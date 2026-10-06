@@ -1,0 +1,480 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>종로 보행환경 정보지도</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/maplibre-gl@4.7.1/dist/maplibre-gl.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+:root{
+  --ink:#1E2A32; --sub:#5B6770; --paper:#FFFFFF; --wash:#EEF2F1; --line:#D3DAD8;
+  --sidewalk:#1F8A5B; --shared:#C98A10; --roadway:#7C8790;
+  --field:#1F8A5B; --agency:#2459B3; --unverified:#9A3B2E;
+  --focus:#2459B3;
+  font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  color:var(--ink);
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:var(--paper)}
+body{display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px)}
+button,input{font:inherit}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+
+.top{padding:12px 14px 8px;border-bottom:1px solid var(--line);background:var(--paper);z-index:500}
+.title-row{display:flex;align-items:center;justify-content:space-between;gap:8px}
+h1{font-size:1.15rem;font-weight:800;margin:0;letter-spacing:-.01em}
+.principle{margin:6px 0 8px;font-size:.84rem;line-height:1.5;color:var(--ink);
+  padding:8px 10px;border-left:4px solid var(--ink);background:var(--wash)}
+.ghost{background:none;border:1px solid var(--line);border-radius:999px;padding:5px 11px;font-size:.8rem;color:var(--sub);cursor:pointer}
+.about{font-size:.84rem;line-height:1.55;color:var(--sub);margin-bottom:8px}
+.about p{margin:4px 0}
+.vlegend{list-style:none;padding:0;margin:6px 0;display:grid;gap:4px}
+
+.filters{display:flex;gap:6px;overflow-x:auto;padding:2px 0 6px;scrollbar-width:none}
+.filters::-webkit-scrollbar{display:none}
+.chip{flex:none;display:inline-flex;align-items:center;gap:6px;border:1.5px solid var(--line);background:var(--paper);
+  border-radius:8px;padding:6px 10px;font-size:.85rem;cursor:pointer;color:var(--sub)}
+.chip .dot{width:10px;height:10px;border-radius:3px;background:var(--c)}
+.chip[aria-pressed="true"]{border-color:var(--ink);color:var(--ink);font-weight:700}
+.toggles{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;font-size:.85rem}
+.switch{display:inline-flex;align-items:center;gap:6px;cursor:pointer}
+.switch input{width:18px;height:18px;accent-color:var(--ink)}
+.count{color:var(--sub);margin-left:auto}
+
+#map{flex:1;min-height:0}
+
+/* 마커: 분류 색 + 짧은 글자. 검증 상태는 테두리 모양으로 */
+.pin{width:30px;height:30px;border-radius:50% 50% 50% 4px;transform:rotate(-45deg);
+  background:var(--c);border:2.5px solid #fff;box-shadow:0 1px 3px rgba(30,42,50,.45);display:grid;place-items:center}
+.pin b{transform:rotate(45deg);color:#fff;font-size:11px;font-weight:800;letter-spacing:-.03em}
+.pin.unverified{border-style:dashed;border-color:#fff;opacity:.8}
+.pin.closed{background:#9AA3A8}
+
+.road-legend{position:fixed;left:10px;bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:600;
+  background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:6px 10px;display:flex;gap:12px;font-size:.78rem}
+.road-legend span{display:inline-flex;align-items:center;gap:5px}
+.ln{display:inline-block;width:20px;height:0;border-top:4px solid}
+.ln.sidewalk{border-color:var(--sidewalk)}
+.ln.shared{border-color:var(--shared);border-top-style:dashed}
+.ln.roadway{border-color:var(--roadway)}
+
+/* 하단 정보창 */
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:1000;background:var(--paper);
+  border-radius:14px 14px 0 0;box-shadow:0 -6px 24px rgba(30,42,50,.18);
+  max-height:72vh;overflow-y:auto;padding:8px 18px calc(20px + env(safe-area-inset-bottom,0px));
+  transform:translateY(105%);transition:transform .22s ease}
+.sheet[aria-hidden="false"]{transform:translateY(0)}
+@media (prefers-reduced-motion:reduce){.sheet{transition:none}}
+@media (min-width:760px){.sheet{left:auto;right:16px;bottom:16px;width:380px;border-radius:12px;max-height:80vh}}
+.sheet-grip{width:40px;height:4px;border-radius:2px;background:var(--line);margin:2px auto 8px}
+.sheet-close{position:absolute;top:10px;right:12px;border:none;background:none;font-size:1.1rem;cursor:pointer;color:var(--sub);padding:6px}
+.cat{font-size:.8rem;font-weight:700;color:var(--c)}
+.sheet h2{font-size:1.2rem;margin:2px 0 8px;padding-right:30px}
+
+.vbadge{display:inline-block;font-size:.76rem;font-weight:700;padding:2px 7px;border-radius:4px;border:1.5px solid;margin-right:4px}
+.vbadge.field{color:var(--field);border-color:var(--field)}
+.vbadge.agency{color:var(--agency);border-color:var(--agency)}
+.vbadge.unverified{color:var(--unverified);border-color:var(--unverified);border-style:dashed}
+.vrow{font-size:.82rem;color:var(--sub);margin-bottom:12px}
+
+dl.facts{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:0 0 14px;font-size:.92rem}
+dl.facts dt{color:var(--sub)}
+dl.facts dd{margin:0;font-weight:600}
+.status{display:inline-block;font-size:.82rem;font-weight:700;padding:3px 8px;border-radius:4px;background:var(--wash)}
+.status.open{color:var(--field)} .status.shut{color:var(--unverified)}
+
+.reports h3,.report-form h3{font-size:.95rem;margin:16px 0 6px}
+.reports ul{list-style:none;padding:0;margin:0;display:grid;gap:6px}
+.reports li{font-size:.85rem;background:var(--wash);border-radius:6px;padding:7px 9px}
+.reports .meta{color:var(--sub);font-size:.78rem}
+.report-form .opts{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+.report-form label.opt{border:1.5px solid var(--line);border-radius:6px;padding:5px 9px;font-size:.84rem;cursor:pointer}
+.report-form label.opt:has(input:checked){border-color:var(--ink);font-weight:700}
+.report-form label.opt input{position:absolute;opacity:0}
+.report-form textarea{width:100%;min-height:64px;border:1.5px solid var(--line);border-radius:6px;padding:8px;font:inherit;font-size:.88rem}
+.btn{margin-top:8px;width:100%;border:none;border-radius:8px;background:var(--ink);color:#fff;padding:11px;font-weight:700;cursor:pointer}
+.note{font-size:.78rem;color:var(--sub);margin-top:6px}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="title-row">
+    <h1>종로 보행환경 정보지도</h1>
+    <button id="aboutBtn" class="ghost" aria-expanded="false" aria-controls="about">이 지도에 대해</button>
+  </div>
+  <p class="principle">우리는 장소의 ‘안전’을 평가하지 않습니다. 이용자가 건강과 안전에 관한 판단을 할 수 있도록 검증 가능한 환경 정보를 제공합니다.</p>
+  <div id="about" class="about" hidden>
+    <p>모든 정보에는 확인 방법과 최종 확인 날짜가 붙어 있습니다.</p>
+    <ul class="vlegend">
+      <li><span class="vbadge field">현장확인</span> 조사자가 직접 가서 확인</li>
+      <li><span class="vbadge agency">기관확인</span> 공공기관 자료로 확인</li>
+      <li><span class="vbadge unverified">확인불가</span> 최근 확인하지 못함</li>
+    </ul>
+    <p>보행 구간은 인도·차도·보차혼용 구분과 폭, 포장, 경사 같은 측정값만 보여줍니다. 어느 길이 더 안전한지는 판단하지 않습니다.</p>
+  </div>
+  <nav class="filters" aria-label="분류 필터" id="filters"></nav>
+  <div class="toggles">
+    <label class="switch"><input type="checkbox" id="openNow"><span>지금 이용 가능한 곳만</span></label>
+    <label class="switch"><input type="checkbox" id="showRoads" checked><span>보행 구간 표시</span></label>
+    <span id="count" class="count" aria-live="polite"></span>
+  </div>
+</header>
+
+<main id="map" aria-label="지도"></main>
+
+<div class="road-legend" aria-label="보행 구간 범례">
+  <span><i class="ln sidewalk"></i>인도</span>
+  <span><i class="ln shared"></i>보차혼용</span>
+  <span><i class="ln roadway"></i>차도</span>
+</div>
+
+<section id="sheet" class="sheet" aria-hidden="true" role="dialog" aria-labelledby="sheetTitle">
+  <div class="sheet-grip" aria-hidden="true"></div>
+  <button class="sheet-close" id="sheetClose" aria-label="닫기">✕</button>
+  <div id="sheetBody"></div>
+</section>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@maplibre/maplibre-gl-leaflet@0.1.4/leaflet-maplibre-gl.js"></script>
+<script>/* data/config.js */
+// ── 배경지도 설정 ─────────────────────────────────
+// 브이월드(VWORLD, 국토교통부) 인증키를 발급받아 아래 따옴표 안에 넣으면
+// 국내 포털 지도와 비슷한 브이월드 지도로 바뀝니다. 비워 두면 OpenFreeMap(한글 표기)을 씁니다.
+// 발급 방법은 README의 '브이월드 배경지도 쓰기' 참고.
+window.MAP_CONFIG = {
+  VWORLD_KEY: "",  // 공개 저장소라 비워 둠 — 로컬 config.js 에만 키를 넣으세요
+  VWORLD_STYLE: "Base",    // "Base"(일반지도) | "white"(회색지도) | "midnight"(야간지도)
+};
+</script>
+<script>/* data/bounds.js */
+// 조사 범위 (종각역 · 종로3가역 · 을지로3가역 · 을지로입구 사이 사각형)
+// ⚠ 대략값입니다. README의 "좌표 범위 확정하기"대로 직접 확인 후 수정하세요.
+window.SURVEY_BOUNDS = {
+  south: 37.5650, west: 126.9810,   // 남서쪽 (을지로입구역 부근)
+  north: 37.5745, east: 126.9945,   // 북동쪽 (익선동·종묘 서쪽 부근)
+};
+</script>
+<script>/* data/places.js */
+// ───────────────────────────────────────────────
+// 시설 데이터 (모두 형식 확인용 샘플 — 실제 정보 아님)
+// verification.status: "field"(현장확인) | "agency"(기관확인) | "unverified"(확인불가)
+// hours: "24h" | null(확인불가) | { mon:[["09:00","18:00"]], ..., sun:[] }  (빈 배열 = 휴무)
+// coordSource: 좌표 출처 — "gps"(현장 GPS) | "public"(공공데이터) | "osm"
+// ───────────────────────────────────────────────
+const WEEKDAY_9_18 = { mon:[["09:00","18:00"]], tue:[["09:00","18:00"]], wed:[["09:00","18:00"]],
+  thu:[["09:00","18:00"]], fri:[["09:00","18:00"]], sat:[], sun:[] };
+
+window.PLACES = [
+  { id:"toilet-001", category:"toilet", name:"[샘플] 공원 내 공중화장실", lat:37.5716, lng:126.9881,
+    details:{ location:"공원 동문 안쪽 왼편", accessibleStall:true, open:true,
+      approach:{ step:false, stairs:false, ramp:true } },
+    hours:{ mon:[["08:00","22:00"]], tue:[["08:00","22:00"]], wed:[["08:00","22:00"]], thu:[["08:00","22:00"]],
+      fri:[["08:00","22:00"]], sat:[["08:00","22:00"]], sun:[["08:00","22:00"]] },
+    verification:{ status:"field", date:"2026-09-21", by:"조사팀" }, coordSource:"gps", sample:true },
+
+  { id:"bench-001", category:"bench", name:"[샘플] 벤치", lat:37.5720, lng:126.9876,
+    details:{ count:2, location:"공원 서쪽 산책로" }, hours:"24h",
+    verification:{ status:"field", date:"2026-09-21", by:"조사팀" }, coordSource:"gps", sample:true },
+
+  { id:"stairs-001", category:"stairs", name:"[샘플] 역 출입구 계단", lat:37.5708, lng:126.9912,
+    details:{ steps:24, location:"출입구에서 지하 대합실까지", handrail:"양쪽", altRoute:"인근 엘리베이터 있음" },
+    hours:null, verification:{ status:"field", date:"2026-09-21", by:"조사팀" }, coordSource:"gps", sample:true },
+
+  { id:"aed-001", category:"aed", name:"[샘플] AED", lat:37.5700, lng:126.9868,
+    details:{ location:"건물 1층 로비 안내데스크 옆", photo:null }, hours:WEEKDAY_9_18,
+    verification:{ status:"agency", date:"2026-09-01", by:"공공데이터(AED 표준데이터)" }, coordSource:"public", sample:true },
+
+  { id:"pharm-001", category:"pharmacy", name:"[샘플] 약국", lat:37.5691, lng:126.9893,
+    details:{ phone:"02-000-0000" },
+    hours:{ mon:[["09:00","21:00"]], tue:[["09:00","21:00"]], wed:[["09:00","21:00"]], thu:[["09:00","21:00"]],
+      fri:[["09:00","21:00"]], sat:[["10:00","15:00"]], sun:[] },
+    verification:{ status:"agency", date:"2026-09-30", by:"공공데이터(약국 정보)" }, coordSource:"public", sample:true },
+
+  { id:"hosp-001", category:"hospital", name:"[샘플] 의원", lat:37.5684, lng:126.9906,
+    details:{ phone:"02-000-0000", dept:"내과" }, hours:WEEKDAY_9_18,
+    verification:{ status:"agency", date:"2026-09-30", by:"공공데이터(병의원 정보)" }, coordSource:"public", sample:true },
+
+  { id:"fire-001", category:"fire", name:"[샘플] 119안전센터", lat:37.5675, lng:126.9850,
+    details:{}, hours:"24h",
+    verification:{ status:"unverified", date:"2026-08-10", by:"" }, coordSource:"public", sample:true },
+
+  { id:"police-001", category:"police", name:"[샘플] 지구대", lat:37.5696, lng:126.9860,
+    details:{}, hours:"24h",
+    verification:{ status:"agency", date:"2026-09-15", by:"공공데이터(지구대·파출소 현황)" }, coordSource:"public", sample:true },
+
+  { id:"trash-001", category:"trash", name:"[샘플] 쓰레기통", lat:37.5712, lng:126.9890,
+    details:{ location:"공원 정문 옆", recycling:null }, hours:null,
+    verification:{ status:"unverified", date:"2026-07-02", by:"" }, coordSource:"public", sample:true },
+];
+</script>
+<script>/* data/roads.js */
+// 보행 구간 데이터 (GeoJSON, 좌표 순서 [경도, 위도]) — 샘플
+// type: "sidewalk"(인도) | "roadway"(차도) | "shared"(보차혼용)
+// 주관적 평가("안전함/위험함") 대신 측정 가능한 속성만 기록합니다.
+window.ROADS = { type:"FeatureCollection", features:[
+  { type:"Feature", properties:{ id:"seg-001", name:"[샘플] 종로 북측 보도", type:"sidewalk",
+      widthM:4.0, surface:"보도블록", curbCut:true, slopeNote:"경사 측정 전",
+      verification:{ status:"field", date:"2026-09-21" } },
+    geometry:{ type:"LineString", coordinates:[[126.9830,37.57065],[126.9921,37.57085]] } },
+  { type:"Feature", properties:{ id:"seg-002", name:"[샘플] 종로 차도", type:"roadway",
+      widthM:null, surface:"아스팔트", curbCut:null, slopeNote:null,
+      verification:{ status:"agency", date:"2026-06-01" } },
+    geometry:{ type:"LineString", coordinates:[[126.9830,37.57035],[126.9921,37.57055]] } },
+  { type:"Feature", properties:{ id:"seg-003", name:"[샘플] 골목길", type:"shared",
+      widthM:2.5, surface:"아스팔트", curbCut:null, slopeNote:"완만한 오르막(북쪽 방향)",
+      verification:{ status:"unverified", date:"2026-05-11" } },
+    geometry:{ type:"LineString", coordinates:[[126.9896,37.5731],[126.9898,37.5717]] } },
+]};
+</script>
+<script>/* app.js */
+// ── 분류 정의 ─────────────────────────────────────
+const CATEGORIES = {
+  toilet:   { label:"화장실", short:"WC",  color:"#2459B3" },
+  bench:    { label:"벤치",   short:"벤치", color:"#5C7F2E" },
+  stairs:   { label:"계단",   short:"계단", color:"#7A4FA8" },
+  aed:      { label:"AED",    short:"AED", color:"#C2185B" },
+  hospital: { label:"병원",   short:"병원", color:"#B23A2E" },
+  pharmacy: { label:"약국",   short:"약국", color:"#0F8577" },
+  fire:     { label:"소방서", short:"119", color:"#D9480F" },
+  police:   { label:"지구대", short:"112", color:"#1E3A5F" },
+  trash:    { label:"쓰레기통", short:"휴지", color:"#8A6D3B" },
+};
+const VSTATUS = { field:"현장확인", agency:"기관확인", unverified:"확인불가" };
+const DAYS = ["sun","mon","tue","wed","thu","fri","sat"];
+const DAY_KO = { mon:"월", tue:"화", wed:"수", thu:"목", fri:"금", sat:"토", sun:"일" };
+const REPORT_TYPES = ["폐쇄됨","철거됨","공사중","운영시간 다름","정보가 다름","기타"];
+
+const state = { active:new Set(Object.keys(CATEGORIES)), openNow:false, showRoads:true };
+
+// ── 지도 ─────────────────────────────────────────
+const B = window.SURVEY_BOUNDS;
+const bounds = L.latLngBounds([B.south, B.west], [B.north, B.east]);
+const map = L.map("map", { maxBounds: bounds.pad(0.3), minZoom: 15, maxZoom: 19, zoomControl: true })
+  .fitBounds(bounds);
+
+// ── 배경지도 ────────────────────────────────────
+// 1순위: 브이월드(국토교통부, 공공저작물 출처표시) — data/config.js 에 인증키가 있을 때
+// 2순위: OpenFreeMap(OpenStreetMap 기반, 키 불필요) — 지명을 한글로 바꿔 표시
+// 쓰지 않는 것: OSM 공식 타일(file:// 차단), CARTO(2026년 8월 말부터 키 없으면 워터마크)
+const CFG = window.MAP_CONFIG || {};
+if (CFG.VWORLD_KEY) {
+  const ext = CFG.VWORLD_STYLE === "Satellite" ? "jpeg" : "png";
+  L.tileLayer(`https://api.vworld.kr/req/wmts/1.0.0/${CFG.VWORLD_KEY}/${CFG.VWORLD_STYLE || "Base"}/{z}/{y}/{x}.${ext}`, {
+    maxZoom: 19,
+    attribution: '&copy; <a href="https://www.vworld.kr" target="_blank">브이월드(국토교통부)</a>',
+  }).addTo(map);
+} else {
+  const base = L.maplibreGL({
+    style: "https://tiles.openfreemap.org/styles/liberty",
+    attribution: '<a href="https://openfreemap.org" target="_blank">OpenFreeMap</a> &copy; <a href="https://www.openmaptiles.org/" target="_blank">OpenMapTiles</a> Data from <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>',
+  }).addTo(map);
+  const gl = base.getMaplibreMap();
+  gl.once("styledata", () => {
+    gl.getStyle().layers.forEach(layer => {
+      if (layer.type !== "symbol" || !layer.layout || !layer.layout["text-field"]) return;
+      // 영어 대신 한글 이름(name:ko → name) 표시
+      gl.setLayoutProperty(layer.id, "text-field", ["coalesce", ["get", "name:ko"], ["get", "name"]]);
+    });
+    gl.getStyle().layers.filter(l => l.type === "fill-extrusion")
+      .forEach(l => gl.setLayoutProperty(l.id, "visibility", "none"));
+  });
+}
+
+// 조사 범위 테두리
+L.rectangle(bounds, { color:"#1E2A32", weight:1.5, dashArray:"6 6", fill:false, interactive:false }).addTo(map);
+
+// ── 운영시간 ─────────────────────────────────────
+function seoulNow() {
+  const parts = new Intl.DateTimeFormat("en-US", { timeZone:"Asia/Seoul", weekday:"short",
+    hour:"2-digit", minute:"2-digit", hour12:false }).formatToParts(new Date());
+  const get = t => parts.find(p => p.type === t).value;
+  const day = get("weekday").toLowerCase().slice(0,3);
+  return { day, minutes: (parseInt(get("hour"),10) % 24) * 60 + parseInt(get("minute"),10) };
+}
+const toMin = s => { const [h,m] = s.split(":").map(Number); return h*60 + m; };
+
+// 반환: true(운영중) | false(운영 안 함) | null(확인불가)
+function isOpenNow(place) {
+  if (hasActiveClosureReport(place)) return false;
+  const h = place.hours;
+  if (h === "24h") return true;
+  if (!h) return null;
+  const { day, minutes } = seoulNow();
+  const prev = DAYS[(DAYS.indexOf(day) + 6) % 7];
+  const inRange = ([s,e], m) => { const a = toMin(s), b = toMin(e);
+    return b > a ? (m >= a && m < b) : (m >= a || m < b); };
+  if ((h[day] || []).some(r => inRange(r, minutes))) return true;
+  // 전날 밤에 시작해 자정을 넘는 시간대
+  return (h[prev] || []).some(([s,e]) => toMin(e) <= toMin(s) && minutes < toMin(e));
+}
+function hoursText(h) {
+  if (h === "24h") return "24시간";
+  if (!h) return "확인불가";
+  return ["mon","tue","wed","thu","fri","sat","sun"]
+    .map(d => `${DAY_KO[d]} ${(h[d]||[]).length ? h[d].map(r => r.join("–")).join(", ") : "휴무"}`).join(" · ");
+}
+
+// ── 시민 제보 (프로토타입: 이 브라우저에만 저장) ──────
+const REPORT_KEY = "walkmap.reports.v1";
+function loadReports() { try { return JSON.parse(localStorage.getItem(REPORT_KEY)) || {}; } catch { return {}; } }
+function saveReport(id, r) {
+  const all = loadReports(); (all[id] ||= []).unshift(r);
+  try { localStorage.setItem(REPORT_KEY, JSON.stringify(all)); } catch {}
+}
+// 검토 전 제보는 표시만 하고 원본 정보는 바꾸지 않습니다.
+// 관리자 승인 로직이 생기면 approved:true 인 '폐쇄됨/철거됨'만 상태에 반영합니다.
+function hasActiveClosureReport(place) {
+  return (loadReports()[place.id] || []).some(r => r.approved && ["폐쇄됨","철거됨"].includes(r.type));
+}
+
+// ── 필터 UI ──────────────────────────────────────
+const filtersEl = document.getElementById("filters");
+Object.entries(CATEGORIES).forEach(([key, c]) => {
+  const b = document.createElement("button");
+  b.className = "chip"; b.style.setProperty("--c", c.color);
+  b.setAttribute("aria-pressed", "true");
+  b.innerHTML = `<span class="dot"></span>${c.label}`;
+  b.onclick = () => {
+    state.active.has(key) ? state.active.delete(key) : state.active.add(key);
+    b.setAttribute("aria-pressed", state.active.has(key)); render();
+  };
+  filtersEl.appendChild(b);
+});
+document.getElementById("openNow").onchange = e => { state.openNow = e.target.checked; render(); };
+document.getElementById("showRoads").onchange = e => {
+  state.showRoads = e.target.checked; state.showRoads ? roadLayer.addTo(map) : roadLayer.remove(); };
+const aboutBtn = document.getElementById("aboutBtn"), about = document.getElementById("about");
+aboutBtn.onclick = () => { about.hidden = !about.hidden; aboutBtn.setAttribute("aria-expanded", !about.hidden); };
+
+// ── 보행 구간 ────────────────────────────────────
+const ROAD_STYLE = {
+  sidewalk:{ color:"#1F8A5B", weight:6 },
+  shared:  { color:"#C98A10", weight:6, dashArray:"8 6" },
+  roadway: { color:"#7C8790", weight:5 },
+};
+const ROAD_LABEL = { sidewalk:"인도", shared:"보차혼용", roadway:"차도" };
+const roadLayer = L.geoJSON(window.ROADS, {
+  style: f => ({ ...ROAD_STYLE[f.properties.type], opacity:.85 }),
+  onEachFeature: (f, layer) => layer.on("click", () => openRoad(f.properties)),
+}).addTo(map);
+
+// ── 마커 ─────────────────────────────────────────
+const markerLayer = L.layerGroup().addTo(map);
+function pinIcon(place, open) {
+  const c = CATEGORIES[place.category];
+  const cls = ["pin", place.verification.status === "unverified" ? "unverified" : "", open === false ? "closed" : ""].join(" ");
+  return L.divIcon({ className:"", iconSize:[30,30], iconAnchor:[15,30],
+    html:`<div class="${cls}" style="--c:${c.color}"><b>${c.short}</b></div>` });
+}
+function render() {
+  markerLayer.clearLayers();
+  let shown = 0, hiddenUnknown = 0;
+  window.PLACES.forEach(p => {
+    if (!state.active.has(p.category)) return;
+    const open = isOpenNow(p);
+    if (state.openNow && open !== true) { if (open === null) hiddenUnknown++; return; }
+    shown++;
+    L.marker([p.lat, p.lng], { icon: pinIcon(p, open), title: p.name, keyboard:true })
+      .on("click", () => openPlace(p)).addTo(markerLayer);
+  });
+  document.getElementById("count").textContent =
+    `${shown}곳 표시` + (hiddenUnknown ? ` · 운영시간 확인불가 ${hiddenUnknown}곳 제외` : "");
+}
+
+// ── 정보창 ───────────────────────────────────────
+const sheet = document.getElementById("sheet"), sheetBody = document.getElementById("sheetBody");
+document.getElementById("sheetClose").onclick = closeSheet;
+map.on("click", closeSheet);
+function closeSheet() { sheet.setAttribute("aria-hidden", "true"); }
+function showSheet(html) { sheetBody.innerHTML = html; sheet.setAttribute("aria-hidden", "false"); sheet.scrollTop = 0; }
+const esc = s => String(s ?? "").replace(/[&<>"]/g, ch => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[ch]));
+const yn = v => v === true ? "있음" : v === false ? "없음" : "확인불가";
+
+function verificationRow(v) {
+  return `<div class="vrow"><span class="vbadge ${v.status}">${VSTATUS[v.status]}</span>
+    최종확인 ${esc(v.date)}${v.by ? ` · ${esc(v.by)}` : ""}</div>`;
+}
+
+function detailRows(p) {
+  const d = p.details, rows = [];
+  const add = (k, v) => rows.push(`<dt>${k}</dt><dd>${v}</dd>`);
+  switch (p.category) {
+    case "toilet":
+      add("위치", esc(d.location)); add("장애인화장실", yn(d.accessibleStall));
+      add("개방 여부", d.open === true ? "개방" : d.open === false ? "비개방" : "확인불가");
+      add("접근경로", `단차 ${yn(d.approach?.step)} · 계단 ${yn(d.approach?.stairs)} · 경사로 ${yn(d.approach?.ramp)}`);
+      break;
+    case "stairs":
+      add("칸수", d.steps != null ? `${d.steps}칸` : "확인불가"); add("위치", esc(d.location));
+      if (d.handrail) add("손잡이", esc(d.handrail)); if (d.altRoute) add("대체 경로", esc(d.altRoute));
+      break;
+    case "bench": add("개수", d.count != null ? `${d.count}개` : "확인불가"); add("위치", esc(d.location)); break;
+    case "aed": add("설치 위치", esc(d.location)); break;
+    case "trash": add("위치", esc(d.location)); add("분리배출", yn(d.recycling)); break;
+    default:
+      if (d.dept) add("진료과", esc(d.dept));
+      if (d.phone) add("전화", `<a href="tel:${esc(d.phone)}">${esc(d.phone)}</a>`);
+  }
+  if (p.hours !== null || ["toilet","aed","hospital","pharmacy"].includes(p.category)) add("운영시간", hoursText(p.hours));
+  return rows.join("");
+}
+
+function openPlace(p) {
+  const c = CATEGORIES[p.category], open = isOpenNow(p);
+  const statusHtml = open === true ? `<span class="status open">지금 운영 중</span>`
+    : open === false ? `<span class="status shut">지금 운영 안 함</span>`
+    : `<span class="status">운영 여부 확인불가</span>`;
+  const reports = loadReports()[p.id] || [];
+  const photo = p.details.photo ? `<img src="${esc(p.details.photo)}" alt="${esc(p.name)} 위치 사진" style="width:100%;border-radius:8px;margin-bottom:10px">` : "";
+  showSheet(`
+    <div class="cat" style="--c:${c.color}">${c.label}</div>
+    <h2 id="sheetTitle">${esc(p.name)}</h2>
+    ${verificationRow(p.verification)}
+    ${photo}
+    <p style="margin:0 0 10px">${statusHtml}</p>
+    <dl class="facts">${detailRows(p)}</dl>
+    <div class="reports"><h3>시민 제보 ${reports.length ? `(${reports.length})` : ""}</h3>
+      ${reports.length ? `<ul>${reports.map(r => `<li><b>${esc(r.type)}</b> ${esc(r.memo)}
+        <div class="meta">${esc(r.date)} · ${r.approved ? "검토 완료" : "검토 전"}</div></li>`).join("")}</ul>`
+        : `<p class="note">아직 제보가 없습니다. 현장 상황이 다르면 알려주세요.</p>`}
+    </div>
+    <form class="report-form" id="reportForm">
+      <h3>현장 상황 알리기</h3>
+      <div class="opts">${REPORT_TYPES.map((t,i) =>
+        `<label class="opt"><input type="radio" name="type" value="${t}" ${i===0?"checked":""}>${t}</label>`).join("")}</div>
+      <textarea name="memo" placeholder="예: 10월 2일 오후 3시, 입구에 '공사로 폐쇄' 안내문" aria-label="상세 내용"></textarea>
+      <button class="btn" type="submit">제보 보내기</button>
+      <p class="note">제보는 검토 후 반영되며, 그 전까지 원래 정보와 함께 '검토 전'으로 표시됩니다.</p>
+    </form>`);
+  document.getElementById("reportForm").onsubmit = e => {
+    e.preventDefault();
+    const f = new FormData(e.target);
+    saveReport(p.id, { type:f.get("type"), memo:f.get("memo").trim(),
+      date:new Date().toLocaleString("ko-KR", { timeZone:"Asia/Seoul" }), approved:false });
+    openPlace(p);
+  };
+}
+
+function openRoad(r) {
+  showSheet(`
+    <div class="cat" style="--c:${ROAD_STYLE[r.type].color}">보행 구간 · ${ROAD_LABEL[r.type]}</div>
+    <h2 id="sheetTitle">${esc(r.name)}</h2>
+    ${verificationRow(r.verification)}
+    <dl class="facts">
+      <dt>구분</dt><dd>${ROAD_LABEL[r.type]}</dd>
+      <dt>유효 폭</dt><dd>${r.widthM != null ? r.widthM + "m" : "확인불가"}</dd>
+      <dt>포장</dt><dd>${esc(r.surface) || "확인불가"}</dd>
+      <dt>연석 경사로</dt><dd>${yn(r.curbCut)}</dd>
+      <dt>경사</dt><dd>${esc(r.slopeNote) || "확인불가"}</dd>
+    </dl>
+    <p class="note">측정된 환경 정보만 표시합니다. 이 구간의 안전 여부는 평가하지 않습니다.</p>`);
+}
+
+render();
+setInterval(render, 60 * 1000); // 1분마다 '지금 운영 중' 재계산
+</script>
+</body>
+</html>
