@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>종로 보행환경 정보지도</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/maplibre-gl@4.7.1/dist/maplibre-gl.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <div class="title-row">
+    <h1>종로 보행환경 정보지도</h1>
+    <button id="aboutBtn" class="ghost" aria-expanded="false" aria-controls="about">이 지도에 대해</button>
+  </div>
+  <p class="principle">우리는 장소의 ‘안전’을 평가하지 않습니다. 이용자가 건강과 안전에 관한 판단을 할 수 있도록 검증 가능한 환경 정보를 제공합니다.</p>
+  <div id="about" class="about" hidden>
+    <p>모든 정보에는 확인 방법과 최종 확인 날짜가 붙어 있습니다.</p>
+    <ul class="vlegend">
+      <li><span class="vbadge field">현장확인</span> 조사자가 직접 가서 확인</li>
+      <li><span class="vbadge agency">기관확인</span> 공공기관 자료로 확인</li>
+      <li><span class="vbadge unverified">확인불가</span> 최근 확인하지 못함</li>
+    </ul>
+    <p>보행 구간은 인도·차도·보차혼용 구분과 폭, 포장, 경사 같은 측정값만 보여줍니다. 어느 길이 더 안전한지는 판단하지 않습니다.</p>
+  </div>
+  <nav class="filters" aria-label="분류 필터" id="filters"></nav>
+  <div class="toggles">
+    <label class="switch"><input type="checkbox" id="openNow"><span>지금 이용 가능한 곳만</span></label>
+    <label class="switch"><input type="checkbox" id="showRoads" checked><span>보행 구간 표시</span></label>
+    <span id="count" class="count" aria-live="polite"></span>
+  </div>
+</header>
+
+<main id="map" aria-label="지도"></main>
+
+<div class="road-legend" aria-label="보행 구간 범례">
+  <span><i class="ln sidewalk"></i>인도</span>
+  <span><i class="ln shared"></i>보차혼용</span>
+  <span><i class="ln roadway"></i>차도</span>
+</div>
+
+<section id="sheet" class="sheet" aria-hidden="true" role="dialog" aria-labelledby="sheetTitle">
+  <div class="sheet-grip" aria-hidden="true"></div>
+  <button class="sheet-close" id="sheetClose" aria-label="닫기">✕</button>
+  <div id="sheetBody"></div>
+</section>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@maplibre/maplibre-gl-leaflet@0.1.4/leaflet-maplibre-gl.js"></script>
+<script src="data/config.js"></script>
+<script src="data/bounds.js"></script>
+<script src="data/places.js"></script>
+<script src="data/roads.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
