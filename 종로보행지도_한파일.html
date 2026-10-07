@@ -260,13 +260,7 @@ const map = L.map("map", { maxBounds: bounds.pad(0.3), minZoom: 15, maxZoom: 19,
 // 2순위: OpenFreeMap(OpenStreetMap 기반, 키 불필요) — 지명을 한글로 바꿔 표시
 // 쓰지 않는 것: OSM 공식 타일(file:// 차단), CARTO(2026년 8월 말부터 키 없으면 워터마크)
 const CFG = window.MAP_CONFIG || {};
-if (CFG.VWORLD_KEY) {
-  const ext = CFG.VWORLD_STYLE === "Satellite" ? "jpeg" : "png";
-  L.tileLayer(`https://api.vworld.kr/req/wmts/1.0.0/${CFG.VWORLD_KEY}/${CFG.VWORLD_STYLE || "Base"}/{z}/{y}/{x}.${ext}`, {
-    maxZoom: 19,
-    attribution: '&copy; <a href="https://www.vworld.kr" target="_blank">브이월드(국토교통부)</a>',
-  }).addTo(map);
-} else {
+function addOpenFreeMap() {
   const base = L.maplibreGL({
     style: "https://tiles.openfreemap.org/styles/liberty",
     attribution: '<a href="https://openfreemap.org" target="_blank">OpenFreeMap</a> &copy; <a href="https://www.openmaptiles.org/" target="_blank">OpenMapTiles</a> Data from <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>',
@@ -281,6 +275,20 @@ if (CFG.VWORLD_KEY) {
     gl.getStyle().layers.filter(l => l.type === "fill-extrusion")
       .forEach(l => gl.setLayoutProperty(l.id, "visibility", "none"));
   });
+}
+// 브이월드 키는 등록한 주소에서만 동작하므로, 파일을 더블클릭해 연 경우(file://)엔 쓰지 않습니다.
+if (CFG.VWORLD_KEY && location.protocol !== "file:") {
+  const ext = CFG.VWORLD_STYLE === "Satellite" ? "jpeg" : "png";
+  const vworld = L.tileLayer(`https://api.vworld.kr/req/wmts/1.0.0/${CFG.VWORLD_KEY}/${CFG.VWORLD_STYLE || "Base"}/{z}/{y}/{x}.${ext}`, {
+    maxZoom: 19,
+    attribution: '&copy; <a href="https://www.vworld.kr" target="_blank">브이월드(국토교통부)</a>',
+  }).addTo(map);
+  // 등록되지 않은 주소라 타일이 거부되면 OpenFreeMap으로 바꿉니다.
+  let loaded = false;
+  vworld.on("tileload", () => { loaded = true; });
+  vworld.once("tileerror", () => { if (!loaded) { vworld.remove(); addOpenFreeMap(); } });
+} else {
+  addOpenFreeMap();
 }
 
 // 조사 범위 테두리
