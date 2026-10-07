@@ -3,6 +3,6 @@
 // 국내 포털 지도와 비슷한 브이월드 지도로 바뀝니다. 비워 두면 OpenFreeMap(한글 표기)을 씁니다.
 // 발급 방법은 README의 '브이월드 배경지도 쓰기' 참고.
 window.MAP_CONFIG = {
-  VWORLD_KEY: "",  // 공개 저장소라 비워 둠 — 로컬 config.js 에만 키를 넣으세요
+  VWORLD_KEY: "323F9283-FDA0-42EF-9172-6EDB1995EA50",  // 공개 저장소라 비워 둠 — 로컬 config.js 에만 키를 넣으세요
   VWORLD_STYLE: "Base",    // "Base"(일반지도) | "white"(회색지도) | "midnight"(야간지도)
 };
