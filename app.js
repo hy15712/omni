@@ -182,27 +182,36 @@ function verificationRow(v) {
     최종확인 ${esc(v.date)}${v.by ? ` · ${esc(v.by)}` : ""}</div>`;
 }
 
+// 칸이 아예 없으면(조사 때 ‘–’ 입력 안 함) 그 줄을 보이지 않고, null(‘모름’)이면 ‘확인불가’로 보입니다.
 function detailRows(p) {
   const d = p.details, rows = [];
   const add = (k, v) => rows.push(`<dt>${k}</dt><dd>${v}</dd>`);
+  const has = v => v !== undefined;
+  const text = (k, v) => { if (v) add(k, esc(v)); };
+  const num = (k, v, unit) => { if (has(v)) add(k, v != null ? `${v}${unit}` : "확인불가"); };
   switch (p.category) {
-    case "toilet":
-      add("위치", esc(d.location)); add("장애인화장실", yn(d.accessibleStall));
-      add("개방 여부", d.open === true ? "개방" : d.open === false ? "비개방" : "확인불가");
-      add("접근경로", `단차 ${yn(d.approach?.step)} · 계단 ${yn(d.approach?.stairs)} · 경사로 ${yn(d.approach?.ramp)}`);
+    case "toilet": {
+      text("위치", d.location);
+      if (has(d.accessibleStall)) add("장애인화장실", yn(d.accessibleStall));
+      if (has(d.open)) add("개방 여부", d.open === true ? "개방" : d.open === false ? "비개방" : "확인불가");
+      const ap = d.approach || {};
+      const parts = [["단차", ap.step], ["계단", ap.stairs], ["경사로", ap.ramp]].filter(([, v]) => has(v));
+      if (parts.length) add("접근경로", parts.map(([k, v]) => `${k} ${yn(v)}`).join(" · "));
       break;
+    }
     case "stairs":
-      add("칸수", d.steps != null ? `${d.steps}칸` : "확인불가"); add("위치", esc(d.location));
-      if (d.handrail) add("손잡이", esc(d.handrail)); if (d.altRoute) add("대체 경로", esc(d.altRoute));
+      num("칸수", d.steps, "칸"); text("위치", d.location);
+      if (has(d.handrail)) add("손잡이", d.handrail ? esc(d.handrail) : "확인불가");
+      text("대체 경로", d.altRoute);
       break;
-    case "bench": add("개수", d.count != null ? `${d.count}개` : "확인불가"); add("위치", esc(d.location)); break;
-    case "aed": add("설치 위치", esc(d.location)); break;
-    case "trash": add("위치", esc(d.location)); add("분리배출", yn(d.recycling)); break;
+    case "bench": num("개수", d.count, "개"); text("위치", d.location); break;
+    case "aed": text("설치 위치", d.location); break;
+    case "trash": text("위치", d.location); if (has(d.recycling)) add("분리배출", yn(d.recycling)); break;
     default:
       if (d.dept) add("진료과", esc(d.dept));
       if (d.phone) add("전화", `<a href="tel:${esc(d.phone)}">${esc(d.phone)}</a>`);
   }
-  if (p.hours !== null || ["toilet","aed","hospital","pharmacy"].includes(p.category)) add("운영시간", hoursText(p.hours));
+  if (has(p.hours) && (p.hours !== null || ["toilet","aed","hospital","pharmacy"].includes(p.category))) add("운영시간", hoursText(p.hours));
   return rows.join("");
 }
 
@@ -263,10 +272,10 @@ function openRoad(r) {
     ${photoGallery(r.photos || [], r.name)}
     <dl class="facts">
       <dt>구분</dt><dd>${ROAD_LABEL[r.type]}</dd>
-      <dt>유효 폭</dt><dd>${r.widthM != null ? r.widthM + "m" : "확인불가"}</dd>
-      <dt>포장</dt><dd>${esc(r.surface) || "확인불가"}</dd>
-      <dt>연석 경사로</dt><dd>${yn(r.curbCut)}</dd>
-      <dt>경사</dt><dd>${esc(r.slopeNote) || "확인불가"}</dd>
+      ${r.widthM !== undefined ? `<dt>유효 폭</dt><dd>${r.widthM != null ? r.widthM + "m" : "확인불가"}</dd>` : ""}
+      ${r.surface !== undefined ? `<dt>포장</dt><dd>${esc(r.surface) || "확인불가"}</dd>` : ""}
+      ${r.curbCut !== undefined ? `<dt>연석 경사로</dt><dd>${yn(r.curbCut)}</dd>` : ""}
+      ${r.slopeNote !== undefined ? `<dt>경사</dt><dd>${esc(r.slopeNote) || "확인불가"}</dd>` : ""}
     </dl>
     <p class="note">측정된 환경 정보만 표시합니다. 이 구간의 안전 여부는 평가하지 않습니다.</p>`);
   bindGallery();
@@ -369,7 +378,7 @@ function openCell(cell, r, c) {
 function openLight(l) {
   showSheet(`
     <div class="cat" style="--c:#B37400">${esc(l.type)}</div>
-    <h2 id="sheetTitle">${esc(l.type)} ${l.count}개</h2>
+    <h2 id="sheetTitle">${esc(l.type)} ${l.count != null ? `${l.count}개` : "(개수 확인불가)"}</h2>
     ${verificationRow(l.verification)}
     <dl class="facts"><dt>위치</dt><dd>${l.lat.toFixed(5)}, ${l.lng.toFixed(5)}</dd></dl>`);
 }

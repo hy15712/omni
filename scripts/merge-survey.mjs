@@ -60,20 +60,21 @@ function roadDist(c1, c2) {   // 양 끝점끼리 거리(방향 무관) 중 큰 
 }
 
 // ── 조사 기록 → 지도 데이터 형식 ───────────────────
+// 조사 때 ‘–’(입력 안 함)으로 둔 칸은 data 에 키가 없음 → 지도 데이터에도 넣지 않아 정보창에 줄이 안 나옴
+const only = (d, keys) => Object.fromEntries(keys.filter(k => d[k] !== undefined).map(k => [k, d[k]]));
 function toEntry(rec) {
   const d = rec.data || {}, v = { status: "field", date: rec.surveyDate, by: rec.surveyor };
   if (rec.kind === "road") return { type: "Feature",
-    properties: { id: null, name: d.name || `${ROAD_LABEL[d.type] || "보행"} 구간`, type: d.type, widthM: d.widthM ?? null,
-      surface: d.surface ?? null, curbCut: d.curbCut ?? null, slopeNote: d.slopeNote ?? null, verification: v,
-      coordSource: rec.coordSource },
+    properties: { id: null, name: d.name || `${ROAD_LABEL[d.type] || "보행"} 구간`, type: d.type,
+      ...only(d, ["widthM", "surface", "curbCut", "slopeNote"]), verification: v, coordSource: rec.coordSource },
     geometry: { type: "LineString", coordinates: rec.coords } };
   if (rec.kind === "light") return { lat: rec.lat, lng: rec.lng, count: d.count ?? null, type: d.type || "미상", id: null,
     ...(d.location ? { location: d.location } : {}), verification: v, coordSource: rec.coordSource };
   const keys = DETAIL_KEYS[rec.category] || [];
-  const details = Object.fromEntries(keys.map(k => [k, d[k] ?? null]));
+  const details = only(d, keys);
   const name = d.name || `${LABEL[rec.category]}${d.location ? " · " + d.location : ""}`;
   return { id: null, category: rec.category, name, lat: rec.lat, lng: rec.lng, details,
-    hours: HOURS_CATS.includes(rec.category) ? d.hours ?? null : null,
+    ...(HOURS_CATS.includes(rec.category) ? (d.hours !== undefined ? { hours: d.hours } : {}) : { hours: null }),
     verification: v, coordSource: rec.coordSource };
 }
 const posOf = (kind, e) => kind === "road" ? null : [e.lat, e.lng];

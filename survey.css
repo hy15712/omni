@@ -47,6 +47,13 @@ body.sv-wide .grid-legend{right:410px}
 .sv-row{display:flex;gap:8px;flex-wrap:wrap}
 .sv-row>*{flex:1}
 .hint{font-size:.82rem;color:var(--sub);margin:6px 0 0}
+.sv-howto{font-weight:700;font-size:.95rem;margin:2px 0 0;padding:10px 12px;background:#EAF1FB;border-radius:8px;color:#1B3F7A}
+.btn2.small{min-height:44px;font-size:.88rem;font-weight:600;border-color:var(--line);width:100%}
+.sv-legend{font-size:.78rem;color:var(--sub);margin:14px 0 0;padding-top:10px;border-top:1px solid var(--line)}
+.seg button.none{flex:0 0 56px;min-width:56px;color:var(--sub);font-size:1.2rem}
+.seg button.none.on{background:#5B6770;border-color:#5B6770;color:#fff}
+/* hidden 속성이 display:flex 에 덮이지 않게 */
+.sv-panel [hidden]{display:none !important}
 .sv-coord{font-size:.88rem;background:var(--wash);border-radius:8px;padding:8px 10px;margin-top:8px;line-height:1.5}
 .sv-coord .ll{font-variant-numeric:tabular-nums;font-weight:700}
 .sv-coord.warn{background:#FCEBE8;color:#7A2B21}

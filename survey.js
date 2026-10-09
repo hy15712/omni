@@ -8,7 +8,7 @@ if (new URLSearchParams(location.search).get("survey") !== "1") return;
 
 const NAME_KEY = "walkmap.surveyor", DATE_KEY = "walkmap.surveyDate";
 const GPS_WARN_M = 15;          // 정확도가 이보다 나쁘면 핀 위치 확인 안내
-const GPS_GOOD_M = 10, GPS_WAIT_MS = 10000;
+const GPS_GOOD_M = 10, GPS_WAIT_MS = 4000;   // 내 위치 찾기: 정확도가 이만큼 좋아지거나 이 시간이 지나면 멈춤
 const PHOTO_MAX = 1600, PHOTO_Q = 0.82;
 const JSZIP_URL = "https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js";
 const WEEK = ["mon","tue","wed","thu","fri","sat","sun"];
@@ -69,6 +69,10 @@ const FIELDS = {
   ],
 };
 const TRI = ["있음","없음","모름"];
+// ‘–’(입력 안 함): 기록하지 않은 칸 → 데이터에서 빠지고 지도 정보창에 그 줄이 나오지 않음
+// ‘모름’: 확인하려 했지만 알 수 없음 → 지도에 ‘확인불가’로 표시
+const NONE = "-";
+const NONE_BTN = `<button type="button" data-v="-" class="none" title="입력 안 함" aria-label="입력 안 함">–</button>`;
 const optsOf = list => list.map(o => Array.isArray(o) ? o : [o, o]);
 
 // ── 기기 안 저장소(IndexedDB) ──────────────────────
@@ -196,21 +200,22 @@ function fieldHtml([type, key, label, extra, flag]) {
   const name = `<span>${esc(label)}${flag === "required" ? ` <em class="req">필수</em>` : ""}</span>`;
   switch (type) {
     case "text": return `<label class="sv-field">${name}<input type="text" data-field="${key}" data-type="text" placeholder="${esc(extra || "")}"></label>`;
-    case "decimal": return `<label class="sv-field">${name}<input type="text" inputmode="decimal" data-field="${key}" data-type="decimal" placeholder="${esc(extra || "")} · 모르면 비워 두기"></label>`;
+    case "decimal": return `<label class="sv-field">${name}<input type="text" inputmode="decimal" data-field="${key}" data-type="decimal" placeholder="${esc(extra || "")} · 안 쟀으면 비워 두기"></label>`;
     case "count": return `<div class="sv-field">${name}<div class="stepper" data-field="${key}" data-type="count" data-default="${extra ?? ""}">
         <button type="button" data-step="-1" aria-label="${esc(label)} 줄이기">−</button>
-        <input type="number" inputmode="numeric" min="0" placeholder="모름" aria-label="${esc(label)}">
+        <input type="number" inputmode="numeric" min="0" placeholder="–" aria-label="${esc(label)}">
         <button type="button" data-step="1" aria-label="${esc(label)} 늘리기">+</button></div></div>`;
     case "tri": { const l = extra || TRI;
       return `<div class="sv-field">${name}<div class="seg" data-field="${key}" data-type="tri">
-        <button type="button" data-v="true">${l[0]}</button><button type="button" data-v="false">${l[1]}</button><button type="button" data-v="null">${l[2]}</button></div></div>`; }
+        <button type="button" data-v="true">${l[0]}</button><button type="button" data-v="false">${l[1]}</button><button type="button" data-v="null">${l[2]}</button>${NONE_BTN}</div></div>`; }
     case "choice": return `<div class="sv-field">${name}<div class="seg" data-field="${key}" data-type="choice"${flag === "required" ? " data-required" : ""}>
         ${optsOf(extra).map(([v, l]) => `<button type="button" data-v="${esc(v)}">${esc(l)}</button>`).join("")}
-        ${flag === "required" ? "" : `<button type="button" data-v="">모름</button>`}</div></div>`;
+        ${flag === "required" ? "" : `<button type="button" data-v="">모름</button>${NONE_BTN}`}</div></div>`;
     case "hours": return `<div class="sv-field">${name}<div class="hours" data-field="${key}" data-type="hours">
         <div class="seg hours-mode">
           <button type="button" data-mode="same">매일 같은 시간</button><button type="button" data-mode="days">요일별</button>
-          <button type="button" data-mode="24h">24시간</button><button type="button" data-mode="unknown">모름</button></div>
+          <button type="button" data-mode="24h">24시간</button><button type="button" data-mode="unknown">모름</button>
+          <button type="button" data-mode="-" class="none" title="입력 안 함" aria-label="입력 안 함">–</button></div>
         <div class="hours-same" hidden><input type="time" class="h-s" aria-label="시작"> ~ <input type="time" class="h-e" aria-label="끝"></div>
         <div class="hours-days" hidden>${WEEK.map(d => `<div class="hday" data-day="${d}"><b>${DAY_KO[d]}</b>
           <input type="time" class="h-s" aria-label="${DAY_KO[d]} 시작"> ~ <input type="time" class="h-e" aria-label="${DAY_KO[d]} 끝">
@@ -228,6 +233,7 @@ function hoursMode(el, mode) {
 }
 function readHours(el) {
   const mode = segGet($(".hours-mode", el));
+  if (mode === NONE || !mode) return undefined;
   if (mode === "24h") return "24h";
   if (mode === "same") {
     const s = $(".hours-same .h-s", el).value, e = $(".hours-same .h-e", el).value;
@@ -244,6 +250,7 @@ function readHours(el) {
   return null;
 }
 function fillHours(el, h) {
+  if (h === undefined) return hoursMode(el, NONE);
   if (h === "24h") return hoursMode(el, "24h");
   if (!h) return hoursMode(el, "unknown");
   const key = r => JSON.stringify(r || []);
@@ -267,35 +274,38 @@ function readFields(form) {
     const k = el.dataset.field;
     let v;
     switch (el.dataset.type) {
-      case "text": v = el.value.trim() || null; break;
+      case "text": v = el.value.trim() || undefined; break;
       case "decimal": {
         const s = el.value.trim().replace(",", ".");
-        v = s ? Number(s) : null;
+        v = s ? Number(s) : undefined;
         if (s && !(v >= 0)) throw new Error(`‘${el.closest(".sv-field").firstElementChild.textContent}’에는 숫자만 적어 주세요.`);
         break;
       }
-      case "count": { const s = $("input", el).value; v = s === "" ? null : Math.max(0, parseInt(s, 10)); break; }
-      case "tri": v = JSON.parse(segGet(el) ?? "null"); break;
-      case "choice":
-        v = segGet(el) || null;
-        if (!v && el.hasAttribute("data-required")) throw new Error(`‘${el.closest(".sv-field").firstElementChild.textContent.replace("필수", "").trim()}’을(를) 골라 주세요.`);
+      case "count": { const s = $("input", el).value; v = s === "" ? undefined : Math.max(0, parseInt(s, 10)); break; }
+      case "tri": { const t = segGet(el); v = t === undefined || t === NONE ? undefined : JSON.parse(t); break; }
+      case "choice": {
+        const t = segGet(el);
+        v = t === undefined || t === NONE ? undefined : t || null;
+        if (v == null && el.hasAttribute("data-required")) throw new Error(`‘${el.closest(".sv-field").firstElementChild.textContent.replace("필수", "").trim()}’을(를) 골라 주세요.`);
         break;
+      }
       case "hours": v = readHours(el); break;
     }
+    if (v === undefined) continue;
     const path = k.split("."), last = path.pop();
     path.reduce((o, p) => o[p] ||= {}, out)[last] = v;
   }
   return out;
 }
-function fillFields(form, data = {}) {
+function fillFields(form, data = {}, fresh = false) {
   for (const el of $$("[data-field]", form)) {
     const v = el.dataset.field.split(".").reduce((o, p) => o?.[p], data);
     switch (el.dataset.type) {
       case "text": case "decimal": el.value = v ?? ""; break;
-      case "count": $("input", el).value = v ?? el.dataset.default; break;
-      case "tri": segSet(el, String(v ?? null)); break;
-      case "choice": segSet(el, v ?? (el.hasAttribute("data-required") ? undefined : "")); break;
-      case "hours": fillHours(el, v === undefined ? null : v); break;
+      case "count": $("input", el).value = v ?? (fresh ? el.dataset.default : ""); break;
+      case "tri": segSet(el, v === undefined ? NONE : String(v)); break;
+      case "choice": segSet(el, v === undefined ? (el.hasAttribute("data-required") ? undefined : NONE) : v ?? ""); break;
+      case "hours": fillHours(el, v); break;
     }
   }
 }
@@ -324,7 +334,7 @@ const pinIconOf = (cat, cls) => L.divIcon({ className:"", iconSize:[30,30], icon
 
 function startDraft(cat, rec = null) {
   stopGps();
-  draftLayer.clearLayers();
+  draftLayer.clearLayers(); hereLayer.clearLayers();
   draft = cat && {
     cat, kind: SCATS[cat].kind, editing: rec, loc: null, pts: [],
     photos: [], removed: [], marker: null, accCircle: null, line: null,
@@ -341,7 +351,7 @@ function startDraft(cat, rec = null) {
         .forEach(p => draft?.editing === rec && draft.photos.push({ id: p.id, blob: new Blob([p.data], { type: p.type }) }));
       renderThumbs();
     });
-  } else fillFields(paneNew);
+  } else fillFields(paneNew, {}, true);
 }
 
 function setLoc(latlng, src, acc, pan = true) {
@@ -369,14 +379,19 @@ function drawLine() {
   renderCoord();
 }
 
+let zoomHinted = false;
 map.on("click", e => {
   if (!draft || tab !== "new") return;
+  if (map.getZoom() < 17 && !zoomHinted) { zoomHinted = true; toast("지도를 더 확대(+)한 뒤 찍으면 더 정확합니다. 핀은 끌어서 옮길 수 있습니다.", 5000); }
   if (draft.kind === "road") addPt(e.latlng, "map", null, false);
   else setLoc(e.latlng, "map", null, false);
 });
 
-// ── 현재 위치(GPS) ───────────────────────────────
+// ── 내 위치 근처로 이동 ───────────────────────────
+// Wi-Fi 아이패드는 GPS가 없어 위치가 수십 m 어긋나므로, 핀을 자동으로 찍지 않고
+// 지도만 옮기고 대략 범위(파란 원)를 보여줍니다. 정확한 자리는 확대해서 직접 찍습니다.
 let watchId = null, gpsTimer = null;
+const hereLayer = L.layerGroup().addTo(map);
 function stopGps() {
   if (watchId !== null) navigator.geolocation.clearWatch(watchId);
   watchId = null; clearTimeout(gpsTimer);
@@ -384,35 +399,39 @@ function stopGps() {
 }
 function startGps() {
   if (!window.isSecureContext || !navigator.geolocation) {
-    toast("현재 위치(GPS)는 공개 사이트(https 주소)에서만 됩니다. 지도를 눌러 위치를 찍어 주세요.", 6000); return;
+    toast("내 위치 찾기는 공개 사이트(https 주소)에서만 됩니다. 지도를 확대해서 위치를 직접 찍어 주세요.", 6000); return;
   }
   stopGps();
-  const btn = $('[data-act="gps"]', paneNew); btn.disabled = true; btn.textContent = "위치 잡는 중…";
+  const btn = $('[data-act="gps"]', paneNew); btn.disabled = true; btn.textContent = "내 위치 찾는 중…";
   const d = draft, t0 = Date.now();
   let best = null;
   const finish = () => {
     stopGps();
     if (draft !== d) return;
-    if (!best) { toast("위치를 잡지 못했습니다. 지도를 눌러 찍어 주세요."); return; }
-    if (d.kind === "road") addPt(L.latLng(best.lat, best.lng), "gps", best.acc);
-    if (best.acc > GPS_WARN_M) toast(`정확도가 ±${best.acc}m 입니다. 핀이 맞는 자리에 있는지 확인하고, 아니면 끌어서 옮겨 주세요.`, 6000);
+    if (!best) { toast("내 위치를 찾지 못했습니다. 지도를 확대해서 위치를 직접 찍어 주세요."); return; }
+    const here = L.latLng(best.lat, best.lng);
+    hereLayer.clearLayers();
+    L.circle(here, { radius: best.acc, color: "#2459B3", weight: 1.5, fillOpacity: .1, interactive: false }).addTo(hereLayer);
+    L.circleMarker(here, { radius: 6, color: "#fff", weight: 2, fillColor: "#2459B3", fillOpacity: 1, interactive: false }).addTo(hereLayer);
+    if (!map.options.maxBounds.contains(here)) return toast("지금 계신 곳은 조사 범위에서 멀리 떨어져 있습니다. 지도에서 위치를 직접 찍어 주세요.", 6000);
+    map.setView(here, Math.max(map.getZoom(), 18));
+    toast(`대략 ±${best.acc}m 범위(파란 원) 안에 계십니다. 주변 건물·길 모양을 보고 정확한 위치를 눌러 주세요.`, 7000);
   };
   watchId = navigator.geolocation.watchPosition(p => {
     if (draft !== d) return stopGps();
     const acc = Math.round(p.coords.accuracy);
     if (!best || acc < best.acc) {
       best = { lat: p.coords.latitude, lng: p.coords.longitude, acc };
-      if (d.kind !== "road") setLoc(L.latLng(best.lat, best.lng), "gps", acc);
-      btn.textContent = `위치 잡는 중… ±${acc}m`;
+      btn.textContent = `내 위치 찾는 중… ±${acc}m`;
     }
     if (best.acc <= GPS_GOOD_M || Date.now() - t0 > GPS_WAIT_MS) finish();
   }, err => {
     stopGps();
     toast(err.code === 1
       ? "위치 권한이 꺼져 있습니다. 아이패드 설정 > 개인정보 보호 > 위치 서비스 > Safari 웹 사이트를 ‘앱을 사용하는 동안’으로 바꿔 주세요."
-      : "위치를 잡지 못했습니다. 지도를 눌러 찍어 주세요.", 7000);
+      : "내 위치를 찾지 못했습니다. 지도를 확대해서 위치를 직접 찍어 주세요.", 7000);
   }, { enableHighAccuracy: true, maximumAge: 0, timeout: 15000 });
-  gpsTimer = setTimeout(finish, GPS_WAIT_MS + 2000);
+  gpsTimer = setTimeout(finish, GPS_WAIT_MS);
 }
 
 // ── 사진 ─────────────────────────────────────────
@@ -475,12 +494,14 @@ function renderForm() {
       ${draft.editing ? `<span class="sv-editing">수정 중 · 조사일 ${esc(draft.editing.surveyDate)} · ${esc(draft.editing.surveyor)}</span>` : ""}
       <button type="button" class="sv-link" data-act="change">분류 바꾸기</button></div>
     <div class="sv-loc">
-      <button type="button" class="btn big" data-act="gps" data-label="${road ? "📍 현재 위치를 점으로 추가" : "📍 현재 위치"}">${road ? "📍 현재 위치를 점으로 추가" : "📍 현재 위치"}</button>
-      <p class="hint">${road ? "또는 지도에서 선의 점을 차례로 누르세요." : "또는 지도를 눌러 위치를 찍으세요. 핀은 끌어서 옮길 수 있습니다."}</p>
+      <p class="sv-howto">${road ? "지도를 확대(+)한 뒤 선이 지나는 점을 차례로 누르세요."
+        : "지도를 최대한 확대(+)한 뒤 정확한 위치를 누르세요. 핀은 끌어서 옮길 수 있습니다."}</p>
       <div id="svCoord" class="sv-coord"></div>
+      <button type="button" class="btn2 small" data-act="gps" data-label="📍 내 위치 근처로 지도 이동">📍 내 위치 근처로 지도 이동</button>
       ${road ? `<div class="sv-row"><button type="button" class="btn2" data-act="undo">되돌리기</button><button type="button" class="btn2" data-act="clearpts">다시 그리기</button></div>` : ""}
     </div>
     ${big ? photoBlock(true) : ""}
+    <p class="sv-legend"><b>모름</b> 확인했지만 알 수 없음 → 지도에 ‘확인불가’ · <b>–</b> 기록 안 함 → 지도에 안 나옴</p>
     <form id="svForm" onsubmit="return false">
       ${FIELDS[draft.cat].map(fieldHtml).join("")}
       ${big ? "" : photoBlock(false)}
@@ -668,6 +689,7 @@ function romanize(str) {
 const csvCell = v => `"${String(v ?? "").replace(/"/g, '""')}"`;
 function fmt([type, key, label, extra], data) {
   const v = key.split(".").reduce((o, p) => o?.[p], data);
+  if (v === undefined) return "";   // ‘–’ 입력 안 함
   if (type === "tri") return (extra || TRI)[v === true ? 0 : v === false ? 1 : 2];
   if (type === "hours") return hoursText(v ?? null);
   if (type === "choice") return v == null ? "모름" : (optsOf(extra).find(([x]) => x === v)?.[1] ?? v);
