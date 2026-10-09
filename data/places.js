@@ -2,7 +2,8 @@
 // 시설 데이터 (모두 형식 확인용 샘플 — 실제 정보 아님)
 // verification.status: "field"(현장확인) | "agency"(기관확인) | "unverified"(확인불가)
 // hours: "24h" | null(확인불가) | { mon:[["09:00","18:00"]], ..., sun:[] }  (빈 배열 = 휴무)
-// coordSource: 좌표 출처 — "gps"(현장 GPS) | "public"(공공데이터) | "osm"
+// coordSource: 좌표 출처 — "gps"(현장 GPS) | "map"(우리 지도에서 찍음) | "public"(공공데이터) | "osm"
+// details.photos: 위치 사진 경로 목록(첫 장이 대표). 조사 입력 모드 → scripts/merge-survey.mjs 로 들어옴
 // ───────────────────────────────────────────────
 const WEEKDAY_9_18 = { mon:[["09:00","18:00"]], tue:[["09:00","18:00"]], wed:[["09:00","18:00"]],
   thu:[["09:00","18:00"]], fri:[["09:00","18:00"]], sat:[], sun:[] };

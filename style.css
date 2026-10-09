@@ -86,6 +86,11 @@ dl.facts dd{margin:0;font-weight:600}
 .report-form textarea{width:100%;min-height:64px;border:1.5px solid var(--line);border-radius:6px;padding:8px;font:inherit;font-size:.88rem}
 .btn{margin-top:8px;width:100%;border:none;border-radius:8px;background:var(--ink);color:#fff;padding:11px;font-weight:700;cursor:pointer}
 .note{font-size:.78rem;color:var(--sub);margin-top:6px}
+.gallery{margin:0 0 10px}
+.gallery .main{width:100%;max-height:260px;object-fit:cover;border-radius:8px;display:block}
+.gallery .thumbs{display:flex;gap:6px;margin-top:6px;overflow-x:auto}
+.gallery .thumbs button{flex:none;padding:0;border:none;background:none;cursor:pointer}
+.gallery .thumbs img{width:56px;height:56px;object-fit:cover;border-radius:6px;display:block}
 
 /* 가로등 격자 */
 .chip.light .dot{background:repeating-linear-gradient(45deg,#FFD23F 0 3px,#E89B00 3px 6px)}

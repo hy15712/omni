@@ -212,7 +212,7 @@ function openPlace(p) {
     : open === false ? `<span class="status shut">지금 운영 안 함</span>`
     : `<span class="status">운영 여부 확인불가</span>`;
   const reports = loadReports()[p.id] || [];
-  const photo = p.details.photo ? `<img src="${esc(p.details.photo)}" alt="${esc(p.name)} 위치 사진" style="width:100%;border-radius:8px;margin-bottom:10px">` : "";
+  const photo = photoGallery(p.details.photos || (p.details.photo ? [p.details.photo] : []), p.name);
   showSheet(`
     <div class="cat" style="--c:${c.color}">${c.label}</div>
     <h2 id="sheetTitle">${esc(p.name)}</h2>
@@ -233,6 +233,7 @@ function openPlace(p) {
       <button class="btn" type="submit">제보 보내기</button>
       <p class="note">제보는 검토 후 반영되며, 그 전까지 원래 정보와 함께 '검토 전'으로 표시됩니다.</p>
     </form>`);
+  bindGallery();
   document.getElementById("reportForm").onsubmit = e => {
     e.preventDefault();
     const f = new FormData(e.target);
@@ -242,11 +243,24 @@ function openPlace(p) {
   };
 }
 
+// 위치 사진: 첫 장이 대표, 여러 장이면 아래 작은 사진을 눌러 바꿔 봄
+function photoGallery(list, name) {
+  if (!list.length) return "";
+  return `<figure class="gallery"><img class="main" src="${esc(list[0])}" alt="${esc(name)} 위치 사진">
+    ${list.length > 1 ? `<div class="thumbs">${list.map((src, i) => `<button type="button" data-src="${esc(src)}" aria-label="사진 ${i + 1}">
+      <img src="${esc(src)}" alt=""></button>`).join("")}</div>` : ""}</figure>`;
+}
+function bindGallery() {
+  sheetBody.querySelectorAll(".gallery .thumbs button").forEach(b =>
+    b.onclick = () => { b.closest(".gallery").querySelector(".main").src = b.dataset.src; });
+}
+
 function openRoad(r) {
   showSheet(`
     <div class="cat" style="--c:${ROAD_STYLE[r.type].color}">보행 구간 · ${ROAD_LABEL[r.type]}</div>
     <h2 id="sheetTitle">${esc(r.name)}</h2>
     ${verificationRow(r.verification)}
+    ${photoGallery(r.photos || [], r.name)}
     <dl class="facts">
       <dt>구분</dt><dd>${ROAD_LABEL[r.type]}</dd>
       <dt>유효 폭</dt><dd>${r.widthM != null ? r.widthM + "m" : "확인불가"}</dd>
@@ -255,6 +269,7 @@ function openRoad(r) {
       <dt>경사</dt><dd>${esc(r.slopeNote) || "확인불가"}</dd>
     </dl>
     <p class="note">측정된 환경 정보만 표시합니다. 이 구간의 안전 여부는 평가하지 않습니다.</p>`);
+  bindGallery();
 }
 
 // ── 가로등 격자 ──────────────────────────────────
@@ -344,6 +359,7 @@ function openCell(cell, r, c) {
     <dl class="facts">
       <dt>가로등</dt><dd>${byType["가로등"] || 0}개</dd>
       <dt>보안등</dt><dd>${byType["보안등"] || 0}개</dd>
+      ${byType["미상"] ? `<dt>종류 미상</dt><dd>${byType["미상"]}개</dd>` : ""}
       <dt>설치 지점</dt><dd>${cell.items.length}곳</dd>
       <dt>확인 방법</dt><dd>${Object.entries(byStatus).map(([k, v]) => `${VSTATUS[k]} ${v}곳`).join(" · ") || "자료 없음"}</dd>
     </dl>

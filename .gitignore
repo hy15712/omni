@@ -1,0 +1,4 @@
+# 조사 기록 원본(조사자 이름 포함)은 저장소에 올리지 않음
+survey-inbox/*
+!survey-inbox/README.md
+node_modules/
