@@ -41,6 +41,13 @@
   <span><i class="ln roadway"></i>차도</span>
 </div>
 
+<div class="grid-legend" id="gridLegend" hidden aria-label="가로등 개수 범례">
+  <strong>가로등 개수 <span class="cellsize">(약 50m×50m 칸 기준)</span></strong>
+  <div class="ramp" aria-hidden="true"></div>
+  <div class="ramp-labels"><span>0</span><span>1–3</span><span>4–6</span><span>7+</span></div>
+  <p>설치 개수를 밝기로 표현한 것이며, 실제 조도(밝기)를 측정한 값이 아닙니다. 조사 범위 밖은 자료가 없어 어둡게 표시됩니다.</p>
+</div>
+
 <section id="sheet" class="sheet" aria-hidden="true" role="dialog" aria-labelledby="sheetTitle">
   <div class="sheet-grip" aria-hidden="true"></div>
   <button class="sheet-close" id="sheetClose" aria-label="닫기">✕</button>
@@ -54,6 +61,7 @@
 <script src="data/bounds.js"></script>
 <script src="data/places.js"></script>
 <script src="data/roads.js"></script>
+<script src="data/streetlights.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

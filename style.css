@@ -54,7 +54,7 @@ h1{font-size:1.15rem;font-weight:800;margin:0;letter-spacing:-.01em}
 .sheet{position:fixed;left:0;right:0;bottom:0;z-index:1000;background:var(--paper);
   border-radius:14px 14px 0 0;box-shadow:0 -6px 24px rgba(30,42,50,.18);
   max-height:72vh;overflow-y:auto;padding:8px 18px calc(20px + env(safe-area-inset-bottom,0px));
-  transform:translateY(105%);transition:transform .22s ease}
+  transform:translateY(calc(100% + 40px));transition:transform .22s ease}
 .sheet[aria-hidden="false"]{transform:translateY(0)}
 @media (prefers-reduced-motion:reduce){.sheet{transition:none}}
 @media (min-width:760px){.sheet{left:auto;right:16px;bottom:16px;width:380px;border-radius:12px;max-height:80vh}}
@@ -86,3 +86,27 @@ dl.facts dd{margin:0;font-weight:600}
 .report-form textarea{width:100%;min-height:64px;border:1.5px solid var(--line);border-radius:6px;padding:8px;font:inherit;font-size:.88rem}
 .btn{margin-top:8px;width:100%;border:none;border-radius:8px;background:var(--ink);color:#fff;padding:11px;font-weight:700;cursor:pointer}
 .note{font-size:.78rem;color:var(--sub);margin-top:6px}
+
+/* 가로등 격자 */
+.chip.light .dot{background:repeating-linear-gradient(45deg,#FFD23F 0 3px,#E89B00 3px 6px)}
+.grid-legend{position:fixed;right:10px;bottom:calc(30px + env(safe-area-inset-bottom,0px));z-index:600;
+  background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:8px 10px;font-size:.78rem;max-width:230px}
+.grid-legend strong{display:block;margin-bottom:5px;font-size:.82rem}
+.grid-legend .cellsize{font-weight:400;color:var(--sub)}
+.grid-legend .steps{display:flex;gap:8px;flex-wrap:wrap}
+.grid-legend .steps span{display:inline-flex;align-items:center;gap:4px}
+.grid-legend p{margin:6px 0 0;color:var(--sub);line-height:1.4}
+.light-dot{width:9px;height:9px;border-radius:50%;background:#E89B00;border:2px solid #fff;box-shadow:0 0 0 1px #8A5A00}
+.light-dot.sec{background:#FFD23F}
+.bar{display:flex;height:10px;border-radius:3px;overflow:hidden;background:var(--wash);margin:4px 0 10px}
+.bar span{display:block;height:100%}
+
+/* 밤 모드(가로등 필터 켰을 때) */
+.night-pane{filter:blur(8px)}
+.grid-legend{background:#141B2D;color:#E8ECF4;border-color:#2A3550}
+.grid-legend .cellsize,.grid-legend p{color:#AAB4C8}
+.ramp{height:12px;border-radius:3px;margin:4px 0 3px;
+  background:linear-gradient(90deg,#1A2030 0 25%,#3F4256 25% 50%,#8A7D52 50% 75%,#F2DC8A 75% 100%)}
+.ramp-labels{display:grid;grid-template-columns:repeat(4,1fr);text-align:center}
+.light-dot{box-shadow:0 0 6px 2px rgba(255,210,63,.8)}
+body.night .chip.light{background:#141B2D;color:#FFE38A;border-color:#141B2D}

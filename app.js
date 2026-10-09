@@ -15,7 +15,7 @@ const DAYS = ["sun","mon","tue","wed","thu","fri","sat"];
 const DAY_KO = { mon:"월", tue:"화", wed:"수", thu:"목", fri:"금", sat:"토", sun:"일" };
 const REPORT_TYPES = ["폐쇄됨","철거됨","공사중","운영시간 다름","정보가 다름","기타"];
 
-const state = { active:new Set(Object.keys(CATEGORIES)), openNow:false, showRoads:true };
+const state = { active:new Set(Object.keys(CATEGORIES)), openNow:false, showRoads:true, showLights:false };
 
 // ── 지도 ─────────────────────────────────────────
 const B = window.SURVEY_BOUNDS;
@@ -44,14 +44,13 @@ function addOpenFreeMap() {
       .forEach(l => gl.setLayoutProperty(l.id, "visibility", "none"));
   });
 }
-// 브이월드 키는 등록한 주소에서만 동작하므로, 파일을 더블클릭해 연 경우(file://)엔 쓰지 않습니다.
-if (CFG.VWORLD_KEY && location.protocol !== "file:") {
+if (CFG.VWORLD_KEY) {
   const ext = CFG.VWORLD_STYLE === "Satellite" ? "jpeg" : "png";
   const vworld = L.tileLayer(`https://api.vworld.kr/req/wmts/1.0.0/${CFG.VWORLD_KEY}/${CFG.VWORLD_STYLE || "Base"}/{z}/{y}/{x}.${ext}`, {
     maxZoom: 19,
     attribution: '&copy; <a href="https://www.vworld.kr" target="_blank">브이월드(국토교통부)</a>',
   }).addTo(map);
-  // 등록되지 않은 주소라 타일이 거부되면 OpenFreeMap으로 바꿉니다.
+  // 키가 등록되지 않은 주소라 타일이 하나도 안 오면 OpenFreeMap으로 바꿉니다.
   let loaded = false;
   vworld.on("tileload", () => { loaded = true; });
   vworld.once("tileerror", () => { if (!loaded) { vworld.remove(); addOpenFreeMap(); } });
@@ -119,6 +118,14 @@ Object.entries(CATEGORIES).forEach(([key, c]) => {
   };
   filtersEl.appendChild(b);
 });
+// 가로등 칩: 다른 분류와 달리 핀이 아니라 격자로 표시(기본 꺼짐)
+const lightChip = document.createElement("button");
+lightChip.className = "chip light"; lightChip.setAttribute("aria-pressed", "false");
+lightChip.innerHTML = `<span class="dot"></span>가로등`;
+lightChip.onclick = () => { state.showLights = !state.showLights;
+  lightChip.setAttribute("aria-pressed", state.showLights); toggleLights(); };
+filtersEl.appendChild(lightChip);
+
 document.getElementById("openNow").onchange = e => { state.openNow = e.target.checked; render(); };
 document.getElementById("showRoads").onchange = e => {
   state.showRoads = e.target.checked; state.showRoads ? roadLayer.addTo(map) : roadLayer.remove(); };
@@ -133,8 +140,9 @@ const ROAD_STYLE = {
 };
 const ROAD_LABEL = { sidewalk:"인도", shared:"보차혼용", roadway:"차도" };
 const roadLayer = L.geoJSON(window.ROADS, {
+  bubblingMouseEvents: false,
   style: f => ({ ...ROAD_STYLE[f.properties.type], opacity:.85 }),
-  onEachFeature: (f, layer) => layer.on("click", () => openRoad(f.properties)),
+  onEachFeature: (f, layer) => layer.on("click", e => { L.DomEvent.stopPropagation(e); openRoad(f.properties); }),
 }).addTo(map);
 
 // ── 마커 ─────────────────────────────────────────
@@ -164,7 +172,7 @@ function render() {
 const sheet = document.getElementById("sheet"), sheetBody = document.getElementById("sheetBody");
 document.getElementById("sheetClose").onclick = closeSheet;
 map.on("click", closeSheet);
-function closeSheet() { sheet.setAttribute("aria-hidden", "true"); }
+function closeSheet() { sheet.setAttribute("aria-hidden", "true"); if (typeof clearSelectedCell === "function") clearSelectedCell(); }
 function showSheet(html) { sheetBody.innerHTML = html; sheet.setAttribute("aria-hidden", "false"); sheet.scrollTop = 0; }
 const esc = s => String(s ?? "").replace(/[&<>"]/g, ch => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[ch]));
 const yn = v => v === true ? "있음" : v === false ? "없음" : "확인불가";
@@ -248,6 +256,108 @@ function openRoad(r) {
     </dl>
     <p class="note">측정된 환경 정보만 표시합니다. 이 구간의 안전 여부는 평가하지 않습니다.</p>`);
 }
+
+// ── 가로등 격자 ──────────────────────────────────
+// 조사 범위를 약 GRID_M 미터 칸으로 나누고, 칸마다 등 개수를 더해 색을 칠합니다.
+const GRID_M = 50;
+const dLat = GRID_M / 111320;
+const dLng = GRID_M / (111320 * Math.cos((B.south + B.north) / 2 * Math.PI / 180));
+// 개수 구간별 어둡기: 적을수록 어둡게(밤 표현), 많을수록 덜 어둡게 + 노란빛
+const LIGHT_STEPS = [ // [최소 개수, 어둠 불투명도, 노란빛 불투명도, 범례 라벨]
+  [7, 0.05, 0.30, "7+"], [4, 0.25, 0.18, "4–6"], [1, 0.48, 0.06, "1–3"], [0, 0.72, 0, "0"],
+];
+const NIGHT = "#0A1020", GLOW = "#FFD23F";
+const stepOf = n => LIGHT_STEPS.find(([min]) => n >= min);
+
+map.createPane("gridPane").style.zIndex = 350;  // 배경지도 위, 보행구간·핀 아래
+map.getPane("gridPane").classList.add("night-pane");
+map.createPane("selPane").style.zIndex = 360;
+const gridLayer = L.layerGroup();
+const lightPointLayer = L.layerGroup();
+let selectedCell = null;
+
+function buildGrid() {
+  const rows = Math.ceil((B.north - B.south) / dLat), cols = Math.ceil((B.east - B.west) / dLng);
+  const cells = Array.from({ length: rows * cols }, () => ({ total: 0, items: [] }));
+  (window.STREETLIGHTS || []).forEach(l => {
+    const r = Math.floor((l.lat - B.south) / dLat), c = Math.floor((l.lng - B.west) / dLng);
+    if (r < 0 || c < 0 || r >= rows || c >= cols) return;
+    const cell = cells[r * cols + c]; cell.total += l.count || 1; cell.items.push(l);
+  });
+  const gridN = B.south + rows * dLat, gridE = B.west + cols * dLng;
+
+  // 조사 범위 바깥은 자료가 없으므로 가장 어둡게 덮음 (구멍 뚫린 다각형)
+  L.polygon([
+    [[B.south - 1, B.west - 1], [gridN + 1, B.west - 1], [gridN + 1, gridE + 1], [B.south - 1, gridE + 1]],
+    [[B.south, B.west], [gridN, B.west], [gridN, gridE], [B.south, gridE]],
+  ], { pane: "gridPane", stroke: false, fillColor: NIGHT, fillOpacity: 0.78, interactive: false }).addTo(gridLayer);
+
+  cells.forEach((cell, i) => {
+    const r = Math.floor(i / cols), c = i % cols;
+    const bounds = [[B.south + r * dLat, B.west + c * dLng], [B.south + (r + 1) * dLat, B.west + (c + 1) * dLng]];
+    const [, dark, glow] = stepOf(cell.total);
+    L.rectangle(bounds, { pane: "gridPane", stroke: false, fillColor: NIGHT, fillOpacity: dark, interactive: false }).addTo(gridLayer);
+    if (glow) L.rectangle(bounds, { pane: "gridPane", stroke: false, fillColor: GLOW, fillOpacity: glow, interactive: false }).addTo(gridLayer);
+    // 클릭용 투명 칸 (흐림 효과 밖의 별도 층)
+    L.rectangle(bounds, { pane: "selPane", stroke: false, fillOpacity: 0, bubblingMouseEvents: false })
+      .on("click", e => { L.DomEvent.stopPropagation(e); selectCell(e.target); openCell(cell, r, c); })
+      .addTo(gridLayer);
+  });
+  (window.STREETLIGHTS || []).forEach(l => {
+    L.marker([l.lat, l.lng], { icon: L.divIcon({ className: "", iconSize: [9, 9],
+      html: `<div class="light-dot ${l.type === "보안등" ? "sec" : ""}"></div>` }), title: `${l.type} ${l.count}개` })
+      .on("click", () => openLight(l)).addTo(lightPointLayer);
+  });
+}
+
+function selectCell(rect) {
+  clearSelectedCell();
+  selectedCell = rect; rect.setStyle({ stroke: true, weight: 2.5, color: "#FFFFFF", dashArray: "4 3" });
+}
+function clearSelectedCell() { if (selectedCell) selectedCell.setStyle({ stroke: false }); selectedCell = null; }
+
+// 개별 등 위치는 충분히 확대했을 때만 표시(겹침 방지)
+function syncLightPoints() {
+  const show = state.showLights && map.getZoom() >= 18;
+  show ? lightPointLayer.addTo(map) : lightPointLayer.remove();
+}
+function toggleLights() {
+  document.body.classList.toggle("night", state.showLights);
+  if (state.showLights) { gridLayer.addTo(map); document.getElementById("gridLegend").hidden = false; }
+  else { gridLayer.remove(); document.getElementById("gridLegend").hidden = true; closeSheet(); }
+  syncLightPoints();
+}
+map.on("zoomend", syncLightPoints);
+
+function openCell(cell, r, c) {
+  const byType = cell.items.reduce((o, l) => (o[l.type] = (o[l.type] || 0) + (l.count || 1), o), {});
+  const byStatus = cell.items.reduce((o, l) => (o[l.verification.status] = (o[l.verification.status] || 0) + 1, o), {});
+  const dates = cell.items.map(l => l.verification.date).sort();
+  const pct = n => cell.total ? (n / cell.total * 100) : 0;
+  showSheet(`
+    <div class="cat" style="--c:#B37400">가로등 · 격자 ${r + 1}-${c + 1}</div>
+    <h2 id="sheetTitle">이 구역 가로등 ${cell.total}개</h2>
+    <div class="vrow">약 ${GRID_M}m × ${GRID_M}m 칸 기준${dates.length ? ` · 자료 기준일 ${esc(dates[0])}${dates[0] !== dates.at(-1) ? `~${esc(dates.at(-1))}` : ""}` : ""}</div>
+    ${cell.total ? `<div class="bar" aria-hidden="true">
+        <span style="width:${pct(byType["가로등"] || 0)}%;background:#E89B00"></span>
+        <span style="width:${pct(byType["보안등"] || 0)}%;background:#FFD23F"></span></div>` : ""}
+    <dl class="facts">
+      <dt>가로등</dt><dd>${byType["가로등"] || 0}개</dd>
+      <dt>보안등</dt><dd>${byType["보안등"] || 0}개</dd>
+      <dt>설치 지점</dt><dd>${cell.items.length}곳</dd>
+      <dt>확인 방법</dt><dd>${Object.entries(byStatus).map(([k, v]) => `${VSTATUS[k]} ${v}곳`).join(" · ") || "자료 없음"}</dd>
+    </dl>
+    <p class="note">${cell.total ? "더 확대하면 등 하나하나의 위치가 점으로 표시됩니다." : "자료상 이 칸에 등록된 가로등이 없습니다."}<br>
+    설치 개수이며, 실제 조도(밝기)를 측정한 값이 아닙니다.</p>`);
+}
+function openLight(l) {
+  showSheet(`
+    <div class="cat" style="--c:#B37400">${esc(l.type)}</div>
+    <h2 id="sheetTitle">${esc(l.type)} ${l.count}개</h2>
+    ${verificationRow(l.verification)}
+    <dl class="facts"><dt>위치</dt><dd>${l.lat.toFixed(5)}, ${l.lng.toFixed(5)}</dd></dl>`);
+}
+buildGrid();
 
 render();
 setInterval(render, 60 * 1000); // 1분마다 '지금 운영 중' 재계산
