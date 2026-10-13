@@ -110,3 +110,10 @@ body.sv-wide .grid-legend{right:410px}
 .sv-toast{position:fixed;left:50%;top:12px;transform:translateX(-50%);z-index:2100;background:var(--ink);color:#fff;
   padding:12px 16px;border-radius:10px;max-width:min(560px,92vw);font-size:.9rem;line-height:1.45;box-shadow:0 4px 16px rgba(0,0,0,.25)}
 
+
+/* 카카오톡 등 앱 안 브라우저 경고 */
+.sv-inapp{background:#FCEBE8;border:1.5px solid #9A3B2E;color:#5A1F17;border-radius:8px;padding:10px 12px;margin:0 0 10px;font-size:.9rem;line-height:1.5}
+.sv-inapp b{display:block;margin-bottom:2px}
+.sv-inapp .btn{display:block;text-align:center;text-decoration:none;margin:8px 0 4px;background:#9A3B2E}
+.sv-inapp .how{display:block;font-weight:700;margin-top:6px}
+.sv-inapp small{display:block;color:#7A2B21}

@@ -239,6 +239,13 @@ body.sv-wide .grid-legend{right:410px}
 .sv-toast{position:fixed;left:50%;top:12px;transform:translateX(-50%);z-index:2100;background:var(--ink);color:#fff;
   padding:12px 16px;border-radius:10px;max-width:min(560px,92vw);font-size:.9rem;line-height:1.45;box-shadow:0 4px 16px rgba(0,0,0,.25)}
 
+
+/* 카카오톡 등 앱 안 브라우저 경고 */
+.sv-inapp{background:#FCEBE8;border:1.5px solid #9A3B2E;color:#5A1F17;border-radius:8px;padding:10px 12px;margin:0 0 10px;font-size:.9rem;line-height:1.5}
+.sv-inapp b{display:block;margin-bottom:2px}
+.sv-inapp .btn{display:block;text-align:center;text-decoration:none;margin:8px 0 4px;background:#9A3B2E}
+.sv-inapp .how{display:block;font-weight:700;margin-top:6px}
+.sv-inapp small{display:block;color:#7A2B21}
 </style>
 </head>
 <body>
@@ -877,6 +884,25 @@ const DB = (() => {
 })();
 navigator.storage?.persist?.().catch(() => {});
 
+// ── 앱 안 브라우저(카카오톡 등) 감지 ──────────────
+// 카톡·인스타 등에서 링크를 누르면 그 앱의 내장 브라우저로 열리는데, 여기서는 파일 저장(내보내기)이 막혀 있고
+// 기록도 그 앱 안에 따로 저장됩니다. 그래서 처음부터 일반 브라우저로 열도록 안내합니다.
+const UA = navigator.userAgent;
+const INAPP = /KAKAOTALK/i.test(UA) ? "카카오톡"
+  : /NAVER\(inapp|Instagram|FBAN|FBAV|Line\/|DaumApps|everytimeApp|Whale\/.*Mobile.*inapp/i.test(UA) ? "앱" : null;
+function externalUrl() {
+  const url = location.href;
+  if (INAPP === "카카오톡") return "kakaotalk://web/openExternal?url=" + encodeURIComponent(url);
+  if (/Android/i.test(UA)) return "intent://" + url.replace(/^https?:\/\//, "") + "#Intent;scheme=https;package=com.android.chrome;end";
+  return null;   // 아이폰·아이패드 다른 앱: 메뉴의 ‘Safari로 열기’를 눌러야 함
+}
+const inappHtml = () => INAPP ? `<div class="sv-inapp" role="alert">
+    <b>⚠ ${INAPP} 안에서 열려 있어 내보내기(파일 저장)가 되지 않습니다.</b>
+    크롬·삼성 인터넷·사파리 같은 일반 브라우저로 열어서 입력해 주세요.
+    ${externalUrl() ? `<a class="btn" href="${esc(externalUrl())}">다른 브라우저로 열기</a>`
+      : `<span class="how">화면의 메뉴(⋯ 또는 공유 버튼)에서 ‘Safari로 열기’를 눌러 주세요.</span>`}
+    <small>기록은 브라우저마다 따로 저장돼서, 여기서 입력한 기록은 일반 브라우저로 옮겨지지 않습니다.</small></div>` : "";
+
 // ── 화면 뼈대 ────────────────────────────────────
 document.body.classList.add("survey");
 const header = $(".top");
@@ -887,7 +913,7 @@ header.insertAdjacentHTML("afterbegin", `
     <label class="sv-date">조사일 <input type="date" id="svDate"></label>
     <span id="svDateWarn" class="warn" hidden>오늘이 아닌 날짜로 기록 중</span>
     <span class="sv-private">이 기록은 공개 지도에 바로 나오지 않습니다</span>
-  </div>`);
+  </div>${inappHtml()}`);
 document.body.insertAdjacentHTML("beforeend", `
   <section id="svPanel" class="sv-panel" aria-label="조사 입력">
     <div class="sv-head">
@@ -1434,6 +1460,7 @@ function renderExport() {
   const pending = records.filter(isPending).length, done = records.length - pending;
   const canShare = !!(navigator.canShare && window.File);
   paneExport.innerHTML = `
+    ${inappHtml()}
     <p>이 기기에 저장된 기록 <b>${records.length}개</b>${records.length ? ` (아직 내보내지 않은 것 ${pending}개)` : ""}</p>
     <button type="button" class="btn big" data-act="zip" ${records.length ? "" : "disabled"}>zip 파일 만들기 (전체 ${records.length}개)</button>
     <div id="svZipOut"></div>
@@ -1524,7 +1551,8 @@ paneExport.addEventListener("click", async e => {
     case "download": {
       const a = document.createElement("a"); a.href = URL.createObjectURL(lastZip.blob); a.download = lastZip.name;
       document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 60000);
-      return toast("저장했습니다. 아이패드는 ‘파일’ 앱 > 다운로드 폴더에서 찾을 수 있습니다.", 6000);
+      if (INAPP) return toast(`${INAPP} 안에서는 파일 저장이 막혀 있습니다. 위쪽 ‘다른 브라우저로 열기’를 눌러 주세요.`, 8000);
+      return toast("저장 창이 뜨면 저장해 주세요. 아이패드는 ‘파일’ 앱 > 다운로드 폴더에서 찾을 수 있습니다.", 6000);
     }
     case "share":
       try { await navigator.share({ files: [new File([lastZip.blob], lastZip.name, { type: "application/zip" })], title: lastZip.name }); }
