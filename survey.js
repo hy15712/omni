@@ -102,7 +102,9 @@ navigator.storage?.persist?.().catch(() => {});
 // 카톡·인스타 등에서 링크를 누르면 그 앱의 내장 브라우저로 열리는데, 여기서는 파일 저장(내보내기)이 막혀 있고
 // 기록도 그 앱 안에 따로 저장됩니다. 그래서 처음부터 일반 브라우저로 열도록 안내합니다.
 const UA = navigator.userAgent;
-const INAPP = /KAKAOTALK/i.test(UA) ? "카카오톡"
+// 아이폰·아이패드 카톡은 사파리 엔진이라 저장·공유가 됨(확인함) → 경고하지 않음. 안드로이드 카톡은 다운로드가 막힘.
+const IOS = /iPhone|iPad|iPod/i.test(UA) || (/Macintosh/i.test(UA) && navigator.maxTouchPoints > 1);
+const INAPP = /KAKAOTALK/i.test(UA) ? (IOS ? null : "카카오톡")
   : /NAVER\(inapp|Instagram|FBAN|FBAV|Line\/|DaumApps|everytimeApp|Whale\/.*Mobile.*inapp/i.test(UA) ? "앱" : null;
 function externalUrl() {
   const url = location.href;
