@@ -45,10 +45,10 @@ h1{font-size:1.15rem;font-weight:800;margin:0;letter-spacing:-.01em}
 .road-legend{position:fixed;left:10px;bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:600;
   background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:6px 10px;display:flex;gap:12px;font-size:.78rem}
 .road-legend span{display:inline-flex;align-items:center;gap:5px}
-.ln{display:inline-block;width:20px;height:0;border-top:4px solid}
-.ln.sidewalk{border-color:var(--sidewalk)}
-.ln.shared{border-color:var(--shared);border-top-style:dashed}
-.ln.roadway{border-color:var(--roadway)}
+.ln{display:inline-block;width:20px;height:0;border-top:3px solid}
+.ln.sidewalk{border-color:rgba(31,138,91,.8)}
+.ln.car{border-color:rgba(215,38,61,.5)}
+.ln.narrow{border-color:rgba(242,183,5,.5)}
 
 /* 하단 정보창 */
 .sheet{position:fixed;left:0;right:0;bottom:0;z-index:1000;background:var(--paper);

@@ -133,17 +133,25 @@ const aboutBtn = document.getElementById("aboutBtn"), about = document.getElemen
 aboutBtn.onclick = () => { about.hidden = !about.hidden; aboutBtn.setAttribute("aria-expanded", !about.hidden); };
 
 // ── 보행 구간 ────────────────────────────────────
-const ROAD_STYLE = {
-  sidewalk:{ color:"#1F8A5B", weight:6 },
-  shared:  { color:"#C98A10", weight:6, dashArray:"8 6" },
-  roadway: { color:"#7C8790", weight:5 },
+// 보행자 기준 표시: 차가 다닐 수 있는 길(차도·보차혼용)은 연한 붉은 선, 측정한 유효 폭이 NARROW_M 미만이면
+// 연한 노란 선(좁은 길), 인도는 초록. 선은 가늘게 그리고, 누르는 범위는 투명한 굵은 선으로 넓게 둡니다.
+const NARROW_M = 1.5;
+const NARROW_BASIS = "휠체어·유모차가 서로 비켜 지나갈 수 있는 폭 기준(「장애인·노인·임산부 등의 편의증진 보장에 관한 법률 시행규칙」 별표 1, 접근로 교행구역 1.5m×1.5m)";
+const LINE_STYLE = {
+  sidewalk: { color:"#1F8A5B", weight:3, opacity:.8 },
+  car:      { color:"#D7263D", weight:3, opacity:.5 },
+  narrow:   { color:"#F2B705", weight:3, opacity:.5 },
 };
+const lineKind = r => r.widthM != null && r.widthM < NARROW_M ? "narrow" : r.type === "sidewalk" ? "sidewalk" : "car";
 const ROAD_LABEL = { sidewalk:"인도", shared:"보차혼용", roadway:"차도" };
-const roadLayer = L.geoJSON(window.ROADS, {
-  bubblingMouseEvents: false,
-  style: f => ({ ...ROAD_STYLE[f.properties.type], opacity:.85 }),
-  onEachFeature: (f, layer) => layer.on("click", e => { L.DomEvent.stopPropagation(e); openRoad(f.properties); }),
-}).addTo(map);
+const roadLayer = L.layerGroup([
+  L.geoJSON(window.ROADS, { interactive:false, style: f => LINE_STYLE[lineKind(f.properties)] }),
+  L.geoJSON(window.ROADS, {
+    bubblingMouseEvents: false,
+    style: { weight:18, opacity:0 },
+    onEachFeature: (f, layer) => layer.on("click", e => { L.DomEvent.stopPropagation(e); openRoad(f.properties); }),
+  }),
+]).addTo(map);
 
 // ── 마커 ─────────────────────────────────────────
 const markerLayer = L.layerGroup().addTo(map);
@@ -266,7 +274,7 @@ function bindGallery() {
 
 function openRoad(r) {
   showSheet(`
-    <div class="cat" style="--c:${ROAD_STYLE[r.type].color}">보행 구간 · ${ROAD_LABEL[r.type]}</div>
+    <div class="cat" style="--c:${LINE_STYLE[lineKind(r)].color}">보행 구간 · ${ROAD_LABEL[r.type]}${lineKind(r) === "narrow" ? " · 좁은 길" : ""}</div>
     <h2 id="sheetTitle">${esc(r.name)}</h2>
     ${verificationRow(r.verification)}
     ${photoGallery(r.photos || [], r.name)}
@@ -277,6 +285,7 @@ function openRoad(r) {
       ${r.curbCut !== undefined ? `<dt>연석 경사로</dt><dd>${yn(r.curbCut)}</dd>` : ""}
       ${r.slopeNote !== undefined ? `<dt>경사</dt><dd>${esc(r.slopeNote) || "확인불가"}</dd>` : ""}
     </dl>
+    ${lineKind(r) === "narrow" ? `<p class="note">노란 선(좁은 길): 측정한 유효 폭이 ${NARROW_M}m 미만인 구간입니다. ${NARROW_BASIS}.</p>` : ""}
     <p class="note">측정된 환경 정보만 표시합니다. 이 구간의 안전 여부는 평가하지 않습니다.</p>`);
   bindGallery();
 }
