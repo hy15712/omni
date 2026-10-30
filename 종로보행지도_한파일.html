@@ -55,10 +55,10 @@ h1{font-size:1.15rem;font-weight:800;margin:0;letter-spacing:-.01em}
 .road-legend{position:fixed;left:10px;bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:600;
   background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:6px 10px;display:flex;gap:12px;font-size:.78rem}
 .road-legend span{display:inline-flex;align-items:center;gap:5px}
-.ln{display:inline-block;width:20px;height:0;border-top:3px solid}
+.ln{display:inline-block;width:20px;height:0;border-top:2px solid}
 .ln.sidewalk{border-color:rgba(31,138,91,.8)}
-.ln.car{border-color:rgba(215,38,61,.5)}
-.ln.narrow{border-color:rgba(242,183,5,.5)}
+.ln.car{border-color:rgba(215,38,61,.4)}
+.ln.narrow{border-color:rgba(242,183,5,.4)}
 
 /* 하단 정보창 */
 .sheet{position:fixed;left:0;right:0;bottom:0;z-index:1000;background:var(--paper);
@@ -535,9 +535,9 @@ aboutBtn.onclick = () => { about.hidden = !about.hidden; aboutBtn.setAttribute("
 const NARROW_M = 1.5;
 const NARROW_BASIS = "휠체어·유모차가 서로 비켜 지나갈 수 있는 폭 기준(「장애인·노인·임산부 등의 편의증진 보장에 관한 법률 시행규칙」 별표 1, 접근로 교행구역 1.5m×1.5m)";
 const LINE_STYLE = {
-  sidewalk: { color:"#1F8A5B", weight:3, opacity:.8 },
-  car:      { color:"#D7263D", weight:3, opacity:.5 },
-  narrow:   { color:"#F2B705", weight:3, opacity:.5 },
+  sidewalk: { color:"#1F8A5B", weight:1.7, opacity:.8 },
+  car:      { color:"#D7263D", weight:1.7, opacity:.4 },
+  narrow:   { color:"#F2B705", weight:1.7, opacity:.4 },
 };
 const lineKind = r => r.widthM != null && r.widthM < NARROW_M ? "narrow" : r.type === "sidewalk" ? "sidewalk" : "car";
 const ROAD_LABEL = { sidewalk:"인도", shared:"보차혼용", roadway:"차도" };

@@ -138,9 +138,9 @@ aboutBtn.onclick = () => { about.hidden = !about.hidden; aboutBtn.setAttribute("
 const NARROW_M = 1.5;
 const NARROW_BASIS = "휠체어·유모차가 서로 비켜 지나갈 수 있는 폭 기준(「장애인·노인·임산부 등의 편의증진 보장에 관한 법률 시행규칙」 별표 1, 접근로 교행구역 1.5m×1.5m)";
 const LINE_STYLE = {
-  sidewalk: { color:"#1F8A5B", weight:3, opacity:.8 },
-  car:      { color:"#D7263D", weight:3, opacity:.5 },
-  narrow:   { color:"#F2B705", weight:3, opacity:.5 },
+  sidewalk: { color:"#1F8A5B", weight:1.7, opacity:.8 },
+  car:      { color:"#D7263D", weight:1.7, opacity:.4 },
+  narrow:   { color:"#F2B705", weight:1.7, opacity:.4 },
 };
 const lineKind = r => r.widthM != null && r.widthM < NARROW_M ? "narrow" : r.type === "sidewalk" ? "sidewalk" : "car";
 const ROAD_LABEL = { sidewalk:"인도", shared:"보차혼용", roadway:"차도" };
