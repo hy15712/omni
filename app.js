@@ -136,7 +136,7 @@ aboutBtn.onclick = () => { about.hidden = !about.hidden; aboutBtn.setAttribute("
 // 보행자 기준 표시: 차가 다닐 수 있는 길(차도·보차혼용)은 연한 붉은 선, 측정한 유효 폭이 NARROW_M 미만이면
 // 연한 노란 선(좁은 길), 인도는 초록. 선은 가늘게 그리고, 누르는 범위는 투명한 굵은 선으로 넓게 둡니다.
 const NARROW_M = 1.5;
-const NARROW_BASIS = "기준: 국토교통부 보도 최소 유효폭 1.5m";
+const NARROW_BASIS = "기준: 국토교통부 「보도 설치 및 관리 지침」(2018. 7. 26. 전면 개정) — 가로수 등을 제외한 보행자 통행 유효 폭 최소 1.5m, 휠체어·유모차가 교행할 수 있는 최소 폭";
 const LINE_STYLE = {
   sidewalk: { color:"#1F8A5B", weight:1.7, opacity:.8 },
   car:      { color:"#D7263D", weight:1.7, opacity:.4 },
