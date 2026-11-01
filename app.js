@@ -422,6 +422,8 @@ function toggleLights() {
 }
 map.on("zoomend", syncLightPoints);
 
+// 지금 가로등 격자에 들어 있는 자료의 범위(‘0개’가 등이 없다는 뜻으로 읽히지 않게 정보창에 함께 안내)
+const LIGHT_DATA_NOTE = "지금 자료는 종로구 보안등(청계천 북쪽 골목)뿐입니다. 큰길 가로등과 중구(청계천 남쪽) 보안등은 아직 들어 있지 않습니다.";
 function openCell(cell, r, c) {
   const byType = cell.items.reduce((o, l) => (o[l.type] = (o[l.type] || 0) + (l.count || 1), o), {});
   const byStatus = cell.items.reduce((o, l) => (o[l.verification.status] = (o[l.verification.status] || 0) + 1, o), {});
@@ -440,9 +442,10 @@ function openCell(cell, r, c) {
       ${byType["미상"] ? `<dt>종류 미상</dt><dd>${byType["미상"]}개</dd>` : ""}
       <dt>설치 지점</dt><dd>${cell.items.length}곳</dd>
       <dt>확인 방법</dt><dd>${Object.entries(byStatus).map(([k, v]) => `${VSTATUS[k]} ${v}곳`).join(" · ") || "자료 없음"}</dd>
+      ${cell.items.length ? `<dt>출처</dt><dd>${[...new Set(cell.items.map(l => l.verification.by).filter(Boolean))].map(esc).join("<br>")}</dd>` : ""}
     </dl>
-    <p class="note">${cell.total ? "조금 더 확대하면 등 하나하나의 위치가 점으로 표시됩니다." : "자료상 이 칸에 등록된 가로등이 없습니다."}<br>
-    설치 개수이며, 실제 조도(밝기)를 측정한 값이 아닙니다.</p>`);
+    <p class="note">${cell.total ? "조금 더 확대하면 등 하나하나의 위치가 점으로 표시됩니다." : "지금 자료에는 이 칸에 등록된 등이 없습니다."}<br>
+    ${LIGHT_DATA_NOTE}<br>설치 개수이며, 실제 조도(밝기)를 측정한 값이 아닙니다.</p>`);
 }
 function openLight(l) {
   showSheet(`
@@ -450,7 +453,8 @@ function openLight(l) {
     <h2 id="sheetTitle">${esc(l.type)} ${l.count != null ? `${l.count}개` : "(개수 확인불가)"}</h2>
     ${verificationRow(l.verification)}
     <dl class="facts"><dt>위치</dt><dd>${l.lat.toFixed(5)}, ${l.lng.toFixed(5)}</dd>
-      ${l.location ? `<dt>위치 설명</dt><dd>${esc(l.location)}</dd>` : ""}${l.note ? `<dt>현장 메모</dt><dd>${esc(l.note)}</dd>` : ""}</dl>`);
+      ${l.location ? `<dt>위치 설명</dt><dd>${esc(l.location)}</dd>` : ""}${l.mount ? `<dt>설치 형태</dt><dd>${esc(l.mount)}</dd>` : ""}${l.note ? `<dt>현장 메모</dt><dd>${esc(l.note)}</dd>` : ""}</dl>
+    <p class="note">설치 개수이며, 실제 조도(밝기)를 측정한 값이 아닙니다.</p>`);
 }
 buildGrid();
 
