@@ -7,7 +7,8 @@
 //      "confirm:<id>"   기존 항목을 다시 확인한 것 → 최종확인 날짜·확인자만 갱신, 새 사진은 덧붙임
 //      "replace:<id>"   기존 항목을 조사 값으로 바꿈(id 유지)
 //      "skip"           버림
-// 4) node scripts/merge-survey.mjs --apply  → data/places.js, roads.js, streetlights.js 갱신, 사진은 photos/ 로 복사
+// 4) node scripts/merge-survey.mjs --apply  → data/places.js, roads.js, streetlights-survey.js 갱신, 사진은 photos/ 로 복사
+//    (현장 조사 가로등은 지도에 안 나오는 streetlights-survey.js 에 보관. 지도의 가로등은 공공데이터 streetlights.js)
 //
 // 이미 합친 기록은 survey-inbox/applied.json 에 남아 다음 실행 때 건너뜁니다.
 // 단, 조사자가 합친 뒤에 기록을 고쳐 다시 내보냈으면(updatedAt 이 더 새로우면) "update:<id>" 로 그 핀을 덮어씁니다.
@@ -115,7 +116,7 @@ const isEdited = rec => applied[rec.id] && targetOf(applied[rec.id]) && applied[
 const items = [...latest.values()].filter(it => !applied[it.rec.id] || isEdited(it.rec))
   .sort((a, b) => (a.rec.surveyDate + a.rec.createdAt).localeCompare(b.rec.surveyDate + b.rec.createdAt));
 
-const places = loadData("places.js", "PLACES"), roads = loadData("roads.js", "ROADS"), lights = loadData("streetlights.js", "STREETLIGHTS");
+const places = loadData("places.js", "PLACES"), roads = loadData("roads.js", "ROADS"), lights = loadData("streetlights-survey.js", "STREETLIGHTS_SURVEY");
 const bounds = (() => { const ctx = { window: {} }; vm.runInNewContext(fs.readFileSync(path.join(ROOT, "data/bounds.js"), "utf8"), ctx); return ctx.window.SURVEY_BOUNDS; })();
 const inBounds = ([lat, lng]) => lat >= bounds.south && lat <= bounds.north && lng >= bounds.west && lng <= bounds.east;
 
@@ -265,7 +266,7 @@ for (const r of report) {
 
 saveData("places.js", places.header, `window.PLACES = [\n${places.value.map(line).join("\n")}\n];`);
 saveData("roads.js", roads.header, `window.ROADS = { type:"FeatureCollection", features:[\n${roads.value.features.map(line).join("\n")}\n]};`);
-saveData("streetlights.js", lights.header, `window.STREETLIGHTS = [\n${lights.value.map(line).join("\n")}\n];`);
+saveData("streetlights-survey.js", lights.header, `window.STREETLIGHTS_SURVEY = [\n${lights.value.map(line).join("\n")}\n];`);
 writeJson(path.join(INBOX, "applied.json"), applied);
 // 지도 데이터 어디에도 쓰이지 않는 사진 파일은 지움(공개 저장소라 지도에서 뺀 사진이 남지 않게)
 const used = new Set([...places.value.flatMap(p => p.details?.photos || []), ...roads.value.features.flatMap(f => f.properties.photos || [])]);

@@ -61,7 +61,7 @@ Claude Code가 이 프로젝트를 이어서 작업할 때 먼저 읽는 파일�
 ## 파일
 
 * `index.html` / `style.css` / `app.js`
-* `data/config.js` 배경지도 키 · `data/bounds.js` 조사 범위(2026-11-01 사용자가 찍은 네 모서리를 모두 감싸는 직사각형으로 확정, 을지로3가역 포함) · `data/places.js` 시설 핀 · `data/roads.js` 보행 구간 GeoJSON · `data/streetlights.js` 가로등
+* `data/config.js` 배경지도 키 · `data/bounds.js` 조사 범위(2026-11-01 사용자가 찍은 네 모서리를 모두 감싸는 직사각형으로 확정, 을지로3가역 포함) · `data/places.js` 시설 핀 · `data/roads.js` 보행 구간 GeoJSON · `data/streetlights.js` 지도에 쓰는 가로등(공공데이터만) · `data/streetlights-survey.js` 현장 조사 가로등 263개(2026-11 사용자 결정으로 지도에서 빼고 보류, 지우지 말 것. index.html 이 불러오지 않음. 조사 기록 합치기의 가로등도 여기로)
 * `survey.js` / `survey.css` 조사 입력 모드(`?survey=1`일 때만 동작, app.js의 전역 `map`·`CATEGORIES` 등을 사용)
 * `photos/` 위치 사진(정보창 `details.photos`, 첫 장이 대표)
 * `scripts/merge-survey.mjs` 조사 기록 합치기 · `scripts/build-onefile.mjs` 한 파일짜리 HTML 다시 만들기
