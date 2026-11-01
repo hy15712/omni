@@ -63,7 +63,7 @@ Claude Code가 이 프로젝트를 이어서 작업할 때 먼저 읽는 파일�
 ## 파일
 
 * `index.html` / `style.css` / `app.js`
-* `data/config.js` 배경지도 키 · `data/bounds.js` 조사 범위(2026-11-01 사용자가 찍은 네 모서리를 모두 감싸는 직사각형으로 확정, 을지로3가역 포함) · `data/places.js` 시설 핀 · `data/roads.js` 보행 구간 GeoJSON · `data/streetlights.js` 보안등 공공데이터 · `data/streetlights-survey.js` 현장 조사 가로등 263개(지우지 말 것. 조사 기록 합치기의 가로등도 여기로). 2026-11 사용자 결정: 골목은 보안등 공공데이터만, 큰길가는 현장 조사 가로등으로 채움. app.js 가 현장 조사 가로등 중 `data/big-roads.js`(큰길 선, 조원들이 찍은 가로등 줄을 따라 그림)에서 15m(`ROAD_BUF_M`) 안에 있고 보안등과 10m(`FIELD_DUP_M`) 안에 겹치지 않는 것만 표시. 처음 적용 때 263개 중 180개(원예림 68·강준수 112) 표시, 지도 전체 526개. 새 조사 구역이 생기면 big-roads.js 에 그 구역 큰길 선을 추가해야 표시됨
+* `data/config.js` 배경지도 키 · `data/bounds.js` 조사 범위(2026-11-01 사용자가 찍은 네 모서리를 모두 감싸는 직사각형으로 확정, 을지로3가역 포함) · `data/places.js` 시설 핀 · `data/roads.js` 보행 구간 GeoJSON · `data/streetlights.js` 보안등 공공데이터 · `data/streetlights-survey.js` 현장 조사 가로등 457개(지우지 말 것. 조사 기록 합치기의 가로등도 여기로). 2026-11 사용자 결정: 골목은 보안등 공공데이터만, 큰길가는 현장 조사 가로등으로 채움. app.js 가 현장 조사 가로등 중 `data/big-roads.js`(큰길 선, 조원들이 찍은 가로등 줄을 따라 그림)에서 15m(`ROAD_BUF_M`) 안에 있고 보안등과 10m(`FIELD_DUP_M`) 안에 겹치지 않는 것만 표시. 처음 적용 때 263개 중 180개(원예림 68·강준수 112) 표시, 지도 전체 526개. 새 조사 구역이 생기면 big-roads.js 에 그 구역 큰길 선을 추가해야 표시됨. 예외: 종로 북쪽 구역(위도 37.5703 이상, `NORTH_ZONE_LAT`, 장하연 조사 194개)은 보안등 공공데이터가 드물어서 골목 기록도 씀 — 보안등과 10m 안에 겹치는 41개만 빼고 153개 표시(2026-11 사용자 결정). 지도 전체 가로등 679개
 * `survey.js` / `survey.css` 조사 입력 모드(`?survey=1`일 때만 동작, app.js의 전역 `map`·`CATEGORIES` 등을 사용)
 * `photos/` 위치 사진(정보창 `details.photos`, 첫 장이 대표)
 * `scripts/merge-survey.mjs` 조사 기록 합치기 · `scripts/build-onefile.mjs` 한 파일짜리 HTML 다시 만들기

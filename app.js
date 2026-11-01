@@ -379,7 +379,9 @@ let selectedCell = null;
 // 지도에 쓰는 가로등 = 보안등 공공데이터(기관확인) + 큰길가 현장 조사 가로등(현장확인). (2026-11 사용자 결정)
 // 골목은 보안등 공공데이터만 씁니다. 현장 조사 가로등은 큰길 선(data/big-roads.js)에서 ROAD_BUF_M 안에 있고,
 // 보안등과 FIELD_DUP_M 안에 겹치지 않는 것만 더합니다. (조사 기록은 data/streetlights-survey.js 에 그대로 남아 있음)
-const ROAD_BUF_M = 15, FIELD_DUP_M = 10;
+// 단, 종로 북쪽 구역(위도 NORTH_ZONE_LAT 이상)은 보안등 공공데이터가 드문 곳이 많아 골목 기록도 함께 씀:
+// 보안등과 FIELD_DUP_M 안에 겹치는 것만 빼고 모두 표시(장하연 조사, 2026-11 사용자 결정).
+const ROAD_BUF_M = 15, FIELD_DUP_M = 10, NORTH_ZONE_LAT = 37.5703;
 const ALL_LIGHTS = (() => {
   const pub = window.STREETLIGHTS || [];
   const kx = 111320 * Math.cos(B.south * Math.PI / 180), ky = 111320;
@@ -391,7 +393,7 @@ const ALL_LIGHTS = (() => {
   };
   const onBigRoad = p => (window.BIG_ROAD_LINES || []).some(({ line }) =>
     line.slice(1).some((b, i) => segDist(p, line[i], b) <= ROAD_BUF_M));
-  const field = (window.STREETLIGHTS_SURVEY || []).filter(s => onBigRoad(s) && !pub.some(p => near(s, p)));
+  const field = (window.STREETLIGHTS_SURVEY || []).filter(s => (s.lat >= NORTH_ZONE_LAT || onBigRoad(s)) && !pub.some(p => near(s, p)));
   return pub.concat(field);
 })();
 
@@ -451,7 +453,7 @@ function toggleLights() {
 map.on("zoomend", syncLightPoints);
 
 // 지금 가로등 격자에 들어 있는 자료의 범위(‘0개’가 등이 없다는 뜻으로 읽히지 않게 정보창에 함께 안내)
-const LIGHT_DATA_NOTE = "골목은 종로구·중구 보안등 공공데이터, 큰길가(종로·청계천로·을지로·삼일대로 등)는 조사팀이 현장에서 기록한 가로등입니다. 큰길 가로등 공식 자료는 아직 없어 빠진 등이 있을 수 있습니다.";
+const LIGHT_DATA_NOTE = "보안등 공공데이터(종로구·중구)와 조사팀이 현장에서 기록한 가로등을 합친 것입니다. 청계천~종로 사이는 골목은 보안등 공공데이터, 큰길가(종로·청계천로·을지로·삼일대로 등)는 현장 기록을 쓰고, 종로 북쪽은 보안등과 10m 안에 겹치지 않는 현장 기록을 모두 더했습니다. 큰길 가로등 공식 자료는 아직 없어 빠진 등이 있을 수 있습니다.";
 function openCell(cell, r, c) {
   const byType = cell.items.reduce((o, l) => (o[l.type] = (o[l.type] || 0) + (l.count || 1), o), {});
   const byStatus = cell.items.reduce((o, l) => (o[l.verification.status] = (o[l.verification.status] || 0) + 1, o), {});

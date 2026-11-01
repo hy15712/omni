@@ -320,7 +320,7 @@ body.sv-wide .grid-legend{right:410px}
   <strong>가로등 개수 <span class="cellsize">(약 25m×25m 칸 기준)</span></strong>
   <div class="ramp" aria-hidden="true"></div>
   <div class="ramp-labels"><span>0</span><span>1</span><span>2</span><span>3–4</span><span>5+</span></div>
-  <p>설치 개수를 밝기로 표현한 것이며, 실제 조도(밝기)를 측정한 값이 아닙니다. 조사 범위 밖은 자료가 없어 어둡게 표시됩니다.<br>지금 자료: 종로구 보안등(2026-07-03 기준)·중구 보안등(2025-10-31 기준) + 큰길가(종로·청계천로·을지로·삼일대로 등)는 현장 조사 가로등(2026-10). 큰길 가로등 공식 자료는 아직 없음.</p>
+  <p>설치 개수를 밝기로 표현한 것이며, 실제 조도(밝기)를 측정한 값이 아닙니다. 조사 범위 밖은 자료가 없어 어둡게 표시됩니다.<br>지금 자료: 종로구 보안등(2026-07-03 기준)·중구 보안등(2025-10-31 기준) + 현장 조사 가로등(2026-10~11: 종로 남쪽은 큰길가만, 종로 북쪽은 보안등과 10m 안에 겹치지 않는 것). 큰길 가로등 공식 자료는 아직 없음.</p>
 </div>
 
 <section id="sheet" class="sheet" aria-hidden="true" role="dialog" aria-labelledby="sheetTitle">
@@ -1028,8 +1028,8 @@ window.BIG_ROAD_LINES = [
 ];
 </script>
 <script>/* data/streetlights-survey.js */
-// 조사 기록 모드로 현장에서 기록한 가로등(원예림·강준수, 2026-10).
-// 지도(app.js)는 이 중 큰길가(data/big-roads.js 선에서 15m 안)에 있고 보안등과 10m 안에 겹치지 않는 것만 ‘현장확인’으로 표시(2026-11 사용자 결정). 골목 기록은 보안등과 이중으로 세지 않으려고 지도에서 뺌. 여기서는 지우지 말 것.
+// 조사 기록 모드로 현장에서 기록한 가로등(원예림·강준수 2026-10, 장하연 2026-11 종로 북쪽).
+// 지도(app.js)는 이 중 큰길가(data/big-roads.js 선에서 15m 안)에 있고 보안등과 10m 안에 겹치지 않는 것만 ‘현장확인’으로 표시(2026-11 사용자 결정). 골목 기록은 보안등과 이중으로 세지 않으려고 지도에서 뺌. 단 종로 북쪽(위도 37.5703 이상)은 보안등과 10m 안에 겹치는 것만 빼고 모두 표시. 여기서는 지우지 말 것.
 // 조사 기록 합치기(scripts/merge-survey.mjs)로 들어오는 가로등 기록은 계속 이 파일에 쌓임.
 // count: 그 지점의 등 개수(쌍등이면 2) / type: "가로등" | "보안등" | "미상"
 window.STREETLIGHTS_SURVEY = [
@@ -1296,6 +1296,200 @@ window.STREETLIGHTS_SURVEY = [
   {"lat":37.568278,"lng":126.984892,"count":1,"type":"가로등","id":"light-0261","verification":{"status":"field","date":"2026-10-28","by":"강준수"},"coordSource":"map"},
   {"lat":37.568218,"lng":126.985117,"count":1,"type":"가로등","id":"light-0262","verification":{"status":"field","date":"2026-10-28","by":"강준수"},"coordSource":"map"},
   {"lat":37.568188,"lng":126.985353,"count":1,"type":"가로등","id":"light-0263","verification":{"status":"field","date":"2026-10-28","by":"강준수"},"coordSource":"map"},
+  {"lat":37.570437,"lng":126.988006,"count":1,"type":"미상","id":"light-0264","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.570467,"lng":126.988443,"count":1,"type":"미상","id":"light-0265","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.570495,"lng":126.988765,"count":1,"type":"미상","id":"light-0266","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.570788,"lng":126.987842,"count":3,"type":"미상","id":"light-0267","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.570988,"lng":126.987847,"count":2,"type":"미상","id":"light-0268","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571147,"lng":126.987834,"count":1,"type":"미상","id":"light-0269","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571224,"lng":126.987831,"count":1,"type":"미상","id":"light-0270","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571286,"lng":126.987834,"count":1,"type":"미상","id":"light-0271","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571349,"lng":126.987826,"count":1,"type":"미상","id":"light-0272","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571534,"lng":126.987815,"count":3,"type":"미상","id":"light-0273","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571688,"lng":126.987857,"count":1,"type":"미상","id":"light-0274","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.57178,"lng":126.98791,"count":1,"type":"미상","id":"light-0275","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571848,"lng":126.988028,"count":1,"type":"미상","id":"light-0276","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571887,"lng":126.98826,"count":1,"type":"미상","id":"light-0277","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.572138,"lng":126.988505,"count":1,"type":"미상","id":"light-0278","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.572096,"lng":126.988285,"count":1,"type":"미상","id":"light-0279","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.572194,"lng":126.988698,"count":1,"type":"미상","id":"light-0280","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.572524,"lng":126.988686,"count":1,"type":"미상","id":"light-0281","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.572362,"lng":126.988832,"count":1,"type":"미상","id":"light-0282","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.57224,"lng":126.988946,"count":1,"type":"미상","id":"light-0283","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.572014,"lng":126.989108,"count":1,"type":"미상","id":"light-0284","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571902,"lng":126.989001,"count":1,"type":"미상","id":"light-0285","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571845,"lng":126.989199,"count":1,"type":"미상","id":"light-0286","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571738,"lng":126.989074,"count":1,"type":"미상","id":"light-0287","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571639,"lng":126.989273,"count":1,"type":"미상","id":"light-0288","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571327,"lng":126.989164,"count":1,"type":"미상","id":"light-0289","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571236,"lng":126.989372,"count":1,"type":"미상","id":"light-0290","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571034,"lng":126.989252,"count":1,"type":"미상","id":"light-0291","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.570933,"lng":126.989442,"count":1,"type":"미상","id":"light-0292","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.570686,"lng":126.989331,"count":1,"type":"미상","id":"light-0293","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.570504,"lng":126.989242,"count":1,"type":"미상","id":"light-0294","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.570535,"lng":126.989595,"count":1,"type":"미상","id":"light-0295","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.570702,"lng":126.99055,"count":1,"type":"미상","id":"light-0296","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.57067,"lng":126.989997,"count":1,"type":"미상","id":"light-0297","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.570967,"lng":126.990503,"count":1,"type":"미상","id":"light-0298","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571023,"lng":126.990744,"count":1,"type":"미상","id":"light-0299","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571192,"lng":126.990092,"count":1,"type":"미상","id":"light-0300","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.57249,"lng":126.989219,"count":1,"type":"미상","id":"light-0301","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.572507,"lng":126.989576,"count":1,"type":"미상","id":"light-0302","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.572518,"lng":126.989921,"count":1,"type":"미상","id":"light-0303","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.572525,"lng":126.990121,"count":1,"type":"미상","id":"light-0304","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.572532,"lng":126.990436,"count":1,"type":"미상","id":"light-0305","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.572384,"lng":126.99035,"count":1,"type":"미상","id":"light-0306","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.572502,"lng":126.991153,"count":1,"type":"미상","id":"light-0307","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.572374,"lng":126.991307,"count":1,"type":"미상","id":"light-0308","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571992,"lng":126.99142,"count":1,"type":"미상","id":"light-0309","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571832,"lng":126.991049,"count":1,"type":"미상","id":"light-0310","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571239,"lng":126.991653,"count":1,"type":"미상","id":"light-0311","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571341,"lng":126.991471,"count":1,"type":"미상","id":"light-0312","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571037,"lng":126.991692,"count":1,"type":"미상","id":"light-0313","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.570842,"lng":126.99175,"count":1,"type":"미상","id":"light-0314","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.570985,"lng":126.991546,"count":1,"type":"미상","id":"light-0315","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.570792,"lng":126.991467,"count":1,"type":"미상","id":"light-0316","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.57058,"lng":126.991242,"count":1,"type":"미상","id":"light-0317","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.570564,"lng":126.990916,"count":1,"type":"미상","id":"light-0318","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.570755,"lng":126.991018,"count":1,"type":"미상","id":"light-0319","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.570547,"lng":126.990579,"count":1,"type":"미상","id":"light-0320","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.570635,"lng":126.990562,"count":1,"type":"미상","id":"light-0321","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.570536,"lng":126.990335,"count":1,"type":"미상","id":"light-0322","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.570518,"lng":126.990003,"count":1,"type":"미상","id":"light-0323","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.570603,"lng":126.99,"count":1,"type":"미상","id":"light-0324","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.57193,"lng":126.983237,"count":1,"type":"미상","id":"light-0325","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.57169,"lng":126.983247,"count":1,"type":"미상","id":"light-0326","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571447,"lng":126.983242,"count":1,"type":"미상","id":"light-0327","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571175,"lng":126.983344,"count":1,"type":"미상","id":"light-0328","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571169,"lng":126.983532,"count":1,"type":"미상","id":"light-0329","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571175,"lng":126.983792,"count":1,"type":"미상","id":"light-0330","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571175,"lng":126.984025,"count":1,"type":"미상","id":"light-0331","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571181,"lng":126.984221,"count":1,"type":"미상","id":"light-0332","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571186,"lng":126.984403,"count":1,"type":"미상","id":"light-0333","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571198,"lng":126.984543,"count":1,"type":"미상","id":"light-0334","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571386,"lng":126.984602,"count":1,"type":"미상","id":"light-0335","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571577,"lng":126.984575,"count":1,"type":"미상","id":"light-0336","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571526,"lng":126.984725,"count":1,"type":"미상","id":"light-0337","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.572204,"lng":126.984234,"count":1,"type":"미상","id":"light-0338","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.572034,"lng":126.983435,"count":1,"type":"미상","id":"light-0339","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.572062,"lng":126.983636,"count":1,"type":"미상","id":"light-0340","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.572134,"lng":126.983899,"count":1,"type":"미상","id":"light-0341","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.572295,"lng":126.984505,"count":1,"type":"미상","id":"light-0342","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.570967,"lng":126.983765,"count":1,"type":"미상","id":"light-0343","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.570986,"lng":126.98388,"count":1,"type":"미상","id":"light-0344","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571037,"lng":126.983993,"count":1,"type":"미상","id":"light-0345","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.570514,"lng":126.98343,"count":1,"type":"미상","id":"light-0346","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.57038,"lng":126.983644,"count":1,"type":"미상","id":"light-0347","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.570384,"lng":126.983846,"count":1,"type":"미상","id":"light-0348","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.570374,"lng":126.984133,"count":1,"type":"미상","id":"light-0349","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.570537,"lng":126.98446,"count":1,"type":"미상","id":"light-0350","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.570686,"lng":126.984615,"count":1,"type":"미상","id":"light-0351","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.570818,"lng":126.98469,"count":1,"type":"미상","id":"light-0352","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571019,"lng":126.984787,"count":1,"type":"미상","id":"light-0353","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.570955,"lng":126.984782,"count":1,"type":"미상","id":"light-0354","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.570831,"lng":126.984234,"count":1,"type":"미상","id":"light-0355","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.57118,"lng":126.984772,"count":1,"type":"미상","id":"light-0356","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571548,"lng":126.984926,"count":1,"type":"미상","id":"light-0357","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571565,"lng":126.985057,"count":1,"type":"미상","id":"light-0358","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571586,"lng":126.985184,"count":1,"type":"미상","id":"light-0359","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571654,"lng":126.985323,"count":1,"type":"미상","id":"light-0360","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571699,"lng":126.98547,"count":1,"type":"미상","id":"light-0361","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571666,"lng":126.985545,"count":1,"type":"미상","id":"light-0362","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571543,"lng":126.985641,"count":1,"type":"미상","id":"light-0363","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571449,"lng":126.985644,"count":1,"type":"미상","id":"light-0364","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571167,"lng":126.985676,"count":1,"type":"미상","id":"light-0365","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571205,"lng":126.985377,"count":1,"type":"미상","id":"light-0366","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571775,"lng":126.985635,"count":1,"type":"미상","id":"light-0367","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571904,"lng":126.985761,"count":2,"type":"미상","id":"light-0368","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.572074,"lng":126.985846,"count":1,"type":"미상","id":"light-0369","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.572238,"lng":126.985822,"count":1,"type":"미상","id":"light-0370","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.57233,"lng":126.985786,"count":1,"type":"미상","id":"light-0371","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.572443,"lng":126.985786,"count":1,"type":"미상","id":"light-0372","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.5722,"lng":126.98448,"count":1,"type":"미상","id":"light-0373","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.572278,"lng":126.985095,"count":1,"type":"미상","id":"light-0374","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.572403,"lng":126.985392,"count":1,"type":"미상","id":"light-0375","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.572734,"lng":126.985669,"count":1,"type":"미상","id":"light-0376","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.572813,"lng":126.985852,"count":1,"type":"미상","id":"light-0377","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.572887,"lng":126.986026,"count":1,"type":"미상","id":"light-0378","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.57293,"lng":126.986186,"count":1,"type":"미상","id":"light-0379","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.572883,"lng":126.986276,"count":1,"type":"미상","id":"light-0380","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.572623,"lng":126.986418,"count":1,"type":"미상","id":"light-0381","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.572549,"lng":126.986105,"count":1,"type":"미상","id":"light-0382","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571844,"lng":126.986084,"count":1,"type":"미상","id":"light-0383","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.572144,"lng":126.986147,"count":1,"type":"미상","id":"light-0384","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.572571,"lng":126.986481,"count":1,"type":"미상","id":"light-0385","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.572526,"lng":126.986513,"count":1,"type":"미상","id":"light-0386","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.57247,"lng":126.986549,"count":1,"type":"미상","id":"light-0387","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.572408,"lng":126.98658,"count":1,"type":"미상","id":"light-0388","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.572356,"lng":126.98661,"count":1,"type":"미상","id":"light-0389","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.572293,"lng":126.986643,"count":1,"type":"미상","id":"light-0390","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.572035,"lng":126.986687,"count":1,"type":"미상","id":"light-0391","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571962,"lng":126.9868,"count":1,"type":"미상","id":"light-0392","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571904,"lng":126.986835,"count":1,"type":"미상","id":"light-0393","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571857,"lng":126.986862,"count":1,"type":"미상","id":"light-0394","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571792,"lng":126.986895,"count":1,"type":"미상","id":"light-0395","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.572563,"lng":126.986902,"count":1,"type":"미상","id":"light-0396","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.572245,"lng":126.98686,"count":1,"type":"미상","id":"light-0397","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.57219,"lng":126.986893,"count":1,"type":"미상","id":"light-0398","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.57212,"lng":126.986923,"count":1,"type":"미상","id":"light-0399","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.57214,"lng":126.987185,"count":1,"type":"미상","id":"light-0400","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571783,"lng":126.987145,"count":1,"type":"미상","id":"light-0401","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571999,"lng":126.987468,"count":1,"type":"미상","id":"light-0402","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.572656,"lng":126.987087,"count":1,"type":"미상","id":"light-0403","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.572547,"lng":126.987205,"count":1,"type":"미상","id":"light-0404","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.572552,"lng":126.987277,"count":1,"type":"미상","id":"light-0405","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.572551,"lng":126.987363,"count":1,"type":"미상","id":"light-0406","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.572376,"lng":126.987554,"count":1,"type":"미상","id":"light-0407","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.570894,"lng":126.984979,"count":1,"type":"미상","id":"light-0408","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571034,"lng":126.985177,"count":1,"type":"미상","id":"light-0409","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.570943,"lng":126.985149,"count":1,"type":"미상","id":"light-0410","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.570886,"lng":126.985272,"count":1,"type":"미상","id":"light-0411","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.570805,"lng":126.985425,"count":1,"type":"미상","id":"light-0412","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.570913,"lng":126.985672,"count":1,"type":"미상","id":"light-0413","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.570662,"lng":126.985655,"count":1,"type":"미상","id":"light-0414","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.570486,"lng":126.985648,"count":1,"type":"미상","id":"light-0415","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.57038,"lng":126.985377,"count":1,"type":"미상","id":"light-0416","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.570381,"lng":126.985521,"count":1,"type":"미상","id":"light-0417","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.570387,"lng":126.984513,"count":1,"type":"미상","id":"light-0418","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.570386,"lng":126.984947,"count":1,"type":"미상","id":"light-0419","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.570388,"lng":126.985734,"count":1,"type":"미상","id":"light-0420","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.570384,"lng":126.985981,"count":1,"type":"미상","id":"light-0421","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.570386,"lng":126.98615,"count":1,"type":"미상","id":"light-0422","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.570535,"lng":126.985749,"count":1,"type":"미상","id":"light-0423","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.570639,"lng":126.985749,"count":1,"type":"미상","id":"light-0424","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.570731,"lng":126.985722,"count":1,"type":"미상","id":"light-0425","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.570835,"lng":126.985714,"count":1,"type":"미상","id":"light-0426","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.570971,"lng":126.985852,"count":1,"type":"미상","id":"light-0427","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.570833,"lng":126.985853,"count":1,"type":"미상","id":"light-0428","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571001,"lng":126.985981,"count":1,"type":"미상","id":"light-0429","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571008,"lng":126.986108,"count":1,"type":"미상","id":"light-0430","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571007,"lng":126.986235,"count":1,"type":"미상","id":"light-0431","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571009,"lng":126.986349,"count":1,"type":"미상","id":"light-0432","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571014,"lng":126.986447,"count":1,"type":"미상","id":"light-0433","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.570518,"lng":126.985869,"count":1,"type":"미상","id":"light-0434","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.57052,"lng":126.986112,"count":1,"type":"미상","id":"light-0435","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.570525,"lng":126.986439,"count":1,"type":"미상","id":"light-0436","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.570544,"lng":126.98734,"count":1,"type":"미상","id":"light-0437","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.570544,"lng":126.987009,"count":1,"type":"미상","id":"light-0438","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.57054,"lng":126.986754,"count":1,"type":"미상","id":"light-0439","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.57065,"lng":126.987456,"count":1,"type":"미상","id":"light-0440","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.570848,"lng":126.987449,"count":1,"type":"미상","id":"light-0441","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.570975,"lng":126.987362,"count":1,"type":"미상","id":"light-0442","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571152,"lng":126.98724,"count":1,"type":"미상","id":"light-0443","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571124,"lng":126.987084,"count":1,"type":"미상","id":"light-0444","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571105,"lng":126.986945,"count":1,"type":"미상","id":"light-0445","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571086,"lng":126.986752,"count":1,"type":"미상","id":"light-0446","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571475,"lng":126.986407,"count":1,"type":"미상","id":"light-0447","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571728,"lng":126.987177,"count":1,"type":"미상","id":"light-0448","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571668,"lng":126.98721,"count":1,"type":"미상","id":"light-0449","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571686,"lng":126.987436,"count":1,"type":"미상","id":"light-0450","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571546,"lng":126.98743,"count":1,"type":"미상","id":"light-0451","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571478,"lng":126.987425,"count":1,"type":"미상","id":"light-0452","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571504,"lng":126.987346,"count":1,"type":"미상","id":"light-0453","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571589,"lng":126.987251,"count":1,"type":"미상","id":"light-0454","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571019,"lng":126.986749,"count":1,"type":"미상","id":"light-0455","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571019,"lng":126.986926,"count":1,"type":"미상","id":"light-0456","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
+  {"lat":37.571022,"lng":126.987122,"count":1,"type":"미상","id":"light-0457","verification":{"status":"field","date":"2026-11-01","by":"장하연"},"coordSource":"map"},
 ];
 </script>
 <script>/* app.js */
@@ -1680,7 +1874,9 @@ let selectedCell = null;
 // 지도에 쓰는 가로등 = 보안등 공공데이터(기관확인) + 큰길가 현장 조사 가로등(현장확인). (2026-11 사용자 결정)
 // 골목은 보안등 공공데이터만 씁니다. 현장 조사 가로등은 큰길 선(data/big-roads.js)에서 ROAD_BUF_M 안에 있고,
 // 보안등과 FIELD_DUP_M 안에 겹치지 않는 것만 더합니다. (조사 기록은 data/streetlights-survey.js 에 그대로 남아 있음)
-const ROAD_BUF_M = 15, FIELD_DUP_M = 10;
+// 단, 종로 북쪽 구역(위도 NORTH_ZONE_LAT 이상)은 보안등 공공데이터가 드문 곳이 많아 골목 기록도 함께 씀:
+// 보안등과 FIELD_DUP_M 안에 겹치는 것만 빼고 모두 표시(장하연 조사, 2026-11 사용자 결정).
+const ROAD_BUF_M = 15, FIELD_DUP_M = 10, NORTH_ZONE_LAT = 37.5703;
 const ALL_LIGHTS = (() => {
   const pub = window.STREETLIGHTS || [];
   const kx = 111320 * Math.cos(B.south * Math.PI / 180), ky = 111320;
@@ -1692,7 +1888,7 @@ const ALL_LIGHTS = (() => {
   };
   const onBigRoad = p => (window.BIG_ROAD_LINES || []).some(({ line }) =>
     line.slice(1).some((b, i) => segDist(p, line[i], b) <= ROAD_BUF_M));
-  const field = (window.STREETLIGHTS_SURVEY || []).filter(s => onBigRoad(s) && !pub.some(p => near(s, p)));
+  const field = (window.STREETLIGHTS_SURVEY || []).filter(s => (s.lat >= NORTH_ZONE_LAT || onBigRoad(s)) && !pub.some(p => near(s, p)));
   return pub.concat(field);
 })();
 
@@ -1752,7 +1948,7 @@ function toggleLights() {
 map.on("zoomend", syncLightPoints);
 
 // 지금 가로등 격자에 들어 있는 자료의 범위(‘0개’가 등이 없다는 뜻으로 읽히지 않게 정보창에 함께 안내)
-const LIGHT_DATA_NOTE = "골목은 종로구·중구 보안등 공공데이터, 큰길가(종로·청계천로·을지로·삼일대로 등)는 조사팀이 현장에서 기록한 가로등입니다. 큰길 가로등 공식 자료는 아직 없어 빠진 등이 있을 수 있습니다.";
+const LIGHT_DATA_NOTE = "보안등 공공데이터(종로구·중구)와 조사팀이 현장에서 기록한 가로등을 합친 것입니다. 청계천~종로 사이는 골목은 보안등 공공데이터, 큰길가(종로·청계천로·을지로·삼일대로 등)는 현장 기록을 쓰고, 종로 북쪽은 보안등과 10m 안에 겹치지 않는 현장 기록을 모두 더했습니다. 큰길 가로등 공식 자료는 아직 없어 빠진 등이 있을 수 있습니다.";
 function openCell(cell, r, c) {
   const byType = cell.items.reduce((o, l) => (o[l.type] = (o[l.type] || 0) + (l.count || 1), o), {});
   const byStatus = cell.items.reduce((o, l) => (o[l.verification.status] = (o[l.verification.status] || 0) + 1, o), {});
