@@ -65,7 +65,7 @@ Claude Code가 이 프로젝트를 이어서 작업할 때 먼저 읽는 파일�
 * `survey.js` / `survey.css` 조사 입력 모드(`?survey=1`일 때만 동작, app.js의 전역 `map`·`CATEGORIES` 등을 사용)
 * `photos/` 위치 사진(정보창 `details.photos`, 첫 장이 대표)
 * `scripts/merge-survey.mjs` 조사 기록 합치기 · `scripts/build-onefile.mjs` 한 파일짜리 HTML 다시 만들기
-* `survey-inbox/` 받은 조사 zip을 풀어 두는 곳(내용은 .gitignore, 조사자 이름 포함이라 올리지 않음)
+* `survey-inbox/` 받은 조사 zip을 풀어 두는 곳(내용은 .gitignore, 조사자 이름 포함이라 올리지 않음). 단 `survey-inbox/applied.json`(이미 합친 기록 장부, 이름 없음)은 저장소에 올림 — 새 세션에서도 같은 zip을 다시 합칠 때 중복이 생기지 않게. 합친 뒤 꼭 함께 커밋할 것
 * `docs/survey-mode-request.md` 조사 입력 모드 요구사항(구현됨)
 * 2026-11-01 샘플 데이터(시설 9·구간 3·가로등 261) 모두 삭제. 지금 데이터 파일은 비어 있고, 조사 기록 합치기·가로등 공공데이터로 채움
 

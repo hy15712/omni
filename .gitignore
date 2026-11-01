@@ -1,4 +1,6 @@
 # 조사 기록 원본(조사자 이름 포함)은 저장소에 올리지 않음
 survey-inbox/*
 !survey-inbox/README.md
+# 이미 합친 기록 장부(기록 번호·핀 번호·수정 시각만, 이름 없음): 세션이 바뀌어도 같은 기록을 두 번 합치지 않게 올려 둠
+!survey-inbox/applied.json
 node_modules/
