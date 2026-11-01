@@ -60,7 +60,7 @@ Claude Code가 이 프로젝트를 이어서 작업할 때 먼저 읽는 파일�
 ## 파일
 
 * `index.html` / `style.css` / `app.js`
-* `data/config.js` 배경지도 키 · `data/bounds.js` 조사 범위(대략값, 확정 필요) · `data/places.js` 시설 핀 · `data/roads.js` 보행 구간 GeoJSON · `data/streetlights.js` 가로등
+* `data/config.js` 배경지도 키 · `data/bounds.js` 조사 범위(2026-11-01 사용자가 찍은 네 모서리로 확정, 변별 평균 직사각형) · `data/places.js` 시설 핀 · `data/roads.js` 보행 구간 GeoJSON · `data/streetlights.js` 가로등
 * `survey.js` / `survey.css` 조사 입력 모드(`?survey=1`일 때만 동작, app.js의 전역 `map`·`CATEGORIES` 등을 사용)
 * `photos/` 위치 사진(정보창 `details.photos`, 첫 장이 대표)
 * `scripts/merge-survey.mjs` 조사 기록 합치기 · `scripts/build-onefile.mjs` 한 파일짜리 HTML 다시 만들기
@@ -106,7 +106,7 @@ Claude Code가 이 프로젝트를 이어서 작업할 때 먼저 읽는 파일�
 2. ~~좌표 찍기 모드~~ 조사 입력 모드에 포함됨(지도 찍기 + 좌표 복사)
 3. 이미 조사한 굿노트 내용 → 조사 입력 모드(또는 스프레드시트)로 옮기기
 4. 가로등 공공데이터 변환(종로구 보안등 + 서울시 가로등, 지오코딩 포함) → `data/streetlights.js`
-5. `bounds.js` 좌표 확정
+5. ~~`bounds.js` 좌표 확정~~ 완료(2026-11-01)
 6. ~~위치 사진 표시~~ 구현됨(정보창 사진 여러 장, 조사 입력 모드로 입력)
 7. 시민 제보 백엔드(Supabase 등) + 관리자 승인 화면
 8. 공공데이터 API로 병원·약국 운영시간 자동 갱신
