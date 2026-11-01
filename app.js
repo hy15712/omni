@@ -179,29 +179,38 @@ aboutBtn.onclick = () => { about.hidden = !about.hidden; aboutBtn.setAttribute("
 const NARROW_M = 1.5;
 const NARROW_BASIS = "기준: 국토교통부 「보도 설치 및 관리 지침」(2018. 7. 26. 전면 개정) — 가로수 등을 제외한 보행자 통행 유효 폭 최소 1.5m, 휠체어·유모차가 교행할 수 있는 최소 폭";
 const LINE_STYLE = {
-  sidewalk: { color:"#1F8A5B", weight:1.7, opacity:.8 },
-  car:      { color:"#D7263D", weight:1.7, opacity:.6 },
-  narrow:   { color:"#E8FF00", weight:3.5, opacity:.65 },   // 형광 노랑(아래에 어두운 테두리 선을 깔아 밝은 배경에서도 보이게)
+  sidewalk: { color:"#1F8A5B", weight:3, opacity:.8 },   // 굵기 1.7 → 3: 길이 색칠된 것처럼 보이게(2026-11 조원 피드백)
+  car:      { color:"#D7263D", weight:3, opacity:.6 },
+  narrow:   { color:"#E8FF00", weight:4.5, opacity:.65 },   // 형광 노랑(아래에 어두운 테두리 선을 깔아 밝은 배경에서도 보이게)
 };
 const lineKind = r => r.widthM != null && r.widthM < NARROW_M ? "narrow" : r.type === "sidewalk" ? "sidewalk" : "car";
 const ROAD_LABEL = { sidewalk:"인도", shared:"보차혼용", roadway:"차도" };
 const roadLayer = L.layerGroup([
   L.geoJSON(window.ROADS, { interactive:false, filter: f => lineKind(f.properties) === "narrow",
-    style: { color:"#2B2B2B", weight:6, opacity:.55 } }),   // 좁은 길 테두리
+    style: { color:"#2B2B2B", weight:7.5, opacity:.55 } }),   // 좁은 길 테두리
   L.geoJSON(window.ROADS, { interactive:false, style: f => LINE_STYLE[lineKind(f.properties)] }),
   L.geoJSON(window.ROADS, {
     bubblingMouseEvents: false,
     style: { weight:18, opacity:0 },
     onEachFeature: (f, layer) => {
-      layer.on("click", e => { L.DomEvent.stopPropagation(e); openRoad(f.properties); });
-      // 폭을 잰 구간은 18레벨 이상 확대하면 선 위에 폭이 보임
-      if (f.properties.widthM != null) layer.bindTooltip(`폭 ${f.properties.widthM}m`, { permanent:true, direction:"center",
-        className:`width-tag${lineKind(f.properties) === "narrow" ? " narrow" : ""}` });
+      layer.on("click", e => { L.DomEvent.stopPropagation(e); openRoad(f.properties); selectRoad(f, e.latlng); });
     },
   }),
 ]).addTo(map);
-const syncWidthTags = () => document.getElementById("map").classList.toggle("show-width", map.getZoom() >= 18);
-map.on("zoomend", syncWidthTags); syncWidthTags();
+// 구간을 누르면 그 구간을 흰 테두리로 강조하고, 폭을 잰 구간이면 누른 자리에 ‘폭 ○m’를 보여 줌(사용자 요청: 확대만으로는 안 보이게)
+let roadSel = null;
+function selectRoad(f, latlng) {
+  clearRoadSel();
+  const p = f.properties;
+  roadSel = L.layerGroup([
+    L.geoJSON(f, { interactive:false, style: { color:"#FFFFFF", weight:LINE_STYLE[lineKind(p)].weight + 6, opacity:.95 } }),
+    L.geoJSON(f, { interactive:false, style: { ...LINE_STYLE[lineKind(p)], opacity:1 } }),
+  ]).addTo(map);
+  if (p.widthM != null) L.tooltip({ permanent:true, direction:"top", offset:[0,-6], interactive:false,
+    className:`width-tag${lineKind(p) === "narrow" ? " narrow" : ""}` })
+    .setLatLng(latlng).setContent(`폭 ${p.widthM}m`).addTo(roadSel);
+}
+function clearRoadSel() { if (roadSel) roadSel.remove(); roadSel = null; }
 
 // ── 마커 ─────────────────────────────────────────
 const markerLayer = L.layerGroup().addTo(map);
@@ -232,7 +241,7 @@ function render() {
 const sheet = document.getElementById("sheet"), sheetBody = document.getElementById("sheetBody");
 document.getElementById("sheetClose").onclick = closeSheet;
 map.on("click", closeSheet);
-function closeSheet() { sheet.setAttribute("aria-hidden", "true"); if (typeof clearSelectedCell === "function") clearSelectedCell(); }
+function closeSheet() { sheet.setAttribute("aria-hidden", "true"); if (typeof clearSelectedCell === "function") clearSelectedCell(); clearRoadSel(); }
 function showSheet(html) { sheetBody.innerHTML = html; sheet.setAttribute("aria-hidden", "false"); sheet.scrollTop = 0; }
 const esc = s => String(s ?? "").replace(/[&<>"]/g, ch => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[ch]));
 const yn = v => v === true ? "있음" : v === false ? "없음" : "확인불가";

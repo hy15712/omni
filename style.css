@@ -58,16 +58,15 @@ h1{font-size:1.15rem;font-weight:800;margin:0;letter-spacing:-.01em}
 .road-legend{position:fixed;left:10px;bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:600;
   background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:6px 10px;display:flex;gap:12px;font-size:.78rem}
 .road-legend span{display:inline-flex;align-items:center;gap:5px}
-.ln{display:inline-block;width:20px;height:0;border-top:2px solid}
+.ln{display:inline-block;width:20px;height:0;border-top:3px solid}
 .ln.sidewalk{border-color:rgba(31,138,91,.8)}
 .ln.car{border-color:rgba(215,38,61,.6)}
-.ln.narrow{border-color:rgba(232,255,0,.65);border-top-width:4px;box-shadow:0 0 0 1.5px rgba(43,43,43,.55)}
-/* 보행 구간 폭 표시(18레벨 이상 확대 시) */
-.leaflet-tooltip.width-tag{display:none;background:#fff;border:1px solid var(--line);border-radius:4px;padding:0 4px;
+.ln.narrow{border-color:rgba(232,255,0,.65);border-top-width:5px;box-shadow:0 0 0 1.5px rgba(43,43,43,.55)}
+/* 보행 구간 폭 표시(구간을 눌렀을 때) */
+.leaflet-tooltip.width-tag{background:#fff;border:1px solid var(--line);border-radius:4px;padding:0 4px;
   font-size:11px;font-weight:700;color:var(--ink);box-shadow:none}
 .leaflet-tooltip.width-tag::before{display:none}
 .leaflet-tooltip.width-tag.narrow{border-color:#2B2B2B;background:#E8FF00;color:#1E2A32}
-#map.show-width .leaflet-tooltip.width-tag{display:block}
 
 /* 하단 정보창 */
 .sheet{position:fixed;left:0;right:0;bottom:0;z-index:1000;background:var(--paper);
