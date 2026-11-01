@@ -134,17 +134,19 @@ aboutBtn.onclick = () => { about.hidden = !about.hidden; aboutBtn.setAttribute("
 
 // ── 보행 구간 ────────────────────────────────────
 // 보행자 기준 표시: 차가 다닐 수 있는 길(차도·보차혼용)은 연한 붉은 선, 측정한 유효 폭이 NARROW_M 미만이면
-// 진한 주황 선(좁은 길), 인도는 초록. 선은 가늘게 그리고, 누르는 범위는 투명한 굵은 선으로 넓게 둡니다.
+// 형광 노랑 선(좁은 길, 검은 테두리), 인도는 초록. 선은 가늘게 그리고, 누르는 범위는 투명한 굵은 선으로 넓게 둡니다.
 const NARROW_M = 1.5;
 const NARROW_BASIS = "기준: 국토교통부 「보도 설치 및 관리 지침」(2018. 7. 26. 전면 개정) — 가로수 등을 제외한 보행자 통행 유효 폭 최소 1.5m, 휠체어·유모차가 교행할 수 있는 최소 폭";
 const LINE_STYLE = {
   sidewalk: { color:"#1F8A5B", weight:1.7, opacity:.8 },
-  car:      { color:"#D7263D", weight:1.7, opacity:.4 },
-  narrow:   { color:"#FF6A00", weight:3, opacity:.9 },
+  car:      { color:"#D7263D", weight:1.7, opacity:.6 },
+  narrow:   { color:"#E8FF00", weight:3.5, opacity:1 },   // 형광 노랑(아래에 어두운 테두리 선을 깔아 밝은 배경에서도 보이게)
 };
 const lineKind = r => r.widthM != null && r.widthM < NARROW_M ? "narrow" : r.type === "sidewalk" ? "sidewalk" : "car";
 const ROAD_LABEL = { sidewalk:"인도", shared:"보차혼용", roadway:"차도" };
 const roadLayer = L.layerGroup([
+  L.geoJSON(window.ROADS, { interactive:false, filter: f => lineKind(f.properties) === "narrow",
+    style: { color:"#2B2B2B", weight:6, opacity:.85 } }),   // 좁은 길 테두리
   L.geoJSON(window.ROADS, { interactive:false, style: f => LINE_STYLE[lineKind(f.properties)] }),
   L.geoJSON(window.ROADS, {
     bubblingMouseEvents: false,
@@ -296,7 +298,7 @@ function openRoad(r) {
       ${r.slopeNote !== undefined ? `<dt>경사</dt><dd>${esc(r.slopeNote) || "확인불가"}</dd>` : ""}
       ${r.note ? `<dt>현장 메모</dt><dd>${esc(r.note)}</dd>` : ""}
     </dl>
-    ${lineKind(r) === "narrow" ? `<p class="note">주황 선(좁은 길): 측정한 유효 폭이 ${NARROW_M}m 미만인 구간입니다. ${NARROW_BASIS}.</p>` : ""}
+    ${lineKind(r) === "narrow" ? `<p class="note">형광 노랑 선(좁은 길): 측정한 유효 폭이 ${NARROW_M}m 미만인 구간입니다. ${NARROW_BASIS}.</p>` : ""}
     <p class="note">측정된 환경 정보만 표시합니다. 이 구간의 안전 여부는 평가하지 않습니다.</p>`);
   bindGallery();
 }
@@ -307,10 +309,14 @@ const GRID_M = 25;
 const dLat = GRID_M / 111320;
 const dLng = GRID_M / (111320 * Math.cos((B.south + B.north) / 2 * Math.PI / 180));
 // 개수 구간별 어둡기: 적을수록 어둡게(밤 표현), 많을수록 덜 어둡게 + 노란빛
-const LIGHT_STEPS = [ // [최소 개수, 어둠 불투명도, 노란빛 불투명도, 범례 라벨]
-  [3, 0.02, 0.55, "3+"], [2, 0.12, 0.38, "2"], [1, 0.30, 0.22, "1"], [0, 0.72, 0, "0"],
+const LIGHT_STEPS = [ // [최소 개수, 어둠 불투명도, 빛 색, 빛 불투명도, 범례 라벨] — 단계마다 색을 달리해 구별이 쉽게
+  [5, 0.00, "#FFF7B0", 0.80, "5+"],
+  [3, 0.08, "#FFC400", 0.62, "3–4"],
+  [2, 0.24, "#E07800", 0.50, "2"],
+  [1, 0.42, "#8A4B00", 0.42, "1"],
+  [0, 0.72, null,      0,    "0"],
 ];
-const NIGHT = "#0A1020", GLOW = "#FFD23F";
+const NIGHT = "#0A1020";
 const stepOf = n => LIGHT_STEPS.find(([min]) => n >= min);
 
 map.createPane("gridPane").style.zIndex = 350;  // 배경지도 위, 보행구간·핀 아래
@@ -339,9 +345,9 @@ function buildGrid() {
   cells.forEach((cell, i) => {
     const r = Math.floor(i / cols), c = i % cols;
     const bounds = [[B.south + r * dLat, B.west + c * dLng], [B.south + (r + 1) * dLat, B.west + (c + 1) * dLng]];
-    const [, dark, glow] = stepOf(cell.total);
+    const [, dark, glowColor, glow] = stepOf(cell.total);
     L.rectangle(bounds, { pane: "gridPane", stroke: false, fillColor: NIGHT, fillOpacity: dark, interactive: false }).addTo(gridLayer);
-    if (glow) L.rectangle(bounds, { pane: "gridPane", stroke: false, fillColor: GLOW, fillOpacity: glow, interactive: false }).addTo(gridLayer);
+    if (glow) L.rectangle(bounds, { pane: "gridPane", stroke: false, fillColor: glowColor, fillOpacity: glow, interactive: false }).addTo(gridLayer);
     // 클릭용 투명 칸 (흐림 효과 밖의 별도 층)
     L.rectangle(bounds, { pane: "selPane", stroke: false, fillOpacity: 0, bubblingMouseEvents: false })
       .on("click", e => { L.DomEvent.stopPropagation(e); selectCell(e.target); openCell(cell, r, c); })
