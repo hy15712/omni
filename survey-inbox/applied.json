@@ -904,5 +904,697 @@
   "s-mvxa4sf7-y5g43": {
     "result": "police-001",
     "updatedAt": "2026-11-01T03:37:45.955Z"
+  },
+  "s-mvopf7u0-vqdz4": {
+    "result": "aed-016",
+    "updatedAt": "2026-10-28T01:15:37.397Z"
+  },
+  "s-mvpk2j16-dwa67": {
+    "result": "pharmacy-012",
+    "updatedAt": "2026-11-01T10:54:00.030Z"
+  },
+  "s-mvpk55kz-gxhhf": {
+    "result": "pharmacy-013",
+    "updatedAt": "2026-11-01T11:25:03.207Z"
+  },
+  "s-mvpk6jbo-7obts": {
+    "result": "pharmacy-014",
+    "updatedAt": "2026-11-01T11:40:12.113Z"
+  },
+  "s-mvpk7ckt-g07z8": {
+    "result": "pharmacy-015",
+    "updatedAt": "2026-11-01T11:35:34.173Z"
+  },
+  "s-mvpk88yg-prbuf": {
+    "result": "pharmacy-016",
+    "updatedAt": "2026-11-01T11:51:19.065Z"
+  },
+  "s-mvpk8pzm-zzacg": {
+    "result": "pharmacy-017",
+    "updatedAt": "2026-11-01T11:55:34.111Z"
+  },
+  "s-mvpkcki2-mr4yw": {
+    "result": "pharmacy-018",
+    "updatedAt": "2026-11-01T11:23:22.496Z"
+  },
+  "s-mvpkdgv3-u0cc5": {
+    "result": "pharmacy-019",
+    "updatedAt": "2026-11-01T11:46:54.976Z"
+  },
+  "s-mvplfoik-re15r": {
+    "result": "hospital-023",
+    "updatedAt": "2026-11-01T11:57:25.792Z"
+  },
+  "s-mvplimo8-j997r": {
+    "result": "hospital-024",
+    "updatedAt": "2026-11-01T10:57:31.405Z"
+  },
+  "s-mvpllvcc-ipu81": {
+    "result": "hospital-025",
+    "updatedAt": "2026-11-01T10:56:18.715Z"
+  },
+  "s-mvplomk1-x398t": {
+    "result": "hospital-026",
+    "updatedAt": "2026-11-01T10:55:15.656Z"
+  },
+  "s-mvplr4x8-2nmp1": {
+    "result": "hospital-027",
+    "updatedAt": "2026-11-01T11:02:16.825Z"
+  },
+  "s-mvplsu8h-rtfgl": {
+    "result": "hospital-028",
+    "updatedAt": "2026-11-01T10:54:20.732Z"
+  },
+  "s-mvplvie4-rss0m": {
+    "result": "hospital-029",
+    "updatedAt": "2026-11-01T11:10:04.235Z"
+  },
+  "s-mvplx38q-mxu47": {
+    "result": "hospital-030",
+    "updatedAt": "2026-11-01T11:20:43.774Z"
+  },
+  "s-mvplyr36-nicri": {
+    "result": "hospital-031",
+    "updatedAt": "2026-11-01T11:13:01.057Z"
+  },
+  "s-mvpm1gxg-auumv": {
+    "result": "hospital-032",
+    "updatedAt": "2026-11-01T11:33:22.431Z"
+  },
+  "s-mvpm46bt-c0f39": {
+    "result": "hospital-033",
+    "updatedAt": "2026-11-01T11:28:31.274Z"
+  },
+  "s-mvpm607r-t79h0": {
+    "result": "hospital-034",
+    "updatedAt": "2026-11-01T11:30:56.571Z"
+  },
+  "s-mvpm85j9-lb23l": {
+    "result": "hospital-035",
+    "updatedAt": "2026-11-01T11:46:08.174Z"
+  },
+  "s-mvpma7ir-2zfjz": {
+    "result": "hospital-036",
+    "updatedAt": "2026-11-01T11:42:28.681Z"
+  },
+  "s-mvpmct6r-ujytz": {
+    "result": "hospital-037",
+    "updatedAt": "2026-11-01T11:44:20.880Z"
+  },
+  "s-mvpmev69-klfc8": {
+    "result": "hospital-038",
+    "updatedAt": "2026-11-01T11:49:26.888Z"
+  },
+  "s-mvpmgoqb-d6ho1": {
+    "result": "hospital-039",
+    "updatedAt": "2026-11-01T11:53:50.033Z"
+  },
+  "s-mvpmif6u-zoun1": {
+    "result": "hospital-040",
+    "updatedAt": "2026-11-01T11:57:10.189Z"
+  },
+  "s-mvrfc5si-p50vr": {
+    "result": "aed-017",
+    "updatedAt": "2026-10-28T01:16:50.897Z"
+  },
+  "s-mvrfd2e7-23ou0": {
+    "result": "aed-018",
+    "updatedAt": "2026-10-28T01:17:33.151Z"
+  },
+  "s-mvrfgf42-lkhto": {
+    "result": "light-0123",
+    "updatedAt": "2026-10-28T01:20:09.602Z"
+  },
+  "s-mvrfglke-debjg": {
+    "result": "light-0124",
+    "updatedAt": "2026-10-28T01:20:17.966Z"
+  },
+  "s-mvrfgo50-gy225": {
+    "result": "light-0125",
+    "updatedAt": "2026-10-28T01:20:21.300Z"
+  },
+  "s-mvrfgt7u-wyx2g": {
+    "result": "light-0126",
+    "updatedAt": "2026-10-28T01:20:27.882Z"
+  },
+  "s-mvrfgywz-imj3c": {
+    "result": "light-0127",
+    "updatedAt": "2026-10-28T01:20:35.267Z"
+  },
+  "s-mvrfh17f-3kfmi": {
+    "result": "light-0128",
+    "updatedAt": "2026-10-28T01:20:38.235Z"
+  },
+  "s-mvrfh4u1-er1mt": {
+    "result": "light-0129",
+    "updatedAt": "2026-10-28T01:20:42.937Z"
+  },
+  "s-mvrfh6nm-f2kt0": {
+    "result": "light-0130",
+    "updatedAt": "2026-10-28T01:20:45.298Z"
+  },
+  "s-mvrfhafp-zdp3f": {
+    "result": "light-0131",
+    "updatedAt": "2026-10-28T01:20:50.197Z"
+  },
+  "s-mvrfhc92-30k99": {
+    "result": "light-0132",
+    "updatedAt": "2026-10-28T01:20:52.550Z"
+  },
+  "s-mvrfhe2r-0zhp8": {
+    "result": "light-0133",
+    "updatedAt": "2026-10-28T01:20:54.915Z"
+  },
+  "s-mvrfhhl6-3e70k": {
+    "result": "light-0134",
+    "updatedAt": "2026-10-28T01:20:59.466Z"
+  },
+  "s-mvrfhl5i-v08k4": {
+    "result": "light-0135",
+    "updatedAt": "2026-10-28T01:21:04.086Z"
+  },
+  "s-mvrfhmwd-13ve8": {
+    "result": "light-0136",
+    "updatedAt": "2026-10-28T01:21:06.349Z"
+  },
+  "s-mvrfhp2o-mh19u": {
+    "result": "light-0137",
+    "updatedAt": "2026-10-28T01:21:09.167Z"
+  },
+  "s-mvrfhqrb-w5c7f": {
+    "result": "light-0138",
+    "updatedAt": "2026-10-28T01:21:11.351Z"
+  },
+  "s-mvrfhukp-h86sq": {
+    "result": "light-0139",
+    "updatedAt": "2026-10-28T01:21:16.297Z"
+  },
+  "s-mvrfhw1k-y33al": {
+    "result": "light-0140",
+    "updatedAt": "2026-10-28T01:21:18.200Z"
+  },
+  "s-mvrfhxca-lz4ip": {
+    "result": "light-0141",
+    "updatedAt": "2026-10-28T01:21:19.882Z"
+  },
+  "s-mvrfhyow-rebio": {
+    "result": "light-0142",
+    "updatedAt": "2026-10-28T01:21:21.632Z"
+  },
+  "s-mvrfi08g-mrix9": {
+    "result": "light-0143",
+    "updatedAt": "2026-10-28T01:21:23.632Z"
+  },
+  "s-mvrfi2a2-meeqd": {
+    "result": "light-0144",
+    "updatedAt": "2026-10-28T01:21:26.282Z"
+  },
+  "s-mvrfi3mq-l932h": {
+    "result": "light-0145",
+    "updatedAt": "2026-10-28T01:21:28.034Z"
+  },
+  "s-mvrfi509-znzml": {
+    "result": "light-0146",
+    "updatedAt": "2026-10-28T01:21:29.817Z"
+  },
+  "s-mvrfi6jd-nd5lw": {
+    "result": "light-0147",
+    "updatedAt": "2026-10-28T01:21:31.801Z"
+  },
+  "s-mvrfibu3-v9bcb": {
+    "result": "light-0148",
+    "updatedAt": "2026-10-28T01:21:38.667Z"
+  },
+  "s-mvrfidht-4rk5l": {
+    "result": "light-0149",
+    "updatedAt": "2026-10-28T01:21:40.817Z"
+  },
+  "s-mvrfigv4-8rz7x": {
+    "result": "light-0150",
+    "updatedAt": "2026-10-28T01:21:45.184Z"
+  },
+  "s-mvrfiiag-jy2er": {
+    "result": "light-0151",
+    "updatedAt": "2026-10-28T01:21:59.386Z"
+  },
+  "s-mvrfijnk-3xob6": {
+    "result": "light-0152",
+    "updatedAt": "2026-10-28T01:21:48.800Z"
+  },
+  "s-mvrfil83-zglta": {
+    "result": "light-0153",
+    "updatedAt": "2026-10-28T01:21:50.835Z"
+  },
+  "s-mvrfinpe-e1hux": {
+    "result": "light-0154",
+    "updatedAt": "2026-10-28T01:21:54.050Z"
+  },
+  "s-mvrfivep-7ceop": {
+    "result": "light-0155",
+    "updatedAt": "2026-10-28T01:22:04.033Z"
+  },
+  "s-mvrfixsw-p6qg2": {
+    "result": "light-0156",
+    "updatedAt": "2026-10-28T01:22:07.136Z"
+  },
+  "s-mvrfj5xw-d48cg": {
+    "result": "light-0157",
+    "updatedAt": "2026-10-28T01:22:17.684Z"
+  },
+  "s-mvrfj7if-cicrn": {
+    "result": "light-0158",
+    "updatedAt": "2026-10-28T01:22:19.719Z"
+  },
+  "s-mvrfjflz-5ltjw": {
+    "result": "light-0159",
+    "updatedAt": "2026-10-28T01:22:30.215Z"
+  },
+  "s-mvrfjh54-nb967": {
+    "result": "light-0160",
+    "updatedAt": "2026-10-28T01:22:32.200Z"
+  },
+  "s-mvrfjjib-ska5x": {
+    "result": "light-0161",
+    "updatedAt": "2026-10-28T01:22:35.267Z"
+  },
+  "s-mvrfjkuh-b8ef0": {
+    "result": "light-0162",
+    "updatedAt": "2026-10-28T01:22:37.001Z"
+  },
+  "s-mvrfjn0r-fecdx": {
+    "result": "light-0163",
+    "updatedAt": "2026-10-28T01:22:39.819Z"
+  },
+  "s-mvrfjoyl-n3r0q": {
+    "result": "light-0164",
+    "updatedAt": "2026-10-28T01:22:42.333Z"
+  },
+  "s-mvrfjris-x1ul4": {
+    "result": "light-0165",
+    "updatedAt": "2026-10-28T01:22:45.652Z"
+  },
+  "s-mvrfjtnl-yoec7": {
+    "result": "light-0166",
+    "updatedAt": "2026-10-28T01:22:48.417Z"
+  },
+  "s-mvrfjyp1-oaadv": {
+    "result": "light-0167",
+    "updatedAt": "2026-10-28T01:22:54.949Z"
+  },
+  "s-mvrfk100-nsqxs": {
+    "result": "light-0168",
+    "updatedAt": "2026-10-28T01:22:57.936Z"
+  },
+  "s-mvrfk4tx-hqjho": {
+    "result": "light-0169",
+    "updatedAt": "2026-10-28T01:23:02.901Z"
+  },
+  "s-mvrfk6ik-kpz29": {
+    "result": "light-0170",
+    "updatedAt": "2026-10-28T01:23:05.084Z"
+  },
+  "s-mvrfkkmx-cqih8": {
+    "result": "light-0171",
+    "updatedAt": "2026-10-28T01:23:23.385Z"
+  },
+  "s-mvrfkm5l-m6fhj": {
+    "result": "light-0172",
+    "updatedAt": "2026-10-28T01:23:25.353Z"
+  },
+  "s-mvrfko6r-ed487": {
+    "result": "light-0173",
+    "updatedAt": "2026-10-28T01:23:27.987Z"
+  },
+  "s-mvrfkpz2-ibn3r": {
+    "result": "light-0174",
+    "updatedAt": "2026-10-28T01:23:30.302Z"
+  },
+  "s-mvrfkvst-is16j": {
+    "result": "light-0175",
+    "updatedAt": "2026-10-28T01:23:37.853Z"
+  },
+  "s-mvrfkx9z-8ue0m": {
+    "result": "light-0176",
+    "updatedAt": "2026-10-28T01:23:39.767Z"
+  },
+  "s-mvrfkyqd-j7uj1": {
+    "result": "light-0177",
+    "updatedAt": "2026-10-28T01:23:41.653Z"
+  },
+  "s-mvrfl3rr-99mqn": {
+    "result": "light-0178",
+    "updatedAt": "2026-10-28T01:23:48.183Z"
+  },
+  "s-mvrfl5yg-ljgy4": {
+    "result": "light-0179",
+    "updatedAt": "2026-10-28T01:23:51.016Z"
+  },
+  "s-mvrflbxd-6swie": {
+    "result": "light-0180",
+    "updatedAt": "2026-10-28T01:23:58.753Z"
+  },
+  "s-mvrfldx2-xsw6i": {
+    "result": "light-0181",
+    "updatedAt": "2026-10-28T01:24:01.334Z"
+  },
+  "s-mvrflgnn-l7kc9": {
+    "result": "light-0182",
+    "updatedAt": "2026-10-28T01:24:04.883Z"
+  },
+  "s-mvrfli0a-w4fry": {
+    "result": "light-0183",
+    "updatedAt": "2026-10-28T01:24:06.634Z"
+  },
+  "s-mvrfljeu-w81za": {
+    "result": "light-0184",
+    "updatedAt": "2026-10-28T01:24:08.454Z"
+  },
+  "s-mvrflkw2-rhloh": {
+    "result": "light-0185",
+    "updatedAt": "2026-10-28T01:24:10.370Z"
+  },
+  "s-mvrfloyq-w90mp": {
+    "result": "light-0186",
+    "updatedAt": "2026-10-28T01:24:15.650Z"
+  },
+  "s-mvrflqm3-awmkp": {
+    "result": "light-0187",
+    "updatedAt": "2026-10-28T01:24:17.787Z"
+  },
+  "s-mvrflylk-huz6e": {
+    "result": "light-0188",
+    "updatedAt": "2026-10-28T01:24:28.136Z"
+  },
+  "s-mvrfm03p-95kld": {
+    "result": "light-0189",
+    "updatedAt": "2026-10-28T01:24:30.085Z"
+  },
+  "s-mvrfm2mi-ikp3p": {
+    "result": "light-0190",
+    "updatedAt": "2026-10-28T01:24:33.354Z"
+  },
+  "s-mvrfm4dv-2a0ui": {
+    "result": "light-0191",
+    "updatedAt": "2026-10-28T01:24:35.635Z"
+  },
+  "s-mvrfm64e-ay6wu": {
+    "result": "light-0192",
+    "updatedAt": "2026-10-28T01:24:37.886Z"
+  },
+  "s-mvrfm83o-o0c6h": {
+    "result": "light-0193",
+    "updatedAt": "2026-10-28T01:24:40.452Z"
+  },
+  "s-mvrfmej7-2lpvu": {
+    "result": "light-0194",
+    "updatedAt": "2026-10-28T01:24:48.787Z"
+  },
+  "s-mvrfmfz1-aop6i": {
+    "result": "light-0195",
+    "updatedAt": "2026-10-28T01:24:50.653Z"
+  },
+  "s-mvrfmhef-jbtnu": {
+    "result": "light-0196",
+    "updatedAt": "2026-10-28T01:24:52.503Z"
+  },
+  "s-mvrfmixg-8hgry": {
+    "result": "light-0197",
+    "updatedAt": "2026-10-28T01:24:54.484Z"
+  },
+  "s-mvrfmkox-jbbwc": {
+    "result": "light-0198",
+    "updatedAt": "2026-10-28T01:24:56.769Z"
+  },
+  "s-mvrfmm3w-372b7": {
+    "result": "light-0199",
+    "updatedAt": "2026-10-28T01:24:58.604Z"
+  },
+  "s-mvrfmv3m-vpalt": {
+    "result": "light-0200",
+    "updatedAt": "2026-10-28T01:25:10.258Z"
+  },
+  "s-mvrfmxc1-u0ukc": {
+    "result": "light-0201",
+    "updatedAt": "2026-10-28T01:25:13.153Z"
+  },
+  "s-mvrfn1g9-zt24f": {
+    "result": "light-0202",
+    "updatedAt": "2026-10-28T01:25:18.489Z"
+  },
+  "s-mvrfn2sf-0klor": {
+    "result": "light-0203",
+    "updatedAt": "2026-10-28T01:25:20.223Z"
+  },
+  "s-mvrfn3wo-w2ywe": {
+    "result": "light-0204",
+    "updatedAt": "2026-10-28T01:25:21.672Z"
+  },
+  "s-mvrfn501-kel44": {
+    "result": "light-0205",
+    "updatedAt": "2026-10-28T01:25:23.089Z"
+  },
+  "s-mvrfn6q1-f0jw1": {
+    "result": "light-0206",
+    "updatedAt": "2026-10-28T01:25:25.321Z"
+  },
+  "s-mvrfn877-2x0y3": {
+    "result": "light-0207",
+    "updatedAt": "2026-10-28T01:25:27.235Z"
+  },
+  "s-mvrfn9ln-427ha": {
+    "result": "light-0208",
+    "updatedAt": "2026-10-28T01:25:29.051Z"
+  },
+  "s-mvrfnawx-wlljp": {
+    "result": "light-0209",
+    "updatedAt": "2026-10-28T01:25:30.753Z"
+  },
+  "s-mvrfndh1-wt77z": {
+    "result": "light-0210",
+    "updatedAt": "2026-10-28T01:25:34.069Z"
+  },
+  "s-mvrfnesa-oxawf": {
+    "result": "light-0211",
+    "updatedAt": "2026-10-28T01:25:35.770Z"
+  },
+  "s-mvrfng6a-rpc21": {
+    "result": "light-0212",
+    "updatedAt": "2026-10-28T01:25:37.570Z"
+  },
+  "s-mvrfnhfp-fn2t5": {
+    "result": "light-0213",
+    "updatedAt": "2026-10-28T01:25:39.205Z"
+  },
+  "s-mvrfniqh-qikem": {
+    "result": "light-0214",
+    "updatedAt": "2026-10-28T01:25:40.889Z"
+  },
+  "s-mvrfnkhd-wmj8n": {
+    "result": "light-0215",
+    "updatedAt": "2026-10-28T01:25:43.153Z"
+  },
+  "s-mvrfnsyx-p7xgv": {
+    "result": "light-0216",
+    "updatedAt": "2026-10-28T01:25:54.153Z"
+  },
+  "s-mvrfnx6f-pt2zw": {
+    "result": "light-0217",
+    "updatedAt": "2026-10-28T01:25:59.607Z"
+  },
+  "s-mvrfo013-t77po": {
+    "result": "light-0218",
+    "updatedAt": "2026-10-28T01:26:03.303Z"
+  },
+  "s-mvrfo1m2-6kg83": {
+    "result": "light-0219",
+    "updatedAt": "2026-10-28T01:26:05.354Z"
+  },
+  "s-mvrfo2zm-z8kij": {
+    "result": "light-0220",
+    "updatedAt": "2026-10-28T01:26:07.138Z"
+  },
+  "s-mvrfo4hq-h2h3z": {
+    "result": "light-0221",
+    "updatedAt": "2026-10-28T01:26:09.086Z"
+  },
+  "s-mvrfo909-af0on": {
+    "result": "light-0222",
+    "updatedAt": "2026-10-28T01:26:14.937Z"
+  },
+  "s-mvrfoace-tzmaj": {
+    "result": "light-0223",
+    "updatedAt": "2026-10-28T01:26:16.670Z"
+  },
+  "s-mvrfobih-tfvgc": {
+    "result": "light-0224",
+    "updatedAt": "2026-10-28T01:26:18.185Z"
+  },
+  "s-mvrfocns-o4ntt": {
+    "result": "light-0225",
+    "updatedAt": "2026-10-28T01:26:19.672Z"
+  },
+  "s-mvrfodwo-es6po": {
+    "result": "light-0226",
+    "updatedAt": "2026-10-28T01:26:21.288Z"
+  },
+  "s-mvrfof67-2h9jl": {
+    "result": "light-0227",
+    "updatedAt": "2026-10-28T01:26:22.927Z"
+  },
+  "s-mvrfogh7-qazks": {
+    "result": "light-0228",
+    "updatedAt": "2026-10-28T01:26:24.619Z"
+  },
+  "s-mvrfoi8p-nkyyk": {
+    "result": "light-0229",
+    "updatedAt": "2026-10-28T01:26:26.905Z"
+  },
+  "s-mvrfojlb-5u8a0": {
+    "result": "light-0230",
+    "updatedAt": "2026-10-28T01:26:28.655Z"
+  },
+  "s-mvrfokz8-h49ej": {
+    "result": "light-0231",
+    "updatedAt": "2026-10-28T01:26:30.452Z"
+  },
+  "s-mvrfomcd-v6ohf": {
+    "result": "light-0232",
+    "updatedAt": "2026-10-28T01:26:32.221Z"
+  },
+  "s-mvrfonpv-m1kxf": {
+    "result": "light-0233",
+    "updatedAt": "2026-10-28T01:26:34.003Z"
+  },
+  "s-mvrforz5-nfb3z": {
+    "result": "light-0234",
+    "updatedAt": "2026-10-28T01:26:39.521Z"
+  },
+  "s-mvrfotxj-5ou3x": {
+    "result": "light-0235",
+    "updatedAt": "2026-10-28T01:26:42.055Z"
+  },
+  "s-mvrfowlc-taghz": {
+    "result": "light-0236",
+    "updatedAt": "2026-10-28T01:26:45.504Z"
+  },
+  "s-mvrfp1ho-sbnkg": {
+    "result": "light-0237",
+    "updatedAt": "2026-10-28T01:26:51.852Z"
+  },
+  "s-mvrfp4rb-amcv2": {
+    "result": "light-0238",
+    "updatedAt": "2026-10-28T01:26:56.087Z"
+  },
+  "s-mvrfp62i-fyhrc": {
+    "result": "light-0239",
+    "updatedAt": "2026-10-28T01:26:57.786Z"
+  },
+  "s-mvrfp8jf-7gz33": {
+    "result": "light-0240",
+    "updatedAt": "2026-10-28T01:27:00.987Z"
+  },
+  "s-mvrfpa2h-nzrih": {
+    "result": "light-0241",
+    "updatedAt": "2026-10-28T01:27:02.969Z"
+  },
+  "s-mvrfpcsp-c94bi": {
+    "result": "light-0242",
+    "updatedAt": "2026-10-28T01:27:06.505Z"
+  },
+  "s-mvrfpe6p-zp21x": {
+    "result": "light-0243",
+    "updatedAt": "2026-10-28T01:27:08.305Z"
+  },
+  "s-mvrfpgra-3a3cp": {
+    "result": "light-0244",
+    "updatedAt": "2026-10-28T01:27:11.638Z"
+  },
+  "s-mvrfpipl-qmq4z": {
+    "result": "light-0245",
+    "updatedAt": "2026-10-28T01:27:14.169Z"
+  },
+  "s-mvrfpkec-p5s9k": {
+    "result": "light-0246",
+    "updatedAt": "2026-10-28T01:27:16.356Z"
+  },
+  "s-mvrfpn3z-ywgtx": {
+    "result": "light-0247",
+    "updatedAt": "2026-10-28T01:27:19.871Z"
+  },
+  "s-mvrfpp8v-idkc2": {
+    "result": "light-0248",
+    "updatedAt": "2026-10-28T01:27:22.639Z"
+  },
+  "s-mvrfpqnt-x7n0k": {
+    "result": "light-0249",
+    "updatedAt": "2026-10-28T01:27:24.473Z"
+  },
+  "s-mvrfps0t-64ri8": {
+    "result": "light-0250",
+    "updatedAt": "2026-10-28T01:27:26.237Z"
+  },
+  "s-mvrfptku-fgrus": {
+    "result": "light-0251",
+    "updatedAt": "2026-10-28T01:27:28.254Z"
+  },
+  "s-mvrfpvzg-jl4qj": {
+    "result": "light-0252",
+    "updatedAt": "2026-10-28T01:27:31.372Z"
+  },
+  "s-mvrfpxij-dvmvc": {
+    "result": "light-0253",
+    "updatedAt": "2026-10-28T01:27:33.355Z"
+  },
+  "s-mvrfpywi-w9qxq": {
+    "result": "light-0254",
+    "updatedAt": "2026-10-28T01:27:35.154Z"
+  },
+  "s-mvrfq0a2-jijez": {
+    "result": "light-0255",
+    "updatedAt": "2026-10-28T01:27:36.938Z"
+  },
+  "s-mvrfq1qu-pk8pn": {
+    "result": "light-0256",
+    "updatedAt": "2026-10-28T01:27:38.838Z"
+  },
+  "s-mvrfq46d-f5wdo": {
+    "result": "light-0257",
+    "updatedAt": "2026-10-28T01:27:41.989Z"
+  },
+  "s-mvrfq5iz-a7vee": {
+    "result": "light-0258",
+    "updatedAt": "2026-10-28T01:27:43.739Z"
+  },
+  "s-mvrfq705-8n6kv": {
+    "result": "light-0259",
+    "updatedAt": "2026-10-28T01:27:45.653Z"
+  },
+  "s-mvrfq8n0-6qs9w": {
+    "result": "light-0260",
+    "updatedAt": "2026-10-28T01:27:47.772Z"
+  },
+  "s-mvrfqb8j-yb9a6": {
+    "result": "light-0261",
+    "updatedAt": "2026-10-28T01:27:51.139Z"
+  },
+  "s-mvrfqcq8-nbhvc": {
+    "result": "light-0262",
+    "updatedAt": "2026-10-28T01:27:53.072Z"
+  },
+  "s-mvrfqhuj-hdul7": {
+    "result": "light-0263",
+    "updatedAt": "2026-10-28T01:27:59.707Z"
+  },
+  "s-mvrfrzya-v23kk": {
+    "result": "toilet-002",
+    "updatedAt": "2026-10-28T01:29:09.826Z"
+  },
+  "s-mvrfun7g-g346c": {
+    "result": "toilet-003",
+    "updatedAt": "2026-10-28T01:31:13.276Z"
+  },
+  "s-mvrfvbke-nh9kz": {
+    "result": "toilet-004",
+    "updatedAt": "2026-10-28T01:31:44.846Z"
   }
 }
