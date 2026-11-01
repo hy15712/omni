@@ -321,7 +321,7 @@ body.sv-wide .grid-legend{right:410px}
   <strong>가로등 개수 <span class="cellsize">(약 25m×25m 칸 기준)</span></strong>
   <div class="ramp" aria-hidden="true"></div>
   <div class="ramp-labels"><span>0</span><span>1</span><span>2</span><span>3–4</span><span>5+</span></div>
-  <p>설치 개수를 밝기로 표현한 것이며, 실제 조도(밝기)를 측정한 값이 아닙니다. 조사 범위 밖은 자료가 없어 어둡게 표시됩니다.<br>지금 자료: 종로구 보안등(2026-07-03 기준)·중구 보안등(2025-10-31 기준) + 현장 조사 가로등(보안등과 10m 안에 겹치는 것은 뺌). 큰길 가로등 공식 자료는 아직 없음.</p>
+  <p>설치 개수를 밝기로 표현한 것이며, 실제 조도(밝기)를 측정한 값이 아닙니다. 조사 범위 밖은 자료가 없어 어둡게 표시됩니다.<br>지금 자료: 종로구 보안등(2026-07-03 기준)·중구 보안등(2025-10-31 기준) + 큰길가(종로·청계천로·을지로·삼일대로 등)는 현장 조사 가로등(2026-10). 큰길 가로등 공식 자료는 아직 없음.</p>
 </div>
 
 <section id="sheet" class="sheet" aria-hidden="true" role="dialog" aria-labelledby="sheetTitle">
@@ -508,7 +508,7 @@ window.ROADS = { type:"FeatureCollection", features:[
 <script>/* data/streetlights.js */
 // 가로등·보안등 위치 — 지도의 가로등 격자에 쓰는 공공데이터. scripts/import-security-lights.mjs 로 만듦(직접 고치지 말 것)
 // 지금: 종로구 보안등(2026-07-03 기준) 274곳 · 중구 보안등(2025-10-31 기준) 72곳 (전국보안등정보표준데이터, 조사 범위 안만)
-// 큰길 가로등은 아직 없음. 현장 조사 가로등은 data/streetlights-survey.js 에 따로 있고, 지도(app.js)가 이 보안등과 10m 안에 겹치는 것을 빼고 함께 표시
+// 큰길 가로등은 아직 없음. 현장 조사 가로등은 data/streetlights-survey.js 에 따로 있고, 지도(app.js)는 그중 큰길가 것만(data/big-roads.js) 함께 표시
 // count: 그 지점의 등 개수(쌍등이면 2) / type: "가로등" | "보안등" / mount: 설치 형태(건축물·한전주·전용주)
 window.STREETLIGHTS = [
   {"lat":37.568626,"lng":126.991872,"count":1,"type":"보안등","id":"sl-종로구-09-돈화문로1","location":"서울특별시 종로구 돈화문로1","mount":"한전주","verification":{"status":"agency","date":"2026-07-03","by":"서울특별시 종로구청 도로과 (보안등 공공데이터)"}},
@@ -859,9 +859,26 @@ window.STREETLIGHTS = [
   {"lat":37.566126,"lng":126.991898,"count":1,"type":"보안등","id":"sl-중구-7-9-48","location":"서울특별시 중구 을지로 126-1","mount":"건축물","verification":{"status":"agency","date":"2025-10-31","by":"서울특별시 중구청 도로시설과 (보안등 공공데이터)"}},
 ];
 </script>
+<script>/* data/big-roads.js */
+// 현장 조사 가로등 중 ‘큰길가’로 볼 범위를 정하는 선(대략 보도 위치). 지도(app.js)는 이 선에서 ROAD_BUF_M(15m) 안에 있는 현장 조사 가로등만 표시함.
+// 골목은 보안등 공공데이터(data/streetlights.js)만 씀 — 현장 기록과 이중으로 세지 않기 위해(2026-11 사용자 결정).
+// 좌표 출처: 조원들이 우리 지도에서 찍은 가로등 위치(data/streetlights-survey.js)가 줄지어 선 선을 따라 그림. 네이버 등 다른 지도에서 가져오지 않음.
+// 이름 모르는 길은 경도로 표시. [경도, 위도] 순서
+window.BIG_ROAD_LINES = [
+  { name: "종로", line: [[126.9826,37.57002],[126.993,37.57012]] },
+  { name: "청계천로(북쪽)", line: [[126.9829,37.5691],[126.98346,37.56898],[126.98473,37.56876],[126.9865,37.5684],[126.9895,37.5683],[126.9905,37.5684],[126.9925,37.5688]] },
+  { name: "청계천로(남쪽)", line: [[126.9829,37.5686],[126.9845,37.5684],[126.9856,37.5681],[126.987,37.5679],[126.9895,37.5679],[126.9925,37.5681]] },
+  { name: "을지로", line: [[126.9829,37.5665],[126.9845,37.5662],[126.9878,37.56625],[126.9895,37.5663],[126.9925,37.5666]] },
+  { name: "남대문로", line: [[126.9831,37.57],[126.9829,37.5662]] },
+  { name: "삼일대로(서쪽)", line: [[126.98732,37.5662],[126.9874,37.568],[126.98753,37.57]] },
+  { name: "삼일대로(동쪽)", line: [[126.98787,37.5662],[126.988,37.57]] },
+  { name: "남북 길(을지로–청계천, 경도 126.9857)", line: [[126.9857,37.5662],[126.9857,37.568]] },
+  { name: "남북 길(을지로–청계천, 경도 126.9925)", line: [[126.99245,37.5662],[126.99245,37.5682]] },
+];
+</script>
 <script>/* data/streetlights-survey.js */
 // 조사 기록 모드로 현장에서 기록한 가로등(원예림·강준수, 2026-10).
-// 지도(app.js)는 이 중 보안등 공공데이터(data/streetlights.js)와 10m(FIELD_DUP_M) 안에 겹치는 것을 빼고 ‘현장확인’으로 함께 표시(2026-11 사용자 결정). 여기서는 지우지 말 것.
+// 지도(app.js)는 이 중 큰길가(data/big-roads.js 선에서 15m 안)에 있고 보안등과 10m 안에 겹치지 않는 것만 ‘현장확인’으로 표시(2026-11 사용자 결정). 골목 기록은 보안등과 이중으로 세지 않으려고 지도에서 뺌. 여기서는 지우지 말 것.
 // 조사 기록 합치기(scripts/merge-survey.mjs)로 들어오는 가로등 기록은 계속 이 파일에 쌓임.
 // count: 그 지점의 등 개수(쌍등이면 2) / type: "가로등" | "보안등" | "미상"
 window.STREETLIGHTS_SURVEY = [
@@ -1500,15 +1517,22 @@ const gridLayer = L.layerGroup();
 const lightPointLayer = L.layerGroup();
 let selectedCell = null;
 
-// 지도에 쓰는 가로등 = 보안등 공공데이터(기관확인) + 현장 조사 가로등(현장확인).
-// 현장 조사 가로등 중 공공 보안등과 FIELD_DUP_M 미터 안에 있는 것은 같은 등을 두 번 센 것으로 보고 뺍니다.
-// (조사 기록은 data/streetlights-survey.js 에 그대로 남아 있음. 기준을 바꾸려면 이 숫자만 고치면 됨)
-const FIELD_DUP_M = 10;
+// 지도에 쓰는 가로등 = 보안등 공공데이터(기관확인) + 큰길가 현장 조사 가로등(현장확인). (2026-11 사용자 결정)
+// 골목은 보안등 공공데이터만 씁니다. 현장 조사 가로등은 큰길 선(data/big-roads.js)에서 ROAD_BUF_M 안에 있고,
+// 보안등과 FIELD_DUP_M 안에 겹치지 않는 것만 더합니다. (조사 기록은 data/streetlights-survey.js 에 그대로 남아 있음)
+const ROAD_BUF_M = 15, FIELD_DUP_M = 10;
 const ALL_LIGHTS = (() => {
   const pub = window.STREETLIGHTS || [];
-  const mPerLat = 111320, mPerLng = 111320 * Math.cos(B.south * Math.PI / 180);
-  const near = (a, b) => Math.hypot((a.lat - b.lat) * mPerLat, (a.lng - b.lng) * mPerLng) <= FIELD_DUP_M;
-  const field = (window.STREETLIGHTS_SURVEY || []).filter(s => !pub.some(p => near(s, p)));
+  const kx = 111320 * Math.cos(B.south * Math.PI / 180), ky = 111320;
+  const near = (a, b) => Math.hypot((a.lat - b.lat) * ky, (a.lng - b.lng) * kx) <= FIELD_DUP_M;
+  const segDist = (p, a, b) => {   // 점 p 에서 선분 a–b 까지 거리(m). a, b 는 [경도, 위도]
+    const px = p.lng * kx, py = p.lat * ky, ax = a[0] * kx, ay = a[1] * ky, dx = b[0] * kx - ax, dy = b[1] * ky - ay;
+    const t = Math.max(0, Math.min(1, ((px - ax) * dx + (py - ay) * dy) / (dx * dx + dy * dy)));
+    return Math.hypot(px - ax - t * dx, py - ay - t * dy);
+  };
+  const onBigRoad = p => (window.BIG_ROAD_LINES || []).some(({ line }) =>
+    line.slice(1).some((b, i) => segDist(p, line[i], b) <= ROAD_BUF_M));
+  const field = (window.STREETLIGHTS_SURVEY || []).filter(s => onBigRoad(s) && !pub.some(p => near(s, p)));
   return pub.concat(field);
 })();
 
@@ -1568,7 +1592,7 @@ function toggleLights() {
 map.on("zoomend", syncLightPoints);
 
 // 지금 가로등 격자에 들어 있는 자료의 범위(‘0개’가 등이 없다는 뜻으로 읽히지 않게 정보창에 함께 안내)
-const LIGHT_DATA_NOTE = "지금 자료는 종로구·중구 보안등 공공데이터와 조사팀이 현장에서 기록한 가로등입니다(보안등과 10m 안에 겹치는 현장 기록은 같은 등으로 보고 뺐습니다). 큰길 가로등 공식 자료는 아직 없어, 현장 조사에서 빠진 등이 있을 수 있습니다.";
+const LIGHT_DATA_NOTE = "골목은 종로구·중구 보안등 공공데이터, 큰길가(종로·청계천로·을지로·삼일대로 등)는 조사팀이 현장에서 기록한 가로등입니다. 큰길 가로등 공식 자료는 아직 없어 빠진 등이 있을 수 있습니다.";
 function openCell(cell, r, c) {
   const byType = cell.items.reduce((o, l) => (o[l.type] = (o[l.type] || 0) + (l.count || 1), o), {});
   const byStatus = cell.items.reduce((o, l) => (o[l.verification.status] = (o[l.verification.status] || 0) + 1, o), {});
