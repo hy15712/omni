@@ -10,6 +10,7 @@
 // 4) node scripts/merge-survey.mjs --apply  → data/places.js, roads.js, streetlights.js 갱신, 사진은 photos/ 로 복사
 //
 // 이미 합친 기록은 survey-inbox/applied.json 에 남아 다음 실행 때 건너뜁니다.
+// 단, 조사자가 합친 뒤에 기록을 고쳐 다시 내보냈으면(updatedAt 이 더 새로우면) "update:<id>" 로 그 핀을 덮어씁니다.
 // survey-inbox/ 는 조사자 이름이 들어 있어 저장소에 올리지 않습니다(.gitignore).
 import fs from "node:fs";
 import path from "node:path";
@@ -26,7 +27,7 @@ const LABEL = { toilet:"화장실", bench:"벤치", stairs:"계단", aed:"AED", 
   fire:"소방서", police:"지구대", trash:"쓰레기통", streetlight:"가로등", road:"보행 구간" };
 const DETAIL_KEYS = { toilet:["location","accessibleStall","open","approach"], stairs:["steps","location","handrail","altRoute"],
   bench:["count","location"], aed:["location"], trash:["location","recycling"] };
-const HOURS_CATS = ["toilet", "aed"];
+const HOURS_CATS = ["toilet", "aed", "hospital", "pharmacy"];
 const ROAD_LABEL = { sidewalk:"인도", roadway:"차도", shared:"보차혼용" };
 
 const readJson = (f, fallback) => fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, "utf8")) : fallback;
@@ -107,7 +108,9 @@ for (const dir of fs.readdirSync(INBOX).sort()) {
 // 같은 기록이 여러 zip에 있으면(다시 내보낸 경우) 가장 최근 수정본만
 const latest = new Map();
 for (const it of inbox) { const p = latest.get(it.rec.id); if (!p || it.rec.updatedAt > p.rec.updatedAt) latest.set(it.rec.id, it); }
-const items = [...latest.values()].filter(it => !applied[it.rec.id])
+const targetOf = a => a && a.result !== "skip" ? a.result.split(":").pop() : null;
+const isEdited = rec => applied[rec.id] && targetOf(applied[rec.id]) && applied[rec.id].updatedAt && rec.updatedAt > applied[rec.id].updatedAt;
+const items = [...latest.values()].filter(it => !applied[it.rec.id] || isEdited(it.rec))
   .sort((a, b) => (a.rec.surveyDate + a.rec.createdAt).localeCompare(b.rec.surveyDate + b.rec.createdAt));
 
 const places = loadData("places.js", "PLACES"), roads = loadData("roads.js", "ROADS"), lights = loadData("streetlights.js", "STREETLIGHTS");
@@ -125,6 +128,11 @@ const decisions = readJson(decisionsFile, {});
 const report = [];
 for (const it of items) {
   const { rec } = it, entry = toEntry(rec), kind = rec.kind;
+  if (isEdited(rec)) {   // 합친 뒤 조사자가 고친 기록 → 같은 핀을 덮어씀(중복 검사 안 함)
+    decisions[rec.id] = `update:${targetOf(applied[rec.id])}`;
+    report.push({ ...it, entry, near: [], warn: ["합친 뒤 고친 기록"] });
+    continue;
+  }
   const near = [];
   for (const c of existingPool(kind, rec.category)) {
     const m = kind === "road" ? roadDist(rec.coords, c.entry.geometry.coordinates) : dist(posOf(kind, entry), posOf(kind, c.entry));
@@ -188,11 +196,11 @@ function nextId(kind, category) {
   const nums = list.filter(id => id?.startsWith(prefix + "-")).map(id => parseInt(id.slice(prefix.length + 1), 10)).filter(n => n >= 0);
   return `${prefix}-${String((nums.length ? Math.max(...nums) : 0) + 1).padStart(width, "0")}`;
 }
-function copyPhotos(r, id) {
+function copyPhotos(r, id, overwrite = false) {
   fs.mkdirSync(path.join(ROOT, "photos"), { recursive: true });
   return (r.rec.photos || []).map((rel, i) => {
     let name = `${id}-${i + 1}.jpg`, n = i + 1;
-    while (fs.existsSync(path.join(ROOT, "photos", name))) name = `${id}-${++n}.jpg`;
+    while (!overwrite && fs.existsSync(path.join(ROOT, "photos", name))) name = `${id}-${++n}.jpg`;
     fs.copyFileSync(path.join(INBOX, r.dir, rel), path.join(ROOT, "photos", name));
     return `photos/${name}`;
   });
@@ -202,18 +210,26 @@ const findTarget = (kind, id) => kind === "road" ? roads.value.features.find(f =
 const log = [];
 for (const r of report) {
   const dec = decisions[r.rec.id], kind = r.rec.kind, e = r.entry;
-  if (dec === "skip") { applied[r.rec.id] = { result: "skip" }; continue; }
+  if (dec === "skip") { applied[r.rec.id] = { result: "skip", updatedAt: r.rec.updatedAt }; continue; }
   const [act, targetId] = dec.split(":");
   if (act === "new") {
     const id = nextId(kind, r.rec.category), photos = copyPhotos(r, id);
     if (kind === "road") { e.properties.id = id; if (photos.length) e.properties.photos = photos; roads.value.features.push(e); }
     else if (kind === "light") { e.id = id; lights.value.push(e); }
     else { e.id = id; if (photos.length) e.details.photos = photos; places.value.push(e); }
-    log.push(`추가 ${id} ${LABEL[r.rec.category]}`); applied[r.rec.id] = { result: id };
+    log.push(`추가 ${id} ${LABEL[r.rec.category]}`); applied[r.rec.id] = { result: id, updatedAt: r.rec.updatedAt };
     continue;
   }
   const t = findTarget(kind, targetId);
   if (!t) { console.error(`${r.rec.id}: 대상 ${targetId} 를 찾지 못해 건너뜀`); continue; }
+  if (act === "update") {   // 같은 기록의 새 버전: 값·사진 모두 새것으로
+    const photos = copyPhotos(r, targetId, true);
+    if (kind === "road") { Object.assign(t, e); t.properties.id = targetId; if (photos.length) t.properties.photos = photos; }
+    else { for (const k of Object.keys(t)) delete t[k]; Object.assign(t, e, { id: targetId }); if (photos.length && t.details) t.details.photos = photos; }
+    log.push(`수정 반영 ${targetId} ${LABEL[r.rec.category]}`);
+    applied[r.rec.id] = { result: targetId, updatedAt: r.rec.updatedAt };
+    continue;
+  }
   const photos = copyPhotos(r, targetId);
   if (act === "confirm") {
     if (kind === "road") t.properties.verification = e.properties.verification; else t.verification = e.verification;
@@ -227,7 +243,7 @@ for (const r of report) {
     if (holder) holder.photos = [...(holder.photos || []), ...photos];
   }
   log.push(`${act === "confirm" ? "재확인" : "교체"} ${targetId} ${LABEL[r.rec.category]}${photos.length ? ` (사진 ${photos.length}장 추가)` : ""}`);
-  applied[r.rec.id] = { result: `${act}:${targetId}` };
+  applied[r.rec.id] = { result: `${act}:${targetId}`, updatedAt: r.rec.updatedAt };
 }
 
 saveData("places.js", places.header, `window.PLACES = [\n${places.value.map(line).join("\n")}\n];`);

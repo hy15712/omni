@@ -48,7 +48,13 @@ h1{font-size:1.15rem;font-weight:800;margin:0;letter-spacing:-.01em}
 .ln{display:inline-block;width:20px;height:0;border-top:2px solid}
 .ln.sidewalk{border-color:rgba(31,138,91,.8)}
 .ln.car{border-color:rgba(215,38,61,.4)}
-.ln.narrow{border-color:rgba(242,183,5,.4)}
+.ln.narrow{border-color:#FF6A00;border-top-width:3px}
+/* 보행 구간 폭 표시(18레벨 이상 확대 시) */
+.leaflet-tooltip.width-tag{display:none;background:#fff;border:1px solid var(--line);border-radius:4px;padding:0 4px;
+  font-size:11px;font-weight:700;color:var(--ink);box-shadow:none}
+.leaflet-tooltip.width-tag::before{display:none}
+.leaflet-tooltip.width-tag.narrow{border-color:#FF6A00;color:#B34700}
+#map.show-width .leaflet-tooltip.width-tag{display:block}
 
 /* 하단 정보창 */
 .sheet{position:fixed;left:0;right:0;bottom:0;z-index:1000;background:var(--paper);
@@ -107,11 +113,11 @@ dl.facts dd{margin:0;font-weight:600}
 .bar span{display:block;height:100%}
 
 /* 밤 모드(가로등 필터 켰을 때) */
-.night-pane{filter:blur(8px)}
+.night-pane{filter:blur(2.5px)}
 .grid-legend{background:#141B2D;color:#E8ECF4;border-color:#2A3550}
 .grid-legend .cellsize,.grid-legend p{color:#AAB4C8}
 .ramp{height:12px;border-radius:3px;margin:4px 0 3px;
-  background:linear-gradient(90deg,#1A2030 0 25%,#3F4256 25% 50%,#8A7D52 50% 75%,#F2DC8A 75% 100%)}
+  background:linear-gradient(90deg,#1A2030 0 25%,#7A6A3A 25% 50%,#C9A93E 50% 75%,#FFD84A 75% 100%)}
 .ramp-labels{display:grid;grid-template-columns:repeat(4,1fr);text-align:center}
 .light-dot{box-shadow:0 0 6px 2px rgba(255,210,63,.8)}
 body.night .chip.light{background:#141B2D;color:#FFE38A;border-color:#141B2D}
