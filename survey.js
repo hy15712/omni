@@ -351,7 +351,7 @@ let draft = null;
 const draftLayer = L.layerGroup().addTo(map);
 const savedLayer = L.layerGroup().addTo(map);
 const pinHtml = (cat, cls) => `<div class="pin ${cls}" style="--c:${SCATS[cat].color}"><b>${SCATS[cat].short}</b></div>`;
-const pinIconOf = (cat, cls) => L.divIcon({ className:"", iconSize:[30,30], iconAnchor:[15,30], html: pinHtml(cat, cls) });
+const pinIconOf = (cat, cls) => L.divIcon({ className:"", iconSize:[22,22], iconAnchor:[11,22], html: pinHtml(cat, cls) });
 
 function startDraft(cat, rec = null) {
   stopGps();
@@ -526,7 +526,7 @@ function renderForm() {
     <form id="svForm" onsubmit="return false">
       ${FIELDS[draft.cat].map(fieldHtml).join("")}
       ${big ? "" : photoBlock(false)}
-      <label class="sv-field"><span>메모 <small>(지도에는 나오지 않음)</small></span><textarea id="svMemo" rows="3" placeholder="예: 입구에 ‘공사로 폐쇄’ 안내문"></textarea></label>
+      <label class="sv-field"><span>현장 메모 <small>(지도 정보창에 그대로 나옵니다 · 본 것을 사실대로)</small></span><textarea id="svMemo" rows="3" placeholder="예: 1번 출구 개찰구 안 기둥 / 골목 입구에 상자가 쌓여 있음"></textarea></label>
     </form>
     <div class="sv-actions">
       ${draft.editing ? `<button type="button" class="btn2 danger" data-act="delete">삭제</button><button type="button" class="btn2" data-act="cancel">취소</button>` : ""}

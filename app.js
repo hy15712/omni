@@ -158,7 +158,7 @@ const markerLayer = L.layerGroup().addTo(map);
 function pinIcon(place, open) {
   const c = CATEGORIES[place.category];
   const cls = ["pin", place.verification.status === "unverified" ? "unverified" : "", open === false ? "closed" : ""].join(" ");
-  return L.divIcon({ className:"", iconSize:[30,30], iconAnchor:[15,30],
+  return L.divIcon({ className:"", iconSize:[22,22], iconAnchor:[11,22],
     html:`<div class="${cls}" style="--c:${c.color}"><b>${c.short}</b></div>` });
 }
 function render() {
@@ -220,6 +220,7 @@ function detailRows(p) {
       if (d.phone) add("전화", `<a href="tel:${esc(d.phone)}">${esc(d.phone)}</a>`);
   }
   if (has(p.hours) && (p.hours !== null || ["toilet","aed","hospital","pharmacy"].includes(p.category))) add("운영시간", hoursText(p.hours));
+  text("현장 메모", d.note);
   return rows.join("");
 }
 
@@ -284,6 +285,7 @@ function openRoad(r) {
       ${r.surface !== undefined ? `<dt>포장</dt><dd>${esc(r.surface) || "확인불가"}</dd>` : ""}
       ${r.curbCut !== undefined ? `<dt>연석 경사로</dt><dd>${yn(r.curbCut)}</dd>` : ""}
       ${r.slopeNote !== undefined ? `<dt>경사</dt><dd>${esc(r.slopeNote) || "확인불가"}</dd>` : ""}
+      ${r.note ? `<dt>현장 메모</dt><dd>${esc(r.note)}</dd>` : ""}
     </dl>
     ${lineKind(r) === "narrow" ? `<p class="note">노란 선(좁은 길): 측정한 유효 폭이 ${NARROW_M}m 미만인 구간입니다. ${NARROW_BASIS}.</p>` : ""}
     <p class="note">측정된 환경 정보만 표시합니다. 이 구간의 안전 여부는 평가하지 않습니다.</p>`);
@@ -389,7 +391,8 @@ function openLight(l) {
     <div class="cat" style="--c:#B37400">${esc(l.type)}</div>
     <h2 id="sheetTitle">${esc(l.type)} ${l.count != null ? `${l.count}개` : "(개수 확인불가)"}</h2>
     ${verificationRow(l.verification)}
-    <dl class="facts"><dt>위치</dt><dd>${l.lat.toFixed(5)}, ${l.lng.toFixed(5)}</dd></dl>`);
+    <dl class="facts"><dt>위치</dt><dd>${l.lat.toFixed(5)}, ${l.lng.toFixed(5)}</dd>
+      ${l.location ? `<dt>위치 설명</dt><dd>${esc(l.location)}</dd>` : ""}${l.note ? `<dt>현장 메모</dt><dd>${esc(l.note)}</dd>` : ""}</dl>`);
 }
 buildGrid();
 

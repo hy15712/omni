@@ -46,9 +46,9 @@ h1{font-size:1.15rem;font-weight:800;margin:0;letter-spacing:-.01em}
 #map{flex:1;min-height:0}
 
 /* 마커: 분류 색 + 짧은 글자. 검증 상태는 테두리 모양으로 */
-.pin{width:30px;height:30px;border-radius:50% 50% 50% 4px;transform:rotate(-45deg);
-  background:var(--c);border:2.5px solid #fff;box-shadow:0 1px 3px rgba(30,42,50,.45);display:grid;place-items:center}
-.pin b{transform:rotate(45deg);color:#fff;font-size:11px;font-weight:800;letter-spacing:-.03em}
+.pin{width:22px;height:22px;border-radius:50% 50% 50% 3px;transform:rotate(-45deg);
+  background:var(--c);border:1.5px solid #fff;box-shadow:0 1px 2px rgba(30,42,50,.4);display:grid;place-items:center}
+.pin b{transform:rotate(45deg);color:#fff;font-size:8.5px;font-weight:800;letter-spacing:-.04em;white-space:nowrap}
 .pin.unverified{border-style:dashed;border-color:#fff;opacity:.8}
 .pin.closed{background:#9AA3A8}
 
@@ -330,24 +330,24 @@ window.PLACES = [
   {"id":"aed-002","category":"aed","name":"AED · 서울YMCA 사회체육부","lat":37.570481,"lng":126.985394,"details":{"location":"서울YMCA 사회체육부","photos":["photos/aed-002-1.jpg","photos/aed-002-2.jpg"]},"verification":{"status":"field","date":"2026-10-26","by":"장하연"},"coordSource":"map"},
   {"id":"aed-003","category":"aed","name":"AED · A동 1층 로비 데스크 옆","lat":37.570669,"lng":126.986275,"details":{"location":"A동 1층 로비 데스크 옆","photos":["photos/aed-003-1.jpg","photos/aed-003-2.jpg"]},"verification":{"status":"field","date":"2026-10-26","by":"장하연"},"coordSource":"map"},
   {"id":"aed-004","category":"aed","name":"AED · 종로3가역 1호선 상선 5-1 앞","lat":37.570443,"lng":126.991759,"details":{"location":"종로3가역 1호선 상선 5-1 앞","photos":["photos/aed-004-1.jpg","photos/aed-004-2.jpg"]},"verification":{"status":"field","date":"2026-10-26","by":"장하연"},"coordSource":"map"},
-  {"id":"aed-005","category":"aed","name":"AED · 1호선 대합실","lat":37.570451,"lng":126.991727,"details":{"location":"1호선 대합실","photos":["photos/aed-005-1.jpg","photos/aed-005-2.jpg"]},"verification":{"status":"field","date":"2026-10-26","by":"홍서연"},"coordSource":"map"},
+  {"id":"aed-005","category":"aed","name":"AED · 1호선 대합실","lat":37.570451,"lng":126.991727,"details":{"location":"1호선 대합실","photos":["photos/aed-005-1.jpg","photos/aed-005-2.jpg"],"note":"1번출구 개찰구 안 기둥"},"verification":{"status":"field","date":"2026-10-26","by":"홍서연"},"coordSource":"map"},
   {"id":"aed-006","category":"aed","name":"AED · 하선(종각역 방면) 6-3 앞","lat":37.570428,"lng":126.991854,"details":{"location":"하선(종각역 방면) 6-3 앞","photos":["photos/aed-006-1.jpg","photos/aed-006-2.jpg"]},"verification":{"status":"field","date":"2026-10-26","by":"홍서연"},"coordSource":"map"},
-  {"id":"aed-007","category":"aed","name":"AED · B1 안내부스 옆","lat":37.571551,"lng":126.991897,"details":{"location":"B1 안내부스 옆","photos":["photos/aed-007-1.jpg","photos/aed-007-2.jpg"]},"verification":{"status":"field","date":"2026-10-26","by":"홍서연"},"coordSource":"map"},
+  {"id":"aed-007","category":"aed","name":"AED · B1 안내부스 옆","lat":37.571551,"lng":126.991897,"details":{"location":"B1 안내부스 옆","photos":["photos/aed-007-1.jpg","photos/aed-007-2.jpg"],"note":"2-1 출구 진입 후 우측 개찰구 안 벽면"},"verification":{"status":"field","date":"2026-10-26","by":"홍서연"},"coordSource":"map"},
   {"id":"aed-008","category":"aed","name":"AED · B2 D계단상부 옆 벽면","lat":37.571741,"lng":126.991804,"details":{"location":"B2 D계단상부 옆 벽면","photos":["photos/aed-008-1.jpg","photos/aed-008-2.jpg"]},"verification":{"status":"field","date":"2026-10-26","by":"홍서연"},"coordSource":"map"},
   {"id":"aed-009","category":"aed","name":"AED · B3 5호선 환승통로 옆 벽면","lat":37.571463,"lng":126.991907,"details":{"location":"B3 5호선 환승통로 옆 벽면","photos":["photos/aed-009-1.jpg","photos/aed-009-2.jpg"]},"verification":{"status":"field","date":"2026-10-26","by":"홍서연"},"coordSource":"map"},
-  {"id":"aed-010","category":"aed","name":"AED · 1호선 환승통로 벽면","lat":37.571378,"lng":126.991956,"details":{"location":"1호선 환승통로 벽면","photos":["photos/aed-010-1.jpg","photos/aed-010-2.jpg"]},"verification":{"status":"field","date":"2026-10-26","by":"홍서연"},"coordSource":"map"},
+  {"id":"aed-010","category":"aed","name":"AED · 1호선 환승통로 벽면","lat":37.571378,"lng":126.991956,"details":{"location":"1호선 환승통로 벽면","photos":["photos/aed-010-1.jpg","photos/aed-010-2.jpg"],"note":"을지로3가 방면 3호선 끝"},"verification":{"status":"field","date":"2026-10-26","by":"홍서연"},"coordSource":"map"},
   {"id":"aed-011","category":"aed","name":"AED · 4/5번 출구 개찰구 안","lat":37.572565,"lng":126.989726,"details":{"location":"4/5번 출구 개찰구 안","photos":["photos/aed-011-1.jpg","photos/aed-011-2.jpg"]},"verification":{"status":"field","date":"2026-10-26","by":"홍서연"},"coordSource":"map"},
   {"id":"bench-001","category":"bench","name":"벤치 · 보신각터 앞","lat":37.569742,"lng":126.98328,"details":{"count":4,"location":"보신각터 앞"},"hours":null,"verification":{"status":"field","date":"2026-10-29","by":"원예림"},"coordSource":"map"},
   {"id":"stairs-001","category":"stairs","name":"계단 · 9번출구","lat":37.57003,"lng":126.98437,"details":{"steps":2,"location":"9번출구","handrail":"양쪽","altRoute":"바로 옆에 경사로 있음"},"hours":null,"verification":{"status":"field","date":"2026-10-29","by":"원예림"},"coordSource":"map"},
   {"id":"stairs-002","category":"stairs","name":"계단 · 10번출구","lat":37.570028,"lng":126.984834,"details":{"steps":2,"location":"10번출구","handrail":"양쪽","altRoute":"건너편 3번 출구 엘리베이터 이용"},"hours":null,"verification":{"status":"field","date":"2026-10-30","by":"원예림"},"coordSource":"map"},
   {"id":"trash-001","category":"trash","name":"쓰레기통 · 버스정류장 옆","lat":37.568745,"lng":126.985028,"details":{"location":"버스정류장 옆","recycling":true},"hours":null,"verification":{"status":"field","date":"2026-10-30","by":"원예림"},"coordSource":"map"},
   {"id":"aed-012","category":"aed","name":"AED · 관수파출소 내","lat":37.568725,"lng":126.986357,"details":{"location":"관수파출소 내"},"hours":"24h","verification":{"status":"field","date":"2026-10-30","by":"원예림"},"coordSource":"map"},
-  {"id":"aed-013","category":"aed","name":"AED · 세븐일레븐 종로삼일점 내","lat":37.568581,"lng":126.986793,"details":{"location":"세븐일레븐 종로삼일점 내","photos":["photos/aed-013-1.jpg"]},"hours":"24h","verification":{"status":"field","date":"2026-10-30","by":"원예림"},"coordSource":"map"},
-  {"id":"aed-014","category":"aed","name":"AED · 삼일빌딩","lat":37.568615,"lng":126.987116,"details":{"location":"삼일빌딩","photos":["photos/aed-014-1.jpg"]},"hours":null,"verification":{"status":"field","date":"2026-10-30","by":"원예림"},"coordSource":"map"},
+  {"id":"aed-013","category":"aed","name":"AED · 세븐일레븐 종로삼일점 내","lat":37.568581,"lng":126.986793,"details":{"location":"세븐일레븐 종로삼일점 내","photos":["photos/aed-013-1.jpg"],"note":"들어가서 문 오른쪽"},"hours":"24h","verification":{"status":"field","date":"2026-10-30","by":"원예림"},"coordSource":"map"},
+  {"id":"aed-014","category":"aed","name":"AED · 삼일빌딩","lat":37.568615,"lng":126.987116,"details":{"location":"삼일빌딩","photos":["photos/aed-014-1.jpg"],"note":"1층 무인정보단말기 좌측"},"hours":null,"verification":{"status":"field","date":"2026-10-30","by":"원예림"},"coordSource":"map"},
   {"id":"trash-002","category":"trash","name":"쓰레기통 · 투썸플레이스 앞","lat":37.570029,"lng":126.985415,"details":{"location":"투썸플레이스 앞","recycling":true},"hours":null,"verification":{"status":"field","date":"2026-10-30","by":"원예림"},"coordSource":"map"},
   {"id":"trash-003","category":"trash","name":"쓰레기통 · 메가커피 종각역점 앞","lat":37.570017,"lng":126.986387,"details":{"location":"메가커피 종각역점 앞","recycling":true},"hours":null,"verification":{"status":"field","date":"2026-10-30","by":"원예림"},"coordSource":"map"},
   {"id":"toilet-001","category":"toilet","name":"화장실 · 청계3가 사거리 부근","lat":37.568666,"lng":126.9921,"details":{"location":"청계3가 사거리 부근","accessibleStall":false,"open":true,"approach":{"step":false,"stairs":false,"ramp":false},"photos":["photos/toilet-001-1.jpg"]},"hours":"24h","verification":{"status":"field","date":"2026-10-31","by":"원예림"},"coordSource":"map"},
-  {"id":"aed-015","category":"aed","name":"AED · CU 종로으뜸점","lat":37.569402,"lng":126.990701,"details":{"location":"CU 종로으뜸점","photos":["photos/aed-015-1.jpg"]},"hours":"24h","verification":{"status":"field","date":"2026-10-31","by":"원예림"},"coordSource":"map"},
+  {"id":"aed-015","category":"aed","name":"AED · CU 종로으뜸점","lat":37.569402,"lng":126.990701,"details":{"location":"CU 종로으뜸점","photos":["photos/aed-015-1.jpg"],"note":"전자레인지 위"},"hours":"24h","verification":{"status":"field","date":"2026-10-31","by":"원예림"},"coordSource":"map"},
   {"id":"hospital-001","category":"hospital","name":"본라인한의원","lat":37.568697,"lng":126.985903,"details":{},"hours":null,"verification":{"status":"field","date":"2026-11-01","by":"원예림"},"coordSource":"map"},
   {"id":"hospital-002","category":"hospital","name":"경희스마일한의원","lat":37.568938,"lng":126.985912,"details":{},"hours":null,"verification":{"status":"field","date":"2026-11-01","by":"원예림"},"coordSource":"map"},
   {"id":"hospital-003","category":"hospital","name":"서울미유치과의원","lat":37.568922,"lng":126.985887,"details":{},"hours":null,"verification":{"status":"field","date":"2026-11-01","by":"원예림"},"coordSource":"map"},
@@ -393,7 +393,7 @@ window.ROADS = { type:"FeatureCollection", features:[
   {"type":"Feature","properties":{"id":"seg-002","name":"신광기업 옆쪽 길","type":"sidewalk","surface":"아스팔트","curbCut":false,"slopeNote":"완전한 평지","verification":{"status":"field","date":"2026-10-30","by":"원예림"},"coordSource":"map"},"geometry":{"type":"LineString","coordinates":[[126.988568,37.568684],[126.988616,37.568679],[126.988624,37.568618],[126.988613,37.568679],[126.989158,37.568688]]}},
   {"type":"Feature","properties":{"id":"seg-003","name":"올리브영 커피빈 사이 골목","type":"shared","surface":"콘크리트","curbCut":false,"slopeNote":"완전한 평지","verification":{"status":"field","date":"2026-10-30","by":"원예림"},"coordSource":"map"},"geometry":{"type":"LineString","coordinates":[[126.98858,37.570017],[126.988855,37.56836]]}},
   {"type":"Feature","properties":{"id":"seg-004","name":"배스킨라빈스-파스쿠찌","type":"shared","surface":"콘크리트","curbCut":false,"slopeNote":"완전한 평지","verification":{"status":"field","date":"2026-10-30","by":"원예림"},"coordSource":"map"},"geometry":{"type":"LineString","coordinates":[[126.987957,37.569642],[126.989392,37.569711]]}},
-  {"type":"Feature","properties":{"id":"seg-005","name":"버거킹 옆길","type":"shared","surface":"콘크리트","curbCut":false,"slopeNote":"완전한 평지","verification":{"status":"field","date":"2026-10-30","by":"원예림"},"coordSource":"map"},"geometry":{"type":"LineString","coordinates":[[126.988039,37.569966],[126.988334,37.569696]]}},
+  {"type":"Feature","properties":{"id":"seg-005","name":"버거킹 옆길","type":"shared","surface":"콘크리트","curbCut":false,"slopeNote":"완전한 평지","verification":{"status":"field","date":"2026-10-30","by":"원예림"},"coordSource":"map","note":"자동차가 주차되어 있을때 휠체어 불가능"},"geometry":{"type":"LineString","coordinates":[[126.988039,37.569966],[126.988334,37.569696]]}},
   {"type":"Feature","properties":{"id":"seg-006","name":"하우마라탕 인근 길","type":"shared","surface":"콘크리트","curbCut":false,"slopeNote":"완전한 평지","verification":{"status":"field","date":"2026-10-30","by":"원예림"},"coordSource":"map"},"geometry":{"type":"LineString","coordinates":[[126.98858,37.569479],[126.988421,37.569613]]}},
   {"type":"Feature","properties":{"id":"seg-007","name":"이디야커피-하우마라탕","type":"shared","surface":"콘크리트","curbCut":false,"slopeNote":"완전한 평지","verification":{"status":"field","date":"2026-10-30","by":"원예림"},"coordSource":"map"},"geometry":{"type":"LineString","coordinates":[[126.987955,37.569406],[126.988446,37.569479]]}},
   {"type":"Feature","properties":{"id":"seg-008","name":"종로부티크k호텔 인근 길","type":"shared","surface":"콘크리트","curbCut":false,"slopeNote":"완전한 평지","verification":{"status":"field","date":"2026-10-30","by":"원예림"},"coordSource":"map"},"geometry":{"type":"LineString","coordinates":[[126.987939,37.569115],[126.988633,37.569151]]}},
@@ -402,7 +402,7 @@ window.ROADS = { type:"FeatureCollection", features:[
   {"type":"Feature","properties":{"id":"seg-011","name":"보신각-세븐일레븐","type":"shared","surface":"콘크리트","curbCut":false,"slopeNote":"완전한 평지","verification":{"status":"field","date":"2026-10-30","by":"원예림"},"coordSource":"map"},"geometry":{"type":"LineString","coordinates":[[126.983119,37.569549],[126.987483,37.569637]]}},
   {"type":"Feature","properties":{"id":"seg-012","name":"보신각 뒤 종각역 4번 출구 앞","type":"sidewalk","surface":"보도블록","curbCut":false,"slopeNote":"완전한 평지","verification":{"status":"field","date":"2026-10-30","by":"원예림"},"coordSource":"map"},"geometry":{"type":"LineString","coordinates":[[126.984015,37.570023],[126.984012,37.569581]]}},
   {"type":"Feature","properties":{"id":"seg-013","name":"보신각 뒤길 첫번째 골목","type":"sidewalk","surface":"보도블록","curbCut":false,"slopeNote":"완전한 평지","verification":{"status":"field","date":"2026-10-30","by":"원예림"},"coordSource":"map"},"geometry":{"type":"LineString","coordinates":[[126.984028,37.569831],[126.984393,37.569839]]}},
-  {"type":"Feature","properties":{"id":"seg-014","name":"보신각-청계천 사이 s자 길","type":"shared","surface":"아스팔트","curbCut":false,"slopeNote":"완전한 평지","verification":{"status":"field","date":"2026-10-30","by":"원예림"},"coordSource":"map"},"geometry":{"type":"LineString","coordinates":[[126.983372,37.569495],[126.983375,37.569395],[126.983383,37.569395],[126.983348,37.569052]]}},
+  {"type":"Feature","properties":{"id":"seg-014","name":"보신각-청계천 사이 s자 길","type":"shared","surface":"아스팔트","curbCut":false,"slopeNote":"완전한 평지","verification":{"status":"field","date":"2026-10-30","by":"원예림"},"coordSource":"map","note":"자동차가 많이 세워져 있어 경우에 따라 휠체어 접근 힘들 수 있음"},"geometry":{"type":"LineString","coordinates":[[126.983372,37.569495],[126.983375,37.569395],[126.983383,37.569395],[126.983348,37.569052]]}},
   {"type":"Feature","properties":{"id":"seg-015","name":"보차혼용 구간","type":"shared","surface":"콘크리트","curbCut":false,"slopeNote":"완전한 평지","verification":{"status":"field","date":"2026-10-30","by":"원예림"},"coordSource":"map"},"geometry":{"type":"LineString","coordinates":[[126.984017,37.569487],[126.984009,37.568945]]}},
   {"type":"Feature","properties":{"id":"seg-016","name":"스타벅스-청계천","type":"shared","surface":"콘크리트","curbCut":false,"slopeNote":"완전한 평지","verification":{"status":"field","date":"2026-10-30","by":"원예림"},"coordSource":"map"},"geometry":{"type":"LineString","coordinates":[[126.984465,37.570008],[126.984421,37.568856]]}},
   {"type":"Feature","properties":{"id":"seg-017","name":"죠스떡볶이- 시사일본어학원","type":"shared","surface":"콘크리트","curbCut":false,"slopeNote":"완전한 평지","verification":{"status":"field","date":"2026-10-30","by":"원예림"},"coordSource":"map"},"geometry":{"type":"LineString","coordinates":[[126.984516,37.569762],[126.986879,37.569766]]}},
@@ -421,13 +421,13 @@ window.ROADS = { type:"FeatureCollection", features:[
   {"type":"Feature","properties":{"id":"seg-030","name":"나포레호텔-청계천","type":"shared","surface":"콘크리트","curbCut":false,"slopeNote":"완전한 평지","verification":{"status":"field","date":"2026-10-31","by":"원예림"},"coordSource":"map"},"geometry":{"type":"LineString","coordinates":[[126.990585,37.568481],[126.99055,37.568834]]}},
   {"type":"Feature","properties":{"id":"seg-031","name":"나포레호텔 앞 길","type":"shared","surface":"콘크리트","curbCut":false,"slopeNote":"완전한 평지","verification":{"status":"field","date":"2026-10-31","by":"원예림"},"coordSource":"map"},"geometry":{"type":"LineString","coordinates":[[126.990669,37.568845],[126.990827,37.568824],[126.990833,37.568826],[126.991061,37.568801]]}},
   {"type":"Feature","properties":{"id":"seg-032","name":"서울식품 앞 수표로18가길","type":"sidewalk","surface":"보도블록","curbCut":false,"slopeNote":"완전한 평지","verification":{"status":"field","date":"2026-10-31","by":"원예림"},"coordSource":"map"},"geometry":{"type":"LineString","coordinates":[[126.991058,37.568805],[126.991307,37.568775]]}},
-  {"type":"Feature","properties":{"id":"seg-033","name":"수표로18가길 ‘ㄴ‘자 길","type":"sidewalk","surface":"보도블록","curbCut":false,"slopeNote":"완전한 평지","verification":{"status":"field","date":"2026-10-31","by":"원예림"},"coordSource":"map"},"geometry":{"type":"LineString","coordinates":[[126.991054,37.568791],[126.991046,37.568583],[126.991059,37.568585],[126.991285,37.568591]]}},
+  {"type":"Feature","properties":{"id":"seg-033","name":"수표로18가길 ‘ㄴ‘자 길","type":"sidewalk","surface":"보도블록","curbCut":false,"slopeNote":"완전한 평지","verification":{"status":"field","date":"2026-10-31","by":"원예림"},"coordSource":"map","note":"휠체어 진입 불가할 정도로 짐이 많이 쌓여있음"},"geometry":{"type":"LineString","coordinates":[[126.991054,37.568791],[126.991046,37.568583],[126.991059,37.568585],[126.991285,37.568591]]}},
   {"type":"Feature","properties":{"id":"seg-034","name":"사랑채 건너편 ㄱ모양 수표로","type":"sidewalk","surface":"아스팔트","curbCut":false,"slopeNote":"완전한 평지","verification":{"status":"field","date":"2026-10-31","by":"원예림"},"coordSource":"map"},"geometry":{"type":"LineString","coordinates":[[126.989663,37.568701],[126.990184,37.568739],[126.990189,37.568741],[126.990213,37.568436]]}},
   {"type":"Feature","properties":{"id":"seg-035","name":"인도 구간","type":"sidewalk","surface":"보도블록","curbCut":false,"slopeNote":"완전한 평지","verification":{"status":"field","date":"2026-10-31","by":"원예림"},"coordSource":"map"},"geometry":{"type":"LineString","coordinates":[[126.990221,37.568539],[126.990556,37.568569]]}},
   {"type":"Feature","properties":{"id":"seg-036","name":"인도 구간","type":"sidewalk","surface":"보도블록","curbCut":false,"slopeNote":"완만한 평지","verification":{"status":"field","date":"2026-10-31","by":"원예림"},"coordSource":"map"},"geometry":{"type":"LineString","coordinates":[[126.991468,37.569787],[126.991291,37.569802]]}},
   {"type":"Feature","properties":{"id":"seg-037","name":"인도 구간","type":"sidewalk","surface":"보도블록","curbCut":false,"slopeNote":"완전한 평자","verification":{"status":"field","date":"2026-10-31","by":"원예림"},"coordSource":"map"},"geometry":{"type":"LineString","coordinates":[[126.990783,37.569767],[126.990799,37.569397],[126.99078,37.569771],[126.991148,37.569792]]}},
-  {"type":"Feature","properties":{"id":"seg-038","name":"보차혼용 구간","type":"shared","surface":"콘크리트","curbCut":false,"slopeNote":"완전한 평지","verification":{"status":"field","date":"2026-10-31","by":"원예림"},"coordSource":"map"},"geometry":{"type":"LineString","coordinates":[[126.990332,37.569365],[126.99037,37.568891],[126.990378,37.568891],[126.990531,37.568878]]}},
-  {"type":"Feature","properties":{"id":"seg-039","name":"보차혼용 구간","type":"shared","surface":"기타","curbCut":false,"slopeNote":"완전한 평지","verification":{"status":"field","date":"2026-10-31","by":"원예림"},"coordSource":"map"},"geometry":{"type":"LineString","coordinates":[[126.990273,37.569152],[126.990611,37.56914]]}},
+  {"type":"Feature","properties":{"id":"seg-038","name":"보차혼용 구간","type":"shared","surface":"콘크리트","curbCut":false,"slopeNote":"완전한 평지","verification":{"status":"field","date":"2026-10-31","by":"원예림"},"coordSource":"map","note":"자동차가 들어오기엔 좁은데 콘크리트가 깔려있음"},"geometry":{"type":"LineString","coordinates":[[126.990332,37.569365],[126.99037,37.568891],[126.990378,37.568891],[126.990531,37.568878]]}},
+  {"type":"Feature","properties":{"id":"seg-039","name":"보차혼용 구간","type":"shared","surface":"기타","curbCut":false,"slopeNote":"완전한 평지","verification":{"status":"field","date":"2026-10-31","by":"원예림"},"coordSource":"map","note":"일부 보도블록으로 되어있는 구간 존재"},"geometry":{"type":"LineString","coordinates":[[126.990273,37.569152],[126.990611,37.56914]]}},
   {"type":"Feature","properties":{"id":"seg-040","name":"보차혼용 구간","type":"shared","surface":"콘크리트","curbCut":false,"slopeNote":"완전한 평지","verification":{"status":"field","date":"2026-10-31","by":"원예림"},"coordSource":"map"},"geometry":{"type":"LineString","coordinates":[[126.991763,37.568926],[126.99188,37.568538]]}},
   {"type":"Feature","properties":{"id":"seg-041","name":"보차혼용 구간","type":"shared","surface":"콘크리트","curbCut":false,"slopeNote":"완전한 평지","verification":{"status":"field","date":"2026-10-31","by":"원예림"},"coordSource":"map"},"geometry":{"type":"LineString","coordinates":[[126.99121,37.570178],[126.991199,37.56947],[126.991206,37.569467],[126.991313,37.569265],[126.991315,37.569269],[126.991417,37.569151],[126.991424,37.569163],[126.99144,37.568906]]}},
   {"type":"Feature","properties":{"id":"seg-042","name":"보차혼용 구간","type":"shared","surface":"콘크리트","curbCut":false,"slopeNote":"완전한 평지","verification":{"status":"field","date":"2026-10-31","by":"원예림"},"coordSource":"map"},"geometry":{"type":"LineString","coordinates":[[126.99131,37.56928],[126.992134,37.569291]]}},
@@ -728,7 +728,7 @@ const markerLayer = L.layerGroup().addTo(map);
 function pinIcon(place, open) {
   const c = CATEGORIES[place.category];
   const cls = ["pin", place.verification.status === "unverified" ? "unverified" : "", open === false ? "closed" : ""].join(" ");
-  return L.divIcon({ className:"", iconSize:[30,30], iconAnchor:[15,30],
+  return L.divIcon({ className:"", iconSize:[22,22], iconAnchor:[11,22],
     html:`<div class="${cls}" style="--c:${c.color}"><b>${c.short}</b></div>` });
 }
 function render() {
@@ -790,6 +790,7 @@ function detailRows(p) {
       if (d.phone) add("전화", `<a href="tel:${esc(d.phone)}">${esc(d.phone)}</a>`);
   }
   if (has(p.hours) && (p.hours !== null || ["toilet","aed","hospital","pharmacy"].includes(p.category))) add("운영시간", hoursText(p.hours));
+  text("현장 메모", d.note);
   return rows.join("");
 }
 
@@ -854,6 +855,7 @@ function openRoad(r) {
       ${r.surface !== undefined ? `<dt>포장</dt><dd>${esc(r.surface) || "확인불가"}</dd>` : ""}
       ${r.curbCut !== undefined ? `<dt>연석 경사로</dt><dd>${yn(r.curbCut)}</dd>` : ""}
       ${r.slopeNote !== undefined ? `<dt>경사</dt><dd>${esc(r.slopeNote) || "확인불가"}</dd>` : ""}
+      ${r.note ? `<dt>현장 메모</dt><dd>${esc(r.note)}</dd>` : ""}
     </dl>
     ${lineKind(r) === "narrow" ? `<p class="note">노란 선(좁은 길): 측정한 유효 폭이 ${NARROW_M}m 미만인 구간입니다. ${NARROW_BASIS}.</p>` : ""}
     <p class="note">측정된 환경 정보만 표시합니다. 이 구간의 안전 여부는 평가하지 않습니다.</p>`);
@@ -959,7 +961,8 @@ function openLight(l) {
     <div class="cat" style="--c:#B37400">${esc(l.type)}</div>
     <h2 id="sheetTitle">${esc(l.type)} ${l.count != null ? `${l.count}개` : "(개수 확인불가)"}</h2>
     ${verificationRow(l.verification)}
-    <dl class="facts"><dt>위치</dt><dd>${l.lat.toFixed(5)}, ${l.lng.toFixed(5)}</dd></dl>`);
+    <dl class="facts"><dt>위치</dt><dd>${l.lat.toFixed(5)}, ${l.lng.toFixed(5)}</dd>
+      ${l.location ? `<dt>위치 설명</dt><dd>${esc(l.location)}</dd>` : ""}${l.note ? `<dt>현장 메모</dt><dd>${esc(l.note)}</dd>` : ""}</dl>`);
 }
 buildGrid();
 
@@ -1320,7 +1323,7 @@ let draft = null;
 const draftLayer = L.layerGroup().addTo(map);
 const savedLayer = L.layerGroup().addTo(map);
 const pinHtml = (cat, cls) => `<div class="pin ${cls}" style="--c:${SCATS[cat].color}"><b>${SCATS[cat].short}</b></div>`;
-const pinIconOf = (cat, cls) => L.divIcon({ className:"", iconSize:[30,30], iconAnchor:[15,30], html: pinHtml(cat, cls) });
+const pinIconOf = (cat, cls) => L.divIcon({ className:"", iconSize:[22,22], iconAnchor:[11,22], html: pinHtml(cat, cls) });
 
 function startDraft(cat, rec = null) {
   stopGps();
@@ -1495,7 +1498,7 @@ function renderForm() {
     <form id="svForm" onsubmit="return false">
       ${FIELDS[draft.cat].map(fieldHtml).join("")}
       ${big ? "" : photoBlock(false)}
-      <label class="sv-field"><span>메모 <small>(지도에는 나오지 않음)</small></span><textarea id="svMemo" rows="3" placeholder="예: 입구에 ‘공사로 폐쇄’ 안내문"></textarea></label>
+      <label class="sv-field"><span>현장 메모 <small>(지도 정보창에 그대로 나옵니다 · 본 것을 사실대로)</small></span><textarea id="svMemo" rows="3" placeholder="예: 1번 출구 개찰구 안 기둥 / 골목 입구에 상자가 쌓여 있음"></textarea></label>
     </form>
     <div class="sv-actions">
       ${draft.editing ? `<button type="button" class="btn2 danger" data-act="delete">삭제</button><button type="button" class="btn2" data-act="cancel">취소</button>` : ""}

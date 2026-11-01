@@ -66,12 +66,13 @@ function toEntry(rec) {
   const d = rec.data || {}, v = { status: "field", date: rec.surveyDate, by: rec.surveyor };
   if (rec.kind === "road") return { type: "Feature",
     properties: { id: null, name: d.name || `${ROAD_LABEL[d.type] || "보행"} 구간`, type: d.type,
-      ...only(d, ["widthM", "surface", "curbCut", "slopeNote"]), verification: v, coordSource: rec.coordSource },
+      ...only(d, ["widthM", "surface", "curbCut", "slopeNote"]), ...(rec.memo ? { note: rec.memo } : {}), verification: v, coordSource: rec.coordSource },
     geometry: { type: "LineString", coordinates: rec.coords } };
   if (rec.kind === "light") return { lat: rec.lat, lng: rec.lng, count: d.count ?? null, type: d.type || "미상", id: null,
-    ...(d.location ? { location: d.location } : {}), verification: v, coordSource: rec.coordSource };
+    ...(d.location ? { location: d.location } : {}), ...(rec.memo ? { note: rec.memo } : {}), verification: v, coordSource: rec.coordSource };
   const keys = DETAIL_KEYS[rec.category] || [];
   const details = only(d, keys);
+  if (rec.memo) details.note = rec.memo;   // 현장 메모 → 정보창 ‘현장 메모’
   const name = d.name || `${LABEL[rec.category]}${d.location ? " · " + d.location : ""}`;
   return { id: null, category: rec.category, name, lat: rec.lat, lng: rec.lng, details,
     ...(HOURS_CATS.includes(rec.category) ? (d.hours !== undefined ? { hours: d.hours } : {}) : { hours: null }),
