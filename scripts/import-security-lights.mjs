@@ -56,7 +56,7 @@ out.sort((a, b) => a.id.localeCompare(b.id, "ko"));
 const summary = [...sources].map(([k, v]) => `${k} ${v}곳`).join(" · ");
 const header = `// 가로등·보안등 위치 — 지도의 가로등 격자에 쓰는 공공데이터. scripts/import-security-lights.mjs 로 만듦(직접 고치지 말 것)
 // 지금: ${summary} (전국보안등정보표준데이터, 조사 범위 안만)
-// 큰길 가로등은 아직 없음. 현장 조사로 기록한 가로등은 data/streetlights-survey.js 에 따로 보관(지도에 표시 안 함)
+// 큰길 가로등은 아직 없음. 현장 조사 가로등은 data/streetlights-survey.js 에 따로 있고, 지도(app.js)가 이 보안등과 10m 안에 겹치는 것을 빼고 함께 표시
 // count: 그 지점의 등 개수(쌍등이면 2) / type: "가로등" | "보안등" / mount: 설치 형태(건축물·한전주·전용주)`;
 fs.writeFileSync(path.join(ROOT, "data/streetlights.js"), `${header}\nwindow.STREETLIGHTS = [\n${out.map(v => "  " + JSON.stringify(v) + ",").join("\n")}\n];\n`);
 console.log(`조사 범위 안 ${out.length}곳(등 ${out.reduce((s, l) => s + l.count, 0)}개) → data/streetlights.js · ${summary}`);

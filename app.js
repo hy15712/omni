@@ -367,10 +367,22 @@ const gridLayer = L.layerGroup();
 const lightPointLayer = L.layerGroup();
 let selectedCell = null;
 
+// 지도에 쓰는 가로등 = 보안등 공공데이터(기관확인) + 현장 조사 가로등(현장확인).
+// 현장 조사 가로등 중 공공 보안등과 FIELD_DUP_M 미터 안에 있는 것은 같은 등을 두 번 센 것으로 보고 뺍니다.
+// (조사 기록은 data/streetlights-survey.js 에 그대로 남아 있음. 기준을 바꾸려면 이 숫자만 고치면 됨)
+const FIELD_DUP_M = 10;
+const ALL_LIGHTS = (() => {
+  const pub = window.STREETLIGHTS || [];
+  const mPerLat = 111320, mPerLng = 111320 * Math.cos(B.south * Math.PI / 180);
+  const near = (a, b) => Math.hypot((a.lat - b.lat) * mPerLat, (a.lng - b.lng) * mPerLng) <= FIELD_DUP_M;
+  const field = (window.STREETLIGHTS_SURVEY || []).filter(s => !pub.some(p => near(s, p)));
+  return pub.concat(field);
+})();
+
 function buildGrid() {
   const rows = Math.ceil((B.north - B.south) / dLat), cols = Math.ceil((B.east - B.west) / dLng);
   const cells = Array.from({ length: rows * cols }, () => ({ total: 0, items: [] }));
-  (window.STREETLIGHTS || []).forEach(l => {
+  ALL_LIGHTS.forEach(l => {
     const r = Math.floor((l.lat - B.south) / dLat), c = Math.floor((l.lng - B.west) / dLng);
     if (r < 0 || c < 0 || r >= rows || c >= cols) return;
     const cell = cells[r * cols + c]; cell.total += l.count || 1; cell.items.push(l);
@@ -394,7 +406,7 @@ function buildGrid() {
       .on("click", e => { L.DomEvent.stopPropagation(e); selectCell(e.target); openCell(cell, r, c); })
       .addTo(gridLayer);
   });
-  (window.STREETLIGHTS || []).forEach(l => {
+  ALL_LIGHTS.forEach(l => {
     L.marker([l.lat, l.lng], { icon: L.divIcon({ className: "", iconSize: [9, 9],
       html: `<div class="light-dot ${l.type === "보안등" ? "sec" : ""}"></div>` }), title: `${l.type} ${l.count}개` })
       .on("click", () => openLight(l)).addTo(lightPointLayer);
@@ -423,7 +435,7 @@ function toggleLights() {
 map.on("zoomend", syncLightPoints);
 
 // 지금 가로등 격자에 들어 있는 자료의 범위(‘0개’가 등이 없다는 뜻으로 읽히지 않게 정보창에 함께 안내)
-const LIGHT_DATA_NOTE = "지금 자료는 종로구·중구 보안등(골목)입니다. 큰길(종로·을지로·삼일대로 등) 가로등은 아직 들어 있지 않습니다.";
+const LIGHT_DATA_NOTE = "지금 자료는 종로구·중구 보안등 공공데이터와 조사팀이 현장에서 기록한 가로등입니다(보안등과 10m 안에 겹치는 현장 기록은 같은 등으로 보고 뺐습니다). 큰길 가로등 공식 자료는 아직 없어, 현장 조사에서 빠진 등이 있을 수 있습니다.";
 function openCell(cell, r, c) {
   const byType = cell.items.reduce((o, l) => (o[l.type] = (o[l.type] || 0) + (l.count || 1), o), {});
   const byStatus = cell.items.reduce((o, l) => (o[l.verification.status] = (o[l.verification.status] || 0) + 1, o), {});
@@ -442,7 +454,7 @@ function openCell(cell, r, c) {
       ${byType["미상"] ? `<dt>종류 미상</dt><dd>${byType["미상"]}개</dd>` : ""}
       <dt>설치 지점</dt><dd>${cell.items.length}곳</dd>
       <dt>확인 방법</dt><dd>${Object.entries(byStatus).map(([k, v]) => `${VSTATUS[k]} ${v}곳`).join(" · ") || "자료 없음"}</dd>
-      ${cell.items.length ? `<dt>출처</dt><dd>${[...new Set(cell.items.map(l => l.verification.by).filter(Boolean))].map(esc).join("<br>")}</dd>` : ""}
+      ${cell.items.length ? `<dt>출처</dt><dd>${[...new Set(cell.items.map(l => l.verification.status === "field" ? `현장 조사 (${l.verification.by})` : l.verification.by).filter(Boolean))].map(esc).join("<br>")}</dd>` : ""}
     </dl>
     <p class="note">${cell.total ? "조금 더 확대하면 등 하나하나의 위치가 점으로 표시됩니다." : "지금 자료에는 이 칸에 등록된 등이 없습니다."}<br>
     ${LIGHT_DATA_NOTE}<br>설치 개수이며, 실제 조도(밝기)를 측정한 값이 아닙니다.</p>`);
