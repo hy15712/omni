@@ -7,14 +7,15 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/maplibre-gl@4.7.1/dist/maplibre-gl.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
-<link rel="stylesheet" href="style.css?v=202611011017">
-<link rel="stylesheet" href="survey.css?v=202611011017">
+<link rel="stylesheet" href="style.css?v=202611011020">
+<link rel="stylesheet" href="survey.css?v=202611011020">
 </head>
 <body>
 <header class="top">
   <div class="title-row">
     <h1>종로 보행환경 정보지도</h1>
-    <span class="title-btns"><button id="principleShow" class="ghost" aria-controls="principle" hidden>안내 보기</button>
+    <span class="title-btns"><button id="filterToggle" class="ghost" aria-controls="filterBox" aria-expanded="true">필터 ▴</button>
+    <button id="principleShow" class="ghost" aria-controls="principle" hidden>안내 보기</button>
     <button id="aboutBtn" class="ghost" aria-expanded="false" aria-controls="about">이 지도에 대해</button></span>
   </div>
   <p class="principle" id="principle"><span>우리는 장소의 ‘안전’을 평가하지 않습니다. 이용자가 건강과 안전에 관한 판단을 할 수 있도록 검증 가능한 환경 정보를 제공합니다.</span>
@@ -29,11 +30,13 @@
     <p>보행 구간은 인도·차도·보차혼용 구분과 폭, 포장, 경사 같은 측정값만 보여줍니다. 어느 길이 더 안전한지는 판단하지 않습니다.</p>
     <p>선 색: 초록 = 인도, 연한 붉은색 = 차가 다닐 수 있는 길(차도·보차혼용), 검은 테두리의 형광 노란색 = 측정한 유효 폭이 1.5m 미만인 좁은 길. 폭을 잰 구간은 지도를 크게 확대하면 선 위에 폭이 표시됩니다. 기준은 국토교통부 「보도 설치 및 관리 지침」(2018. 7. 26. 전면 개정)의 보행자 통행 유효 폭 최소 1.5m(휠체어·유모차가 교행할 수 있는 최소 폭)입니다.</p>
   </div>
+  <div id="filterBox">
   <nav class="filters" aria-label="분류 필터" id="filters"></nav>
   <div class="toggles">
     <label class="switch"><input type="checkbox" id="openNow"><span>병원·약국·화장실은 지금 운영 중인 곳만</span></label>
     <label class="switch"><input type="checkbox" id="showRoads" checked><span>보행 구간 표시</span></label>
     <span id="count" class="count" aria-live="polite"></span>
+  </div>
   </div>
 </header>
 
@@ -61,12 +64,12 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@maplibre/maplibre-gl-leaflet@0.1.4/leaflet-maplibre-gl.js"></script>
-<script src="data/config.js?v=202611011017"></script>
-<script src="data/bounds.js?v=202611011017"></script>
-<script src="data/places.js?v=202611011017"></script>
-<script src="data/roads.js?v=202611011017"></script>
-<script src="data/streetlights.js?v=202611011017"></script>
-<script src="app.js?v=202611011017"></script>
-<script src="survey.js?v=202611011017"></script>
+<script src="data/config.js?v=202611011020"></script>
+<script src="data/bounds.js?v=202611011020"></script>
+<script src="data/places.js?v=202611011020"></script>
+<script src="data/roads.js?v=202611011020"></script>
+<script src="data/streetlights.js?v=202611011020"></script>
+<script src="app.js?v=202611011020"></script>
+<script src="survey.js?v=202611011020"></script>
 </body>
 </html>

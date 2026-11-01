@@ -159,6 +159,18 @@ function setPrinciple(hidden, remember = true) {
 document.getElementById("principleHide").onclick = () => setPrinciple(true);
 principleShow.onclick = () => setPrinciple(false);
 try { if (localStorage.getItem(PRINCIPLE_KEY) === "1") setPrinciple(true, false); } catch {}
+// 필터 줄(분류 칩·토글) 접기: 지도를 최대한 넓게 보려는 조원 피드백. 접은 상태도 기기에 기억
+const FILTER_KEY = "walkmap.filtersHidden";
+const filterBox = document.getElementById("filterBox"), filterToggle = document.getElementById("filterToggle");
+function setFilters(hidden, remember = true) {
+  filterBox.hidden = hidden;
+  filterToggle.textContent = hidden ? "필터 ▾" : "필터 ▴";
+  filterToggle.setAttribute("aria-expanded", !hidden);
+  if (remember) try { localStorage.setItem(FILTER_KEY, hidden ? "1" : ""); } catch {}
+  window.dispatchEvent(new Event("resize"));
+}
+filterToggle.onclick = () => setFilters(!filterBox.hidden);
+try { if (localStorage.getItem(FILTER_KEY) === "1") setFilters(true, false); } catch {}
 aboutBtn.onclick = () => { about.hidden = !about.hidden; aboutBtn.setAttribute("aria-expanded", !about.hidden); };
 
 // ── 보행 구간 ────────────────────────────────────

@@ -32,10 +32,12 @@ h1{font-size:1.15rem;font-weight:800;margin:0;letter-spacing:-.01em}
 .principle[hidden]{display:none}
 .principle-x{flex:none;background:none;border:none;color:var(--sub);font:inherit;font-size:.78rem;cursor:pointer;padding:2px 4px;white-space:nowrap}
 .title-btns{display:flex;gap:6px;flex-wrap:nowrap;justify-content:flex-end}
+#filterBox[hidden]{display:none}
 @media (max-width:520px){
   h1{font-size:1.02rem;white-space:nowrap}
   .title-btns{gap:4px}
-  .title-btns .ghost{padding:4px 8px;font-size:.72rem;white-space:nowrap}
+  .title-btns .ghost{padding:4px 7px;font-size:.7rem;white-space:nowrap}
+  h1{font-size:.95rem}
 }
 .ghost{background:none;border:1px solid var(--line);border-radius:999px;padding:5px 11px;font-size:.8rem;color:var(--sub);cursor:pointer}
 .about{font-size:.84rem;line-height:1.55;color:var(--sub);margin-bottom:8px}
@@ -273,7 +275,8 @@ body.sv-wide .grid-legend{right:410px}
 <header class="top">
   <div class="title-row">
     <h1>종로 보행환경 정보지도</h1>
-    <span class="title-btns"><button id="principleShow" class="ghost" aria-controls="principle" hidden>안내 보기</button>
+    <span class="title-btns"><button id="filterToggle" class="ghost" aria-controls="filterBox" aria-expanded="true">필터 ▴</button>
+    <button id="principleShow" class="ghost" aria-controls="principle" hidden>안내 보기</button>
     <button id="aboutBtn" class="ghost" aria-expanded="false" aria-controls="about">이 지도에 대해</button></span>
   </div>
   <p class="principle" id="principle"><span>우리는 장소의 ‘안전’을 평가하지 않습니다. 이용자가 건강과 안전에 관한 판단을 할 수 있도록 검증 가능한 환경 정보를 제공합니다.</span>
@@ -288,11 +291,13 @@ body.sv-wide .grid-legend{right:410px}
     <p>보행 구간은 인도·차도·보차혼용 구분과 폭, 포장, 경사 같은 측정값만 보여줍니다. 어느 길이 더 안전한지는 판단하지 않습니다.</p>
     <p>선 색: 초록 = 인도, 연한 붉은색 = 차가 다닐 수 있는 길(차도·보차혼용), 검은 테두리의 형광 노란색 = 측정한 유효 폭이 1.5m 미만인 좁은 길. 폭을 잰 구간은 지도를 크게 확대하면 선 위에 폭이 표시됩니다. 기준은 국토교통부 「보도 설치 및 관리 지침」(2018. 7. 26. 전면 개정)의 보행자 통행 유효 폭 최소 1.5m(휠체어·유모차가 교행할 수 있는 최소 폭)입니다.</p>
   </div>
+  <div id="filterBox">
   <nav class="filters" aria-label="분류 필터" id="filters"></nav>
   <div class="toggles">
     <label class="switch"><input type="checkbox" id="openNow"><span>병원·약국·화장실은 지금 운영 중인 곳만</span></label>
     <label class="switch"><input type="checkbox" id="showRoads" checked><span>보행 구간 표시</span></label>
     <span id="count" class="count" aria-live="polite"></span>
+  </div>
   </div>
 </header>
 
@@ -750,6 +755,18 @@ function setPrinciple(hidden, remember = true) {
 document.getElementById("principleHide").onclick = () => setPrinciple(true);
 principleShow.onclick = () => setPrinciple(false);
 try { if (localStorage.getItem(PRINCIPLE_KEY) === "1") setPrinciple(true, false); } catch {}
+// 필터 줄(분류 칩·토글) 접기: 지도를 최대한 넓게 보려는 조원 피드백. 접은 상태도 기기에 기억
+const FILTER_KEY = "walkmap.filtersHidden";
+const filterBox = document.getElementById("filterBox"), filterToggle = document.getElementById("filterToggle");
+function setFilters(hidden, remember = true) {
+  filterBox.hidden = hidden;
+  filterToggle.textContent = hidden ? "필터 ▾" : "필터 ▴";
+  filterToggle.setAttribute("aria-expanded", !hidden);
+  if (remember) try { localStorage.setItem(FILTER_KEY, hidden ? "1" : ""); } catch {}
+  window.dispatchEvent(new Event("resize"));
+}
+filterToggle.onclick = () => setFilters(!filterBox.hidden);
+try { if (localStorage.getItem(FILTER_KEY) === "1") setFilters(true, false); } catch {}
 aboutBtn.onclick = () => { about.hidden = !about.hidden; aboutBtn.setAttribute("aria-expanded", !about.hidden); };
 
 // ── 보행 구간 ────────────────────────────────────

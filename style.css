@@ -22,10 +22,12 @@ h1{font-size:1.15rem;font-weight:800;margin:0;letter-spacing:-.01em}
 .principle[hidden]{display:none}
 .principle-x{flex:none;background:none;border:none;color:var(--sub);font:inherit;font-size:.78rem;cursor:pointer;padding:2px 4px;white-space:nowrap}
 .title-btns{display:flex;gap:6px;flex-wrap:nowrap;justify-content:flex-end}
+#filterBox[hidden]{display:none}
 @media (max-width:520px){
   h1{font-size:1.02rem;white-space:nowrap}
   .title-btns{gap:4px}
-  .title-btns .ghost{padding:4px 8px;font-size:.72rem;white-space:nowrap}
+  .title-btns .ghost{padding:4px 7px;font-size:.7rem;white-space:nowrap}
+  h1{font-size:.95rem}
 }
 .ghost{background:none;border:1px solid var(--line);border-radius:999px;padding:5px 11px;font-size:.8rem;color:var(--sub);cursor:pointer}
 .about{font-size:.84rem;line-height:1.55;color:var(--sub);margin-bottom:8px}
