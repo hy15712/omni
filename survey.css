@@ -117,3 +117,7 @@ body.sv-wide .grid-legend{right:410px}
 .sv-inapp .btn{display:block;text-align:center;text-decoration:none;margin:8px 0 4px;background:#9A3B2E}
 .sv-inapp .how{display:block;font-weight:700;margin-top:6px}
 .sv-inapp small{display:block;color:#7A2B21}
+
+/* 지도 핀 바로 고치기 */
+.sv-editpin{margin:0 0 10px;min-height:46px;background:#7A5200}
+.sv-thumb .badge.keep{background:#5B6770}

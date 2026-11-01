@@ -140,13 +140,13 @@ const NARROW_BASIS = "기준: 국토교통부 「보도 설치 및 관리 지침
 const LINE_STYLE = {
   sidewalk: { color:"#1F8A5B", weight:1.7, opacity:.8 },
   car:      { color:"#D7263D", weight:1.7, opacity:.6 },
-  narrow:   { color:"#E8FF00", weight:3.5, opacity:1 },   // 형광 노랑(아래에 어두운 테두리 선을 깔아 밝은 배경에서도 보이게)
+  narrow:   { color:"#E8FF00", weight:3.5, opacity:.65 },   // 형광 노랑(아래에 어두운 테두리 선을 깔아 밝은 배경에서도 보이게)
 };
 const lineKind = r => r.widthM != null && r.widthM < NARROW_M ? "narrow" : r.type === "sidewalk" ? "sidewalk" : "car";
 const ROAD_LABEL = { sidewalk:"인도", shared:"보차혼용", roadway:"차도" };
 const roadLayer = L.layerGroup([
   L.geoJSON(window.ROADS, { interactive:false, filter: f => lineKind(f.properties) === "narrow",
-    style: { color:"#2B2B2B", weight:6, opacity:.85 } }),   // 좁은 길 테두리
+    style: { color:"#2B2B2B", weight:6, opacity:.55 } }),   // 좁은 길 테두리
   L.geoJSON(window.ROADS, { interactive:false, style: f => LINE_STYLE[lineKind(f.properties)] }),
   L.geoJSON(window.ROADS, {
     bubblingMouseEvents: false,

@@ -58,7 +58,7 @@ h1{font-size:1.15rem;font-weight:800;margin:0;letter-spacing:-.01em}
 .ln{display:inline-block;width:20px;height:0;border-top:2px solid}
 .ln.sidewalk{border-color:rgba(31,138,91,.8)}
 .ln.car{border-color:rgba(215,38,61,.6)}
-.ln.narrow{border-color:#E8FF00;border-top-width:4px;box-shadow:0 0 0 1.5px #2B2B2B}
+.ln.narrow{border-color:rgba(232,255,0,.65);border-top-width:4px;box-shadow:0 0 0 1.5px rgba(43,43,43,.55)}
 /* 보행 구간 폭 표시(18레벨 이상 확대 시) */
 .leaflet-tooltip.width-tag{display:none;background:#fff;border:1px solid var(--line);border-radius:4px;padding:0 4px;
   font-size:11px;font-weight:700;color:var(--ink);box-shadow:none}
@@ -252,6 +252,10 @@ body.sv-wide .grid-legend{right:410px}
 .sv-inapp .btn{display:block;text-align:center;text-decoration:none;margin:8px 0 4px;background:#9A3B2E}
 .sv-inapp .how{display:block;font-weight:700;margin-top:6px}
 .sv-inapp small{display:block;color:#7A2B21}
+
+/* 지도 핀 바로 고치기 */
+.sv-editpin{margin:0 0 10px;min-height:46px;background:#7A5200}
+.sv-thumb .badge.keep{background:#5B6770}
 </style>
 </head>
 <body>
@@ -716,13 +720,13 @@ const NARROW_BASIS = "기준: 국토교통부 「보도 설치 및 관리 지침
 const LINE_STYLE = {
   sidewalk: { color:"#1F8A5B", weight:1.7, opacity:.8 },
   car:      { color:"#D7263D", weight:1.7, opacity:.6 },
-  narrow:   { color:"#E8FF00", weight:3.5, opacity:1 },   // 형광 노랑(아래에 어두운 테두리 선을 깔아 밝은 배경에서도 보이게)
+  narrow:   { color:"#E8FF00", weight:3.5, opacity:.65 },   // 형광 노랑(아래에 어두운 테두리 선을 깔아 밝은 배경에서도 보이게)
 };
 const lineKind = r => r.widthM != null && r.widthM < NARROW_M ? "narrow" : r.type === "sidewalk" ? "sidewalk" : "car";
 const ROAD_LABEL = { sidewalk:"인도", shared:"보차혼용", roadway:"차도" };
 const roadLayer = L.layerGroup([
   L.geoJSON(window.ROADS, { interactive:false, filter: f => lineKind(f.properties) === "narrow",
-    style: { color:"#2B2B2B", weight:6, opacity:.85 } }),   // 좁은 길 테두리
+    style: { color:"#2B2B2B", weight:6, opacity:.55 } }),   // 좁은 길 테두리
   L.geoJSON(window.ROADS, { interactive:false, style: f => LINE_STYLE[lineKind(f.properties)] }),
   L.geoJSON(window.ROADS, {
     bubblingMouseEvents: false,
@@ -1353,7 +1357,7 @@ function startDraft(cat, rec = null) {
   draftLayer.clearLayers(); hereLayer.clearLayers();
   draft = cat && {
     cat, kind: SCATS[cat].kind, editing: rec, loc: null, pts: [],
-    photos: [], removed: [], marker: null, accCircle: null, line: null,
+    photos: [], removed: [], keep: [...(rec?.keepPhotos || [])], marker: null, accCircle: null, line: null,
   };
   renderForm();
   if (!draft) return;
@@ -1476,10 +1480,15 @@ const thumbUrls = [];
 function renderThumbs() {
   const box = $("#svThumbs"); if (!box || !draft) return;
   thumbUrls.splice(0).forEach(URL.revokeObjectURL);
-  box.innerHTML = draft.photos.map((p, i) => {
+  const k = draft.keep.length;
+  box.innerHTML = draft.keep.map((src, i) => `<div class="sv-thumb"><img src="${esc(src)}" alt="지도에 있는 사진 ${i + 1}">
+      ${i === 0 ? `<span class="badge">대표</span>` : `<span class="badge keep">지도 사진</span>`}
+      <div class="acts">${i ? `<button type="button" data-kp="first" data-i="${i}">대표로</button>` : ""}
+      <button type="button" data-kp="del" data-i="${i}">삭제</button></div></div>`).join("")
+    + draft.photos.map((p, i) => {
     const u = URL.createObjectURL(p.blob); thumbUrls.push(u);
-    return `<div class="sv-thumb"><img src="${u}" alt="사진 ${i + 1}">${i === 0 ? `<span class="badge">대표</span>` : ""}
-      <div class="acts">${i ? `<button type="button" data-ph="first" data-i="${i}">대표로</button>` : ""}
+    return `<div class="sv-thumb"><img src="${u}" alt="사진 ${i + 1}">${i === 0 && !k ? `<span class="badge">대표</span>` : ""}
+      <div class="acts">${i && !k ? `<button type="button" data-ph="first" data-i="${i}">대표로</button>` : ""}
       <button type="button" data-ph="del" data-i="${i}">삭제</button></div></div>`;
   }).join("");
 }
@@ -1507,7 +1516,8 @@ function renderForm() {
   const c = SCATS[draft.cat], road = draft.kind === "road", big = PHOTO_FIRST.includes(draft.cat);
   paneNew.innerHTML = `
     <div class="sv-formhead" style="--c:${c.color}"><span class="dot"></span><b>${esc(c.label)}</b>
-      ${draft.editing ? `<span class="sv-editing">수정 중 · 조사일 ${esc(draft.editing.surveyDate)} · ${esc(draft.editing.surveyor)}</span>` : ""}
+      ${draft.editing?.targetId ? `<span class="sv-editing">지도 핀 고치기 · ${esc(draft.editing.targetId)}</span>`
+        : draft.editing ? `<span class="sv-editing">수정 중 · 조사일 ${esc(draft.editing.surveyDate)} · ${esc(draft.editing.surveyor)}</span>` : ""}
       <button type="button" class="sv-link" data-act="change">분류 바꾸기</button></div>
     <div class="sv-loc">
       <p class="sv-howto">${road ? "지도를 확대(+)한 뒤 선이 지나는 점을 차례로 누르세요."
@@ -1524,7 +1534,8 @@ function renderForm() {
       <label class="sv-field"><span>현장 메모 <small>(지도 정보창에 그대로 나옵니다 · 본 것을 사실대로)</small></span><textarea id="svMemo" rows="3" placeholder="예: 1번 출구 개찰구 안 기둥 / 골목 입구에 상자가 쌓여 있음"></textarea></label>
     </form>
     <div class="sv-actions">
-      ${draft.editing ? `<button type="button" class="btn2 danger" data-act="delete">삭제</button><button type="button" class="btn2" data-act="cancel">취소</button>` : ""}
+      ${draft.editing && !draft.editing.unsaved ? `<button type="button" class="btn2 danger" data-act="delete">삭제</button>` : ""}
+      ${draft.editing ? `<button type="button" class="btn2" data-act="cancel">취소</button>` : ""}
       <button type="button" class="btn" data-act="save">${draft.editing ? "수정 저장" : "저장"}</button>
     </div>`;
   renderCoord(); renderThumbs();
@@ -1553,6 +1564,11 @@ function renderCoord() {
 paneNew.addEventListener("click", async e => {
   const b = e.target.closest("button"); if (!b) return;
   if (b.dataset.cat) return startDraft(b.dataset.cat);
+  if (b.dataset.kp) {
+    const i = Number(b.dataset.i);
+    if (b.dataset.kp === "first") draft.keep.unshift(...draft.keep.splice(i, 1)); else draft.keep.splice(i, 1);
+    return renderThumbs();
+  }
   if (b.dataset.ph) {
     const i = Number(b.dataset.i);
     if (b.dataset.ph === "first") draft.photos.unshift(...draft.photos.splice(i, 1));
@@ -1585,13 +1601,14 @@ async function saveDraft() {
   const d = draft, road = d.kind === "road";
   if (road ? d.pts.length < 2 : !d.loc) return toast(road ? "지도에서 선의 점을 2개 이상 찍어 주세요." : "위치를 정해 주세요. (현재 위치 버튼 또는 지도 누르기)");
   if (!surveyor()) return askName(true);
-  const now = new Date().toISOString(), old = d.editing;
+  const now = new Date().toISOString(), old = d.editing, prev = old?.unsaved ? null : old;
   const rec = {
     id: old?.id || newId(), kind: d.kind, category: d.cat,
-    surveyor: old?.surveyor || surveyor(), surveyDate: old?.surveyDate || dateInput.value || today(),
-    createdAt: old?.createdAt || now, updatedAt: now, exportedAt: old?.exportedAt || null,
+    surveyor: prev?.surveyor || surveyor(), surveyDate: prev?.surveyDate || dateInput.value || today(),
+    createdAt: prev?.createdAt || now, updatedAt: now, exportedAt: prev?.exportedAt || null,
     data, memo: $("#svMemo").value.trim() || null, photoIds: d.photos.map(p => p.id),
   };
+  if (old?.targetId) Object.assign(rec, { targetId: old.targetId, keepPhotos: [...d.keep] });
   if (road) {
     rec.coords = d.pts.map(p => [p.lng, p.lat]);
     rec.pointSources = d.pts.map(p => p.src);
@@ -1606,7 +1623,7 @@ async function saveDraft() {
     console.error(err);
     return toast("저장하지 못했습니다. 개인정보 보호(비공개) 모드가 아닌지, 저장 공간이 남아 있는지 확인해 주세요.", 7000);
   }
-  toast(old ? "수정했습니다." : `저장했습니다. 같은 분류를 이어서 입력할 수 있습니다.`);
+  toast(old?.unsaved ? "고친 내용을 저장했습니다. 내보내기로 보내면 지도에 반영됩니다." : old ? "수정했습니다." : `저장했습니다. 같은 분류를 이어서 입력할 수 있습니다.`);
   await refreshSaved();
   startDraft(old ? null : d.cat);
 }
@@ -1654,7 +1671,7 @@ function renderList() {
       <button type="button" data-all="1" class="${listAll ? "on" : ""}">전체 ${records.length}개</button></div>
     ${shown.length ? Object.keys(groups).sort().reverse().map(day => `<h4 class="sv-sub">${esc(day)} · ${groups[day].length}개</h4>
       <ul class="sv-list">${groups[day].map(r => `<li><button type="button" data-open="${r.id}" style="--c:${SCATS[r.category].color}">
-        <span class="dot"></span><span class="t"><b>${esc(SCATS[r.category].label)}</b> ${esc(summary(r))}
+        <span class="dot"></span><span class="t"><b>${r.targetId ? "✏️ " : ""}${esc(SCATS[r.category].label)}</b> ${esc(summary(r))}
         <small>${esc(r.surveyor)}${r.photoIds?.length ? ` · 사진 ${r.photoIds.length}` : ""}${isPending(r) ? "" : " · 내보냄"}</small></span></button></li>`).join("")}</ul>`).join("")
       : `<p class="note">${listAll ? "아직 저장한 기록이 없습니다." : "이 조사일에 저장한 기록이 없습니다. ‘전체’를 눌러 다른 날짜 기록을 볼 수 있습니다."}</p>`}
     <p class="note">지도에 노란 점선 테두리 핀(선은 점선)으로 보이는 것이 이 기기에 저장된 조사 기록입니다. 눌러서 수정·삭제할 수 있습니다.</p>`;
@@ -1725,7 +1742,7 @@ async function buildZip() {
   try {
     const JSZip = await loadJSZip(), zip = new JSZip(), name = surveyor() || "조사자";
     const exportedAt = new Date().toISOString(), out = [];
-    const rows = [["기록ID","분류","조사일","조사자","위도","경도","좌표 출처","GPS 정확도(m)","내용","메모","사진 수"]];
+    const rows = [["기록ID","분류","조사일","조사자","위도","경도","좌표 출처","GPS 정확도(m)","내용","메모","사진 수","고친 지도 핀"]];
     for (const r of records) {
       const photos = await DB.photosOf(r.id), order = r.photoIds || [];
       photos.sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id));
@@ -1734,7 +1751,7 @@ async function buildZip() {
       out.push({ ...rest, photos: files });
       const [lat, lng] = r.kind === "road" ? [r.coords[0][1], r.coords[0][0]] : [r.lat, r.lng];
       rows.push([r.id, SCATS[r.category].label, r.surveyDate, r.surveyor, lat, lng,
-        r.coordSource === "gps" ? "GPS" : "지도", r.gpsAccuracy ?? "", detailText(r), r.memo ?? "", files.length]);
+        r.coordSource === "gps" ? "GPS" : "지도", r.gpsAccuracy ?? "", detailText(r), r.memo ?? "", files.length, r.targetId ?? ""]);
     }
     zip.file("survey.json", JSON.stringify({ format: "walkmap-survey", version: 1, exportedAt, exportedBy: name, records: out }, null, 2));
     zip.file("survey.csv", "﻿" + rows.map(row => row.map(csvCell).join(",")).join("\r\n"));
@@ -1777,6 +1794,33 @@ paneExport.addEventListener("click", async e => {
     }
   }
 });
+
+// ── 지도 핀 바로 고치기 ───────────────────────────
+// 공개 지도에 이미 있는 핀·보행 구간을 누르면 정보창에 ‘이 핀 고치기’ 버튼이 생깁니다.
+// 현재 값을 입력판에 채워 고친 뒤 저장 → 내보내기 → 합칠 때 같은 핀(targetId)을 덮어씁니다.
+function editButton(onEdit) {
+  sheetBody.insertAdjacentHTML("afterbegin", `<button type="button" class="btn sv-editpin">✏️ 이 핀 고치기 (조사 모드)</button>`);
+  $(".sv-editpin", sheetBody).onclick = () => { closeSheet(); showTab("new"); onEdit(); };
+}
+function editPlace(p) {
+  const { photos, note, ...details } = p.details || {};
+  const data = { ...details };
+  if (FIELDS[p.category].some(f => f[1] === "name")) data.name = p.name;
+  if (FIELDS[p.category].some(f => f[0] === "hours") && p.hours !== undefined) data.hours = p.hours;
+  startDraft(p.category, { id: newId(), unsaved: true, targetId: p.id, kind: "place", category: p.category, data,
+    memo: note || "", lat: p.lat, lng: p.lng, coordSource: p.coordSource === "gps" ? "gps" : "map", keepPhotos: photos || [] });
+  map.panTo([p.lat, p.lng]);
+}
+function editRoad(r) {
+  const f = window.ROADS.features.find(x => x.properties.id === r.id); if (!f) return toast("이 구간을 찾지 못했습니다.");
+  const data = Object.fromEntries(["type", "name", "widthM", "surface", "curbCut", "slopeNote"].filter(k => r[k] !== undefined).map(k => [k, r[k]]));
+  startDraft("road", { id: newId(), unsaved: true, targetId: r.id, kind: "road", category: "road", data, memo: r.note || "",
+    coords: f.geometry.coordinates, coordSource: "map", keepPhotos: r.photos || [] });
+  map.panTo([f.geometry.coordinates[0][1], f.geometry.coordinates[0][0]]);
+}
+const origOpenPlace = openPlace, origOpenRoad = openRoad;
+openPlace = p => { origOpenPlace(p); editButton(() => editPlace(p)); };
+openRoad = r => { origOpenRoad(r); editButton(() => editRoad(r)); };
 
 // ── 시작 ─────────────────────────────────────────
 startDraft(null);

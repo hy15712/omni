@@ -48,7 +48,7 @@ h1{font-size:1.15rem;font-weight:800;margin:0;letter-spacing:-.01em}
 .ln{display:inline-block;width:20px;height:0;border-top:2px solid}
 .ln.sidewalk{border-color:rgba(31,138,91,.8)}
 .ln.car{border-color:rgba(215,38,61,.6)}
-.ln.narrow{border-color:#E8FF00;border-top-width:4px;box-shadow:0 0 0 1.5px #2B2B2B}
+.ln.narrow{border-color:rgba(232,255,0,.65);border-top-width:4px;box-shadow:0 0 0 1.5px rgba(43,43,43,.55)}
 /* 보행 구간 폭 표시(18레벨 이상 확대 시) */
 .leaflet-tooltip.width-tag{display:none;background:#fff;border:1px solid var(--line);border-radius:4px;padding:0 4px;
   font-size:11px;font-weight:700;color:var(--ink);box-shadow:none}

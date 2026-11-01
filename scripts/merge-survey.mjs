@@ -11,6 +11,8 @@
 //
 // 이미 합친 기록은 survey-inbox/applied.json 에 남아 다음 실행 때 건너뜁니다.
 // 단, 조사자가 합친 뒤에 기록을 고쳐 다시 내보냈으면(updatedAt 이 더 새로우면) "update:<id>" 로 그 핀을 덮어씁니다.
+// 조사 모드의 ‘이 핀 고치기’로 만든 기록(targetId 있음)도 "update:<targetId>" 로 그 핀을 덮어씁니다.
+//   이때 사진 = 기록의 keepPhotos(지도에 남길 기존 사진) + 새로 찍은 사진
 // survey-inbox/ 는 조사자 이름이 들어 있어 저장소에 올리지 않습니다(.gitignore).
 import fs from "node:fs";
 import path from "node:path";
@@ -117,6 +119,9 @@ const places = loadData("places.js", "PLACES"), roads = loadData("roads.js", "RO
 const bounds = (() => { const ctx = { window: {} }; vm.runInNewContext(fs.readFileSync(path.join(ROOT, "data/bounds.js"), "utf8"), ctx); return ctx.window.SURVEY_BOUNDS; })();
 const inBounds = ([lat, lng]) => lat >= bounds.south && lat <= bounds.north && lng >= bounds.west && lng <= bounds.east;
 
+const findTarget = (kind, id) => kind === "road" ? roads.value.features.find(f => f.properties.id === id)
+  : kind === "light" ? lights.value.find(l => l.id === id) : places.value.find(p => p.id === id);
+
 // ── 중복 후보 찾기 ───────────────────────────────
 function existingPool(kind, category) {
   if (kind === "road") return roads.value.features.map(f => ({ id: f.properties.id, label: f.properties.name, entry: f }));
@@ -128,6 +133,12 @@ const decisions = readJson(decisionsFile, {});
 const report = [];
 for (const it of items) {
   const { rec } = it, entry = toEntry(rec), kind = rec.kind;
+  if (rec.targetId) {   // ‘이 핀 고치기’로 만든 기록 → 그 핀을 덮어씀(중복 검사 안 함)
+    const ok = !!findTarget(kind, rec.targetId);
+    decisions[rec.id] = ok ? `update:${rec.targetId}` : (decisions[rec.id] ?? "ask");
+    report.push({ ...it, entry, near: [], warn: [ok ? `지도 핀 고치기 (${rec.targetId})` : `고칠 핀 ${rec.targetId} 이(가) 지도에 없음`] });
+    continue;
+  }
   if (isEdited(rec)) {   // 합친 뒤 조사자가 고친 기록 → 같은 핀을 덮어씀(중복 검사 안 함)
     decisions[rec.id] = `update:${targetOf(applied[rec.id])}`;
     report.push({ ...it, entry, near: [], warn: ["합친 뒤 고친 기록"] });
@@ -205,8 +216,6 @@ function copyPhotos(r, id, overwrite = false) {
     return `photos/${name}`;
   });
 }
-const findTarget = (kind, id) => kind === "road" ? roads.value.features.find(f => f.properties.id === id)
-  : kind === "light" ? lights.value.find(l => l.id === id) : places.value.find(p => p.id === id);
 const log = [];
 for (const r of report) {
   const dec = decisions[r.rec.id], kind = r.rec.kind, e = r.entry;
@@ -222,12 +231,20 @@ for (const r of report) {
   }
   const t = findTarget(kind, targetId);
   if (!t) { console.error(`${r.rec.id}: 대상 ${targetId} 를 찾지 못해 건너뜀`); continue; }
-  if (act === "update") {   // 같은 기록의 새 버전: 값·사진 모두 새것으로
-    const photos = copyPhotos(r, targetId, true);
-    if (kind === "road") { Object.assign(t, e); t.properties.id = targetId; if (photos.length) t.properties.photos = photos; }
-    else { for (const k of Object.keys(t)) delete t[k]; Object.assign(t, e, { id: targetId }); if (photos.length && t.details) t.details.photos = photos; }
-    log.push(`수정 반영 ${targetId} ${LABEL[r.rec.category]}`);
-    applied[r.rec.id] = { result: targetId, updatedAt: r.rec.updatedAt };
+  if (act === "update") {   // 같은 기록의 새 버전 또는 ‘이 핀 고치기’: 값을 새것으로
+    let photos, added = [];
+    if (r.rec.targetId) {     // 지도에 남길 기존 사진 + 새 사진. 다시 내보낸 경우 지난번에 넣은 새 사진은 지우고 다시 복사
+      for (const f of applied[r.rec.id]?.addedPhotos || []) fs.rmSync(path.join(ROOT, f), { force: true });
+      added = copyPhotos(r, targetId);
+      photos = [...(r.rec.keepPhotos || []), ...added];
+    } else photos = copyPhotos(r, targetId, true);
+    const holderOf = x => kind === "road" ? x.properties : kind === "place" ? x.details : null;
+    if (kind === "road") { Object.assign(t, e); t.properties.id = targetId; }
+    else { for (const k of Object.keys(t)) delete t[k]; Object.assign(t, e, { id: targetId }); }
+    const h = holderOf(t);
+    if (h) { if (photos.length) h.photos = photos; else delete h.photos; }
+    log.push(`${r.rec.targetId ? "핀 고치기" : "수정 반영"} ${targetId} ${LABEL[r.rec.category]}`);
+    applied[r.rec.id] = { result: targetId, updatedAt: r.rec.updatedAt, ...(added.length ? { addedPhotos: added } : {}) };
     continue;
   }
   const photos = copyPhotos(r, targetId);
@@ -250,4 +267,10 @@ saveData("places.js", places.header, `window.PLACES = [\n${places.value.map(line
 saveData("roads.js", roads.header, `window.ROADS = { type:"FeatureCollection", features:[\n${roads.value.features.map(line).join("\n")}\n]};`);
 saveData("streetlights.js", lights.header, `window.STREETLIGHTS = [\n${lights.value.map(line).join("\n")}\n];`);
 writeJson(path.join(INBOX, "applied.json"), applied);
+// 지도 데이터 어디에도 쓰이지 않는 사진 파일은 지움(공개 저장소라 지도에서 뺀 사진이 남지 않게)
+const used = new Set([...places.value.flatMap(p => p.details?.photos || []), ...roads.value.features.flatMap(f => f.properties.photos || [])]);
+const photoDir = path.join(ROOT, "photos");
+for (const f of fs.existsSync(photoDir) ? fs.readdirSync(photoDir) : []) {
+  if (/\.jpe?g$/i.test(f) && !used.has(`photos/${f}`)) { fs.rmSync(path.join(photoDir, f)); console.log(`안 쓰는 사진 삭제 photos/${f}`); }
+}
 console.log(log.join("\n") || "바뀐 것 없음");
