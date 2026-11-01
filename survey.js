@@ -239,10 +239,14 @@ function fieldHtml([type, key, label, extra, flag]) {
           <button type="button" data-mode="same">매일 같은 시간</button><button type="button" data-mode="days">요일별</button>
           <button type="button" data-mode="24h">24시간</button><button type="button" data-mode="unknown">모름</button>
           <button type="button" data-mode="-" class="none" title="입력 안 함" aria-label="입력 안 함">–</button></div>
-        <div class="hours-same" hidden><input type="time" class="h-s" aria-label="시작"> ~ <input type="time" class="h-e" aria-label="끝"></div>
+        <div class="hours-same" hidden>
+          <div class="h-row"><input type="time" class="h-s" aria-label="시작"> ~ <input type="time" class="h-e" aria-label="끝"></div>
+          <div class="h-offdays"><span>휴무 요일</span>${WEEK.map(d => `<label class="offday"><input type="checkbox" value="${d}">${DAY_KO[d]}</label>`).join("")}</div>
+        </div>
         <div class="hours-days" hidden>${WEEK.map(d => `<div class="hday" data-day="${d}"><b>${DAY_KO[d]}</b>
           <input type="time" class="h-s" aria-label="${DAY_KO[d]} 시작"> ~ <input type="time" class="h-e" aria-label="${DAY_KO[d]} 끝">
-          <label class="off"><input type="checkbox" class="h-off"> 휴무</label></div>`).join("")}</div>
+          <label class="off"><input type="checkbox" class="h-off"> 휴무</label></div>`).join("")}
+          <button type="button" class="btn2 small" data-act="copyday">월요일 시간을 휴무 아닌 다른 요일에 복사</button></div>
         <p class="note">자정을 넘기면 끝 시간을 다음 날 시각으로(예: 22:00 ~ 02:00). 24시까지면 00:00.</p></div></div>`;
   }
 }
@@ -261,7 +265,9 @@ function readHours(el) {
   if (mode === "same") {
     const s = $(".hours-same .h-s", el).value, e = $(".hours-same .h-e", el).value;
     if (!s || !e) throw new Error("시간을 입력하거나 ‘모름’을 골라 주세요.");
-    return Object.fromEntries(WEEK.map(d => [d, [[s, e]]]));
+    const off = $$(".h-offdays input:checked", el).map(i => i.value);
+    if (off.length === 7) throw new Error("모든 요일을 휴무로 고를 수는 없습니다.");
+    return Object.fromEntries(WEEK.map(d => [d, off.includes(d) ? [] : [[s, e]]]));
   }
   if (mode === "days") return Object.fromEntries(WEEK.map(d => {
     const row = $(`.hday[data-day="${d}"]`, el);
@@ -276,11 +282,13 @@ function fillHours(el, h) {
   if (h === undefined) return hoursMode(el, NONE);
   if (h === "24h") return hoursMode(el, "24h");
   if (!h) return hoursMode(el, "unknown");
+  // 여는 날이 모두 같은 시간(한 구간)이면 ‘매일 같은 시간 + 휴무 요일’로 보여 줌
   const key = r => JSON.stringify(r || []);
-  const allSame = WEEK.every(d => key(h[d]) === key(h.mon)) && (h.mon || []).length === 1;
-  if (allSame) {
+  const open = WEEK.filter(d => (h[d] || []).length);
+  if (open.length && open.every(d => h[d].length === 1 && key(h[d]) === key(h[open[0]]))) {
     hoursMode(el, "same");
-    $(".hours-same .h-s", el).value = h.mon[0][0]; $(".hours-same .h-e", el).value = h.mon[0][1];
+    $(".hours-same .h-s", el).value = h[open[0]][0][0]; $(".hours-same .h-e", el).value = h[open[0]][0][1];
+    $$(".h-offdays input", el).forEach(i => i.checked = !open.includes(i.value));
     return;
   }
   hoursMode(el, "days");
@@ -588,6 +596,13 @@ paneNew.addEventListener("click", async e => {
       try { await navigator.clipboard.writeText(t); toast("좌표를 복사했습니다: " + t); }
       catch { prompt("아래 좌표를 길게 눌러 복사하세요", t); }
       return;
+    }
+    case "copyday": {   // 요일별: 월요일 시간을 휴무가 아닌 다른 요일에 복사
+      const el = b.closest(".hours"), mon = $('.hday[data-day="mon"]', el);
+      const s = $(".h-s", mon).value, e = $(".h-e", mon).value;
+      if (!s || !e) return toast("월요일 시간을 먼저 넣어 주세요.");
+      $$(".hday", el).forEach(row => { if (!$(".h-off", row).checked) { $(".h-s", row).value = s; $(".h-e", row).value = e; } });
+      return toast("월요일 시간을 복사했습니다. 다른 요일만 고쳐 주세요.");
     }
     case "cancel": return startDraft(null);
     case "delete": return deleteRecord(draft.editing);
