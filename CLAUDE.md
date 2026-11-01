@@ -67,7 +67,7 @@ Claude Code가 이 프로젝트를 이어서 작업할 때 먼저 읽는 파일�
 * `scripts/merge-survey.mjs` 조사 기록 합치기 · `scripts/build-onefile.mjs` 한 파일짜리 HTML 다시 만들기
 * `survey-inbox/` 받은 조사 zip을 풀어 두는 곳(내용은 .gitignore, 조사자 이름 포함이라 올리지 않음)
 * `docs/survey-mode-request.md` 조사 입력 모드 요구사항(구현됨)
-* 현재 데이터는 모두 `\[샘플]`이며 실제 정보 아님
+* 2026-11-01 샘플 데이터(시설 9·구간 3·가로등 261) 모두 삭제. 지금 데이터 파일은 비어 있고, 조사 기록 합치기·가로등 공공데이터로 채움
 
 ## 구현된 기능
 
