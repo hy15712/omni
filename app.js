@@ -148,6 +148,17 @@ document.getElementById("openNow").onchange = e => { state.openNow = e.target.ch
 document.getElementById("showRoads").onchange = e => {
   state.showRoads = e.target.checked; state.showRoads ? roadLayer.addTo(map) : roadLayer.remove(); };
 const aboutBtn = document.getElementById("aboutBtn"), about = document.getElementById("about");
+// 상단 안내문구 접기: 처음엔 펼쳐서 보여 주고, 접으면 그 기기에 기억(지도 화면을 넓히려는 조원 피드백)
+const PRINCIPLE_KEY = "walkmap.principleHidden";
+const principle = document.getElementById("principle"), principleShow = document.getElementById("principleShow");
+function setPrinciple(hidden, remember = true) {
+  principle.hidden = hidden; principleShow.hidden = !hidden;
+  if (remember) try { localStorage.setItem(PRINCIPLE_KEY, hidden ? "1" : ""); } catch {}
+  window.dispatchEvent(new Event("resize"));   // 지도·조사 입력판 크기 다시 맞춤
+}
+document.getElementById("principleHide").onclick = () => setPrinciple(true);
+principleShow.onclick = () => setPrinciple(false);
+try { if (localStorage.getItem(PRINCIPLE_KEY) === "1") setPrinciple(true, false); } catch {}
 aboutBtn.onclick = () => { about.hidden = !about.hidden; aboutBtn.setAttribute("aria-expanded", !about.hidden); };
 
 // ── 보행 구간 ────────────────────────────────────

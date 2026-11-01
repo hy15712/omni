@@ -27,6 +27,16 @@ button,input{font:inherit}
 h1{font-size:1.15rem;font-weight:800;margin:0;letter-spacing:-.01em}
 .principle{margin:6px 0 8px;font-size:.84rem;line-height:1.5;color:var(--ink);
   padding:8px 10px;border-left:4px solid var(--ink);background:var(--wash)}
+.principle{display:flex;align-items:flex-start;gap:10px}
+.principle>span{flex:1}
+.principle[hidden]{display:none}
+.principle-x{flex:none;background:none;border:none;color:var(--sub);font:inherit;font-size:.78rem;cursor:pointer;padding:2px 4px;white-space:nowrap}
+.title-btns{display:flex;gap:6px;flex-wrap:nowrap;justify-content:flex-end}
+@media (max-width:520px){
+  h1{font-size:1.02rem;white-space:nowrap}
+  .title-btns{gap:4px}
+  .title-btns .ghost{padding:4px 8px;font-size:.72rem;white-space:nowrap}
+}
 .ghost{background:none;border:1px solid var(--line);border-radius:999px;padding:5px 11px;font-size:.8rem;color:var(--sub);cursor:pointer}
 .about{font-size:.84rem;line-height:1.55;color:var(--sub);margin-bottom:8px}
 .about p{margin:4px 0}
@@ -263,9 +273,11 @@ body.sv-wide .grid-legend{right:410px}
 <header class="top">
   <div class="title-row">
     <h1>종로 보행환경 정보지도</h1>
-    <button id="aboutBtn" class="ghost" aria-expanded="false" aria-controls="about">이 지도에 대해</button>
+    <span class="title-btns"><button id="principleShow" class="ghost" aria-controls="principle" hidden>안내 보기</button>
+    <button id="aboutBtn" class="ghost" aria-expanded="false" aria-controls="about">이 지도에 대해</button></span>
   </div>
-  <p class="principle">우리는 장소의 ‘안전’을 평가하지 않습니다. 이용자가 건강과 안전에 관한 판단을 할 수 있도록 검증 가능한 환경 정보를 제공합니다.</p>
+  <p class="principle" id="principle"><span>우리는 장소의 ‘안전’을 평가하지 않습니다. 이용자가 건강과 안전에 관한 판단을 할 수 있도록 검증 가능한 환경 정보를 제공합니다.</span>
+    <button type="button" id="principleHide" class="principle-x" aria-label="안내문 접기">접기 ▴</button></p>
   <div id="about" class="about" hidden>
     <p>모든 정보에는 확인 방법과 최종 확인 날짜가 붙어 있습니다.</p>
     <ul class="vlegend">
@@ -727,6 +739,17 @@ document.getElementById("openNow").onchange = e => { state.openNow = e.target.ch
 document.getElementById("showRoads").onchange = e => {
   state.showRoads = e.target.checked; state.showRoads ? roadLayer.addTo(map) : roadLayer.remove(); };
 const aboutBtn = document.getElementById("aboutBtn"), about = document.getElementById("about");
+// 상단 안내문구 접기: 처음엔 펼쳐서 보여 주고, 접으면 그 기기에 기억(지도 화면을 넓히려는 조원 피드백)
+const PRINCIPLE_KEY = "walkmap.principleHidden";
+const principle = document.getElementById("principle"), principleShow = document.getElementById("principleShow");
+function setPrinciple(hidden, remember = true) {
+  principle.hidden = hidden; principleShow.hidden = !hidden;
+  if (remember) try { localStorage.setItem(PRINCIPLE_KEY, hidden ? "1" : ""); } catch {}
+  window.dispatchEvent(new Event("resize"));   // 지도·조사 입력판 크기 다시 맞춤
+}
+document.getElementById("principleHide").onclick = () => setPrinciple(true);
+principleShow.onclick = () => setPrinciple(false);
+try { if (localStorage.getItem(PRINCIPLE_KEY) === "1") setPrinciple(true, false); } catch {}
 aboutBtn.onclick = () => { about.hidden = !about.hidden; aboutBtn.setAttribute("aria-expanded", !about.hidden); };
 
 // ── 보행 구간 ────────────────────────────────────

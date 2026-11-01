@@ -7,16 +7,18 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/maplibre-gl@4.7.1/dist/maplibre-gl.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
-<link rel="stylesheet" href="style.css?v=202611011014">
-<link rel="stylesheet" href="survey.css?v=202611011014">
+<link rel="stylesheet" href="style.css?v=202611011017">
+<link rel="stylesheet" href="survey.css?v=202611011017">
 </head>
 <body>
 <header class="top">
   <div class="title-row">
     <h1>종로 보행환경 정보지도</h1>
-    <button id="aboutBtn" class="ghost" aria-expanded="false" aria-controls="about">이 지도에 대해</button>
+    <span class="title-btns"><button id="principleShow" class="ghost" aria-controls="principle" hidden>안내 보기</button>
+    <button id="aboutBtn" class="ghost" aria-expanded="false" aria-controls="about">이 지도에 대해</button></span>
   </div>
-  <p class="principle">우리는 장소의 ‘안전’을 평가하지 않습니다. 이용자가 건강과 안전에 관한 판단을 할 수 있도록 검증 가능한 환경 정보를 제공합니다.</p>
+  <p class="principle" id="principle"><span>우리는 장소의 ‘안전’을 평가하지 않습니다. 이용자가 건강과 안전에 관한 판단을 할 수 있도록 검증 가능한 환경 정보를 제공합니다.</span>
+    <button type="button" id="principleHide" class="principle-x" aria-label="안내문 접기">접기 ▴</button></p>
   <div id="about" class="about" hidden>
     <p>모든 정보에는 확인 방법과 최종 확인 날짜가 붙어 있습니다.</p>
     <ul class="vlegend">
@@ -59,12 +61,12 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@maplibre/maplibre-gl-leaflet@0.1.4/leaflet-maplibre-gl.js"></script>
-<script src="data/config.js?v=202611011014"></script>
-<script src="data/bounds.js?v=202611011014"></script>
-<script src="data/places.js?v=202611011014"></script>
-<script src="data/roads.js?v=202611011014"></script>
-<script src="data/streetlights.js?v=202611011014"></script>
-<script src="app.js?v=202611011014"></script>
-<script src="survey.js?v=202611011014"></script>
+<script src="data/config.js?v=202611011017"></script>
+<script src="data/bounds.js?v=202611011017"></script>
+<script src="data/places.js?v=202611011017"></script>
+<script src="data/roads.js?v=202611011017"></script>
+<script src="data/streetlights.js?v=202611011017"></script>
+<script src="app.js?v=202611011017"></script>
+<script src="survey.js?v=202611011017"></script>
 </body>
 </html>

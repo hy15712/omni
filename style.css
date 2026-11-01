@@ -17,6 +17,16 @@ button,input{font:inherit}
 h1{font-size:1.15rem;font-weight:800;margin:0;letter-spacing:-.01em}
 .principle{margin:6px 0 8px;font-size:.84rem;line-height:1.5;color:var(--ink);
   padding:8px 10px;border-left:4px solid var(--ink);background:var(--wash)}
+.principle{display:flex;align-items:flex-start;gap:10px}
+.principle>span{flex:1}
+.principle[hidden]{display:none}
+.principle-x{flex:none;background:none;border:none;color:var(--sub);font:inherit;font-size:.78rem;cursor:pointer;padding:2px 4px;white-space:nowrap}
+.title-btns{display:flex;gap:6px;flex-wrap:nowrap;justify-content:flex-end}
+@media (max-width:520px){
+  h1{font-size:1.02rem;white-space:nowrap}
+  .title-btns{gap:4px}
+  .title-btns .ghost{padding:4px 8px;font-size:.72rem;white-space:nowrap}
+}
 .ghost{background:none;border:1px solid var(--line);border-radius:999px;padding:5px 11px;font-size:.8rem;color:var(--sub);cursor:pointer}
 .about{font-size:.84rem;line-height:1.55;color:var(--sub);margin-bottom:8px}
 .about p{margin:4px 0}
