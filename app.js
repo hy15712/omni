@@ -107,6 +107,22 @@ function hasActiveClosureReport(place) {
 
 // ── 필터 UI ──────────────────────────────────────
 const filtersEl = document.getElementById("filters");
+// 전체 선택/해제 칩: 시설 분류를 한 번에 켜고 끔(가로등은 따로)
+const allChip = document.createElement("button");
+allChip.className = "chip all";
+filtersEl.appendChild(allChip);
+const catChips = {};
+function syncAllChip() {
+  const all = state.active.size === Object.keys(CATEGORIES).length;
+  allChip.textContent = all ? "전체 해제" : "전체 선택";
+  allChip.setAttribute("aria-pressed", all);
+  Object.entries(catChips).forEach(([k, b]) => b.setAttribute("aria-pressed", state.active.has(k)));
+}
+allChip.onclick = () => {
+  const all = state.active.size === Object.keys(CATEGORIES).length;
+  state.active = new Set(all ? [] : Object.keys(CATEGORIES));
+  syncAllChip(); render();
+};
 Object.entries(CATEGORIES).forEach(([key, c]) => {
   const b = document.createElement("button");
   b.className = "chip"; b.style.setProperty("--c", c.color);
@@ -114,10 +130,12 @@ Object.entries(CATEGORIES).forEach(([key, c]) => {
   b.innerHTML = `<span class="dot"></span>${c.label}`;
   b.onclick = () => {
     state.active.has(key) ? state.active.delete(key) : state.active.add(key);
-    b.setAttribute("aria-pressed", state.active.has(key)); render();
+    syncAllChip(); render();
   };
+  catChips[key] = b;
   filtersEl.appendChild(b);
 });
+syncAllChip();
 // 가로등 칩: 다른 분류와 달리 핀이 아니라 격자로 표시(기본 꺼짐)
 const lightChip = document.createElement("button");
 lightChip.className = "chip light"; lightChip.setAttribute("aria-pressed", "false");
@@ -367,8 +385,10 @@ function selectCell(rect) {
 function clearSelectedCell() { if (selectedCell) selectedCell.setStyle({ stroke: false }); selectedCell = null; }
 
 // 개별 등 위치는 충분히 확대했을 때만 표시(겹침 방지)
+// 개별 등 위치를 보여 주기 시작하는 확대 단계(조원 피드백으로 18 → 17)
+const LIGHT_POINT_ZOOM = 17;
 function syncLightPoints() {
-  const show = state.showLights && map.getZoom() >= 18;
+  const show = state.showLights && map.getZoom() >= LIGHT_POINT_ZOOM;
   show ? lightPointLayer.addTo(map) : lightPointLayer.remove();
 }
 function toggleLights() {
@@ -398,7 +418,7 @@ function openCell(cell, r, c) {
       <dt>설치 지점</dt><dd>${cell.items.length}곳</dd>
       <dt>확인 방법</dt><dd>${Object.entries(byStatus).map(([k, v]) => `${VSTATUS[k]} ${v}곳`).join(" · ") || "자료 없음"}</dd>
     </dl>
-    <p class="note">${cell.total ? "더 확대하면 등 하나하나의 위치가 점으로 표시됩니다." : "자료상 이 칸에 등록된 가로등이 없습니다."}<br>
+    <p class="note">${cell.total ? "조금 더 확대하면 등 하나하나의 위치가 점으로 표시됩니다." : "자료상 이 칸에 등록된 가로등이 없습니다."}<br>
     설치 개수이며, 실제 조도(밝기)를 측정한 값이 아닙니다.</p>`);
 }
 function openLight(l) {

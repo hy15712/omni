@@ -28,6 +28,7 @@ h1{font-size:1.15rem;font-weight:800;margin:0;letter-spacing:-.01em}
   border-radius:8px;padding:6px 10px;font-size:.85rem;cursor:pointer;color:var(--sub)}
 .chip .dot{width:10px;height:10px;border-radius:3px;background:var(--c)}
 .chip[aria-pressed="true"]{border-color:var(--ink);color:var(--ink);font-weight:700}
+.chip.all{background:var(--wash);font-weight:700;color:var(--ink)}
 .toggles{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;font-size:.85rem}
 .switch{display:inline-flex;align-items:center;gap:6px;cursor:pointer}
 .switch input{width:18px;height:18px;accent-color:var(--ink)}
