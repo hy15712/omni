@@ -423,7 +423,7 @@ function toggleLights() {
 map.on("zoomend", syncLightPoints);
 
 // 지금 가로등 격자에 들어 있는 자료의 범위(‘0개’가 등이 없다는 뜻으로 읽히지 않게 정보창에 함께 안내)
-const LIGHT_DATA_NOTE = "지금 자료는 종로구 보안등(청계천 북쪽 골목)뿐입니다. 큰길 가로등과 중구(청계천 남쪽) 보안등은 아직 들어 있지 않습니다.";
+const LIGHT_DATA_NOTE = "지금 자료는 종로구·중구 보안등(골목)입니다. 큰길(종로·을지로·삼일대로 등) 가로등은 아직 들어 있지 않습니다.";
 function openCell(cell, r, c) {
   const byType = cell.items.reduce((o, l) => (o[l.type] = (o[l.type] || 0) + (l.count || 1), o), {});
   const byStatus = cell.items.reduce((o, l) => (o[l.verification.status] = (o[l.verification.status] || 0) + 1, o), {});
